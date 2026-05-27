@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Kasse">
+<link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230d9488'/%3E%3Ccircle cx='50' cy='50' r='32' fill='%23fbf7ed'/%3E%3Ctext x='50' y='68' font-family='sans-serif' font-size='50' font-weight='bold' text-anchor='middle' fill='%230d9488'%3E%E2%82%AC%3C/text%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="data:image/svg+xml;utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%230d9488'/%3E%3Ccircle cx='50' cy='50' r='32' fill='%23fbf7ed'/%3E%3Ctext x='50' y='68' font-family='sans-serif' font-size='50' font-weight='bold' text-anchor='middle' fill='%230d9488'%3E%E2%82%AC%3C/text%3E%3C/svg%3E">
 <title>Kasse</title>
@@ -1681,14 +1682,16 @@
         body: JSON.stringify(stateForSync()),
       });
       if (!res.ok) throw new Error('HTTP ' + res.status);
-      const location = res.headers.get('Location') || '';
+      // Fallback auf res.url falls Location-Header per CORS nicht lesbar ist
+      const location = res.headers.get('Location') || (res.url !== JSONBLOB_API ? res.url : '');
       const id = location.split('/').pop();
-      if (!id || !/^\d{10,}$/.test(id)) throw new Error('Keine gültige ID');
+      if (!id || !/^[\w-]{10,}$/.test(id)) throw new Error('Keine gültige ID (Location: ' + (res.headers.get('Location') || 'nicht lesbar') + ')');
       setSyncId(id);
       updateSyncUI();
       setSyncDot('ok');
       toast('Raum erstellt – Code teilen!');
-    } catch {
+    } catch(e) {
+      console.error('[Kasse] Raum erstellen fehlgeschlagen:', e);
       setSyncDot('error');
       toast('Raum konnte nicht erstellt werden');
     }
@@ -1708,7 +1711,8 @@
       if (res.status === 404) { setSyncId(null); updateSyncUI(); toast('Sync-Raum weg – Sync deaktiviert'); return; }
       if (!res.ok) throw new Error('HTTP ' + res.status);
       setSyncDot('ok');
-    } catch {
+    } catch(e) {
+      console.error('[Kasse] Sync push fehlgeschlagen:', e);
       setSyncDot('error');
     } finally {
       syncPushInProgress = false;
@@ -1738,7 +1742,8 @@
       applyTripName();
       setSyncDot('ok');
       toast('Synchronisiert');
-    } catch {
+    } catch(e) {
+      console.error('[Kasse] Sync pull fehlgeschlagen:', e);
       setSyncDot('error');
       toast('Sync fehlgeschlagen');
     } finally {
@@ -1748,9 +1753,9 @@
 
   async function syncJoin(inputVal) {
     let id = (inputVal || '').trim();
-    const m = id.match(/jsonBlob\/(\d+)/);
+    const m = id.match(/jsonBlob\/([\w-]+)/);
     if (m) id = m[1];
-    if (!id || !/^\d{10,}$/.test(id)) { toast('Ungültiger Sync-Code'); return; }
+    if (!id || !/^[\w-]{10,}$/.test(id)) { toast('Ungültiger Sync-Code'); return; }
     setSyncId(id);
     await syncPull();
     if (getSyncId()) updateSyncUI();
@@ -1878,8 +1883,10 @@
   // Theme init
   applyTheme(localStorage.getItem(THEME_KEY) || 'system');
 
-  // Standalone-Version: Service Worker nur registrieren, wenn http(s) verfügbar.
-  // Wenn die Datei direkt (file://) geöffnet wird, läuft die App trotzdem voll.
+  // Service Worker nur registrieren, wenn http(s) verfügbar (nicht bei file://)
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    navigator.serviceWorker.register('./sw.js');
+  }
 
   // Initial render
   applyTripName();

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks generated="2026-05-27T15:56" prefix="MS">
+<tasks generated="2026-05-27T16:14" prefix="EXPSPL">
   <task id="2" status="done">
     <title>Multi-User-Zugang mit Echtzeit-Synchronisation für HTML-Oberfläche</title>
     <summary>Mehrere Benutzer sollen die HTML-Oberfläche gleichzeitig nutzen können. Änderungen werden in Echtzeit für alle verbundenen Nutzer synchronisiert (via GitHub).</summary>
@@ -61,6 +61,72 @@
     </history>
     <files>
       <file path="urlaubskasse.html" ts="2026-05-27T15:55" />
+    </files>
+  </task>
+  <task id="4" status="done">
+    <title>Bug: "Raum konnte nicht erstellt werden"</title>
+    <summary>Fehlermeldung beim Erstellen eines Raums untersuchen und beheben.</summary>
+    <created>2026-05-27T16:01</created>
+    <started>2026-05-27T16:03</started>
+    <done>2026-05-27T16:04</done>
+    <human_estimate>1h</human_estimate>
+    <story_points>5</story_points>
+    <agents>Claude</agents>
+    <concept>tasks/MS-4.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <lane_id>run-72e564ea</lane_id>
+    <lane_order />
+    <history>
+      <event ts="2026-05-27T16:01">received, backlog</event>
+      <event ts="2026-05-27T16:01">refined (title, summary, human_estimate, story_points, kind)</event>
+      <event ts="2026-05-27T16:03">auto-aktiviert via prompt-hook</event>
+      <event ts="2026-05-27T16:03">started run lane run-72e564ea</event>
+      <event ts="2026-05-27T16:04">started</event>
+      <event ts="2026-05-27T16:03">completed</event>
+      <event ts="2026-05-27T16:04">completed</event>
+    </history>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-05-27T16:06" />
+    </files>
+  </task>
+  <task id="5" status="done">
+    <title>Redundante HTML-Datei löschen – nur GitHub-sync-fähige Version behalten</title>
+    <summary>Es gibt zwei Dateien (index.html und Urlaubskasse.html). Eine davon soll gelöscht werden; behalten wird die Version, die für die GitHub-Synchronisation vorgesehen ist.</summary>
+    <created>2026-05-27T16:04</created>
+    <started>2026-05-27T16:04</started>
+    <done>2026-05-27T16:04</done>
+    <human_estimate>15min</human_estimate>
+    <story_points>2</story_points>
+    <agents>Claude</agents>
+    <concept>tasks/MS-5.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <informational />
+    <kind>change</kind>
+    <testing_tool />
+    <lane_id>run-5dfdc8cf</lane_id>
+    <lane_order />
+    <history>
+      <event ts="2026-05-27T16:04">received, backlog</event>
+      <event ts="2026-05-27T16:04">refined (title, summary, human_estimate, story_points, kind)</event>
+      <event ts="2026-05-27T16:04">started</event>
+      <event ts="2026-05-27T16:04">started run lane run-5dfdc8cf</event>
+      <event ts="2026-05-27T16:04">completed</event>
+    </history>
+    <files>
+      <file path="manifest.webmanifest" ts="2026-05-27T16:14" />
+      <file path="sw.js" ts="2026-05-27T16:14" />
+      <file path="urlaubskasse.html" ts="2026-05-27T16:14" />
     </files>
   </task>
 </tasks>

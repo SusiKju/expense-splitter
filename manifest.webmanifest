@@ -2,7 +2,7 @@
   "name": "Urlaubskasse",
   "short_name": "Urlaubskasse",
   "description": "Wer schuldet wem wieviel — Spesen-Splitter für den Urlaub.",
-  "start_url": "./index.html",
+  "start_url": "./urlaubskasse.html",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
