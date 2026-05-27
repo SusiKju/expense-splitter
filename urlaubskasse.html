@@ -811,13 +811,6 @@
     <div id="sync-idle-ui">
       <p class="muted" style="margin:0 0 10px;font-size:13px">Erstelle einen Link mit dem aktuellen Stand – teile ihn in der Gruppe. Andere öffnen den Link und sehen dieselbe Kasse.</p>
       <button class="btn primary" id="sync-create-btn">Link zum Teilen erstellen</button>
-      <div class="field" style="margin-top:10px">
-        <label for="sync-code-input">Link oder Code einfügen</label>
-        <div class="row" style="gap:8px">
-          <input type="text" id="sync-code-input" placeholder="Link oder Code einfügen" autocomplete="off" style="font-family:monospace;font-size:14px">
-          <button class="btn" id="sync-join-btn" style="flex:0;white-space:nowrap">Beitreten</button>
-        </div>
-      </div>
     </div>
     <!-- Sync: Raum aktiv -->
     <div id="sync-active-ui" hidden>
@@ -1880,15 +1873,7 @@
     await syncCreate();
     this.disabled = false;
   });
-  document.getElementById('sync-join-btn').addEventListener('click', async () => {
-    const input = document.getElementById('sync-code-input');
-    await syncJoin(input.value);
-    input.value = '';
-  });
-  document.getElementById('sync-code-input').addEventListener('keydown', async (e) => {
-    if (e.key === 'Enter') { await syncJoin(e.target.value); e.target.value = ''; }
-  });
-  document.getElementById('sync-pull-btn').addEventListener('click', syncPull);
+document.getElementById('sync-pull-btn').addEventListener('click', syncPull);
   document.getElementById('sync-copy-btn').addEventListener('click', copySyncCode);
   document.getElementById('sync-leave-btn').addEventListener('click', syncLeave);
 
