@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks generated="2026-05-27T16:14" prefix="EXPSPL">
+<tasks generated="2026-05-27T23:40" prefix="EXPSPL">
   <task id="2" status="done">
     <title>Multi-User-Zugang mit Echtzeit-Synchronisation für HTML-Oberfläche</title>
     <summary>Mehrere Benutzer sollen die HTML-Oberfläche gleichzeitig nutzen können. Änderungen werden in Echtzeit für alle verbundenen Nutzer synchronisiert (via GitHub).</summary>
@@ -127,6 +127,37 @@
       <file path="manifest.webmanifest" ts="2026-05-27T16:14" />
       <file path="sw.js" ts="2026-05-27T16:14" />
       <file path="urlaubskasse.html" ts="2026-05-27T16:14" />
+    </files>
+  </task>
+  <task id="6" status="done">
+    <title>Bug: Raum kann nicht erstellt werden – urlaubskasse.html</title>
+    <summary>Der Erstellungsprozess für einen neuen Raum schlägt fehl. Ursache im Browser prüfen und beheben.</summary>
+    <created>2026-05-27T16:16</created>
+    <started>2026-05-27T16:17</started>
+    <done>2026-05-27T23:32</done>
+    <human_estimate>1h</human_estimate>
+    <story_points>5</story_points>
+    <agents>Claude</agents>
+    <concept>tasks/EXPSPL-6.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <lane_id>run-10bbbb24</lane_id>
+    <lane_order />
+    <history>
+      <event ts="2026-05-27T16:16">received, backlog</event>
+      <event ts="2026-05-27T16:16">refined (title, summary, human_estimate, story_points, kind)</event>
+      <event ts="2026-05-27T16:17">auto-aktiviert via prompt-hook</event>
+      <event ts="2026-05-27T16:17">started run lane run-10bbbb24</event>
+      <event ts="2026-05-27T23:32">completed</event>
+    </history>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-05-27T23:36" />
     </files>
   </task>
 </tasks>
