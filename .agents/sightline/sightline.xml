@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='utf-8'?>
+<tasks generated="2026-05-27T12:28" prefix="MS">
+  <task id="1" status="backlog">
+    <title>Multi-User-Sync für Urlaubskasse</title>
+    <summary>App-Stand zwischen mehreren Smartphones synchron halten. Drei Optionen evaluiert (Cloud-File, WebRTC, CF-Worker), Richtung noch offen.</summary>
+    <created>2026-05-26T13:00</created>
+    <started />
+    <done />
+    <human_estimate>halber tag</human_estimate>
+    <agents>Claude</agents>
+    <concept>tasks/MS-1.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <history>
+      <event ts="2026-05-26T13:00">eingegangen, backlog</event>
+    </history>
+  </task>
+  <task id="2" status="backlog">
+    <title>Ich möchte, dass mehrere User das HTML aufrufen können und es soll sich auch bei Änderungen synchronisieren.</title>
+    <summary />
+    <created>2026-05-27T12:28</created>
+    <started />
+    <done />
+    <human_estimate>30min</human_estimate>
+    <story_points>3</story_points>
+    <agents>Claude</agents>
+    <concept>tasks/MS-2.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <informational />
+    <kind />
+    <testing_tool />
+    <lane_id />
+    <lane_order />
+    <history>
+      <event ts="2026-05-27T12:28">received, backlog</event>
+    </history>
+  </task>
+</tasks>

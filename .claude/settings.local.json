@@ -1,0 +1,32 @@
+{
+    "permissions": {
+        "allow": [
+            "Bash(git:*)",
+            "Bash(bun add:*)",
+            "Bash(npx vue-tsc:*)",
+            "Bash(do:*)",
+            "Bash(grep:*)",
+            "Bash(xargs ls:*)",
+            "mcp__ide__getDiagnostics",
+            "Bash(ls:*)",
+            "Bash(find:*)",
+            "Bash(cat:*)",
+            "Bash(bun:*)",
+            "Bash(make:*)",
+            "Bash(echo:*)",
+            "Bash(bin/console database:migrate --all --no-debug Dal)",
+            "Bash(vendor/bin/php-cs-fixer fix:*)",
+            "WebFetch(domain:bitbucket.org)",
+            "Bash(find /Users/matthiasredmann/workspace/diw-sources/customers/adamhall/adamhall-groupsite -type f \\\\\\(-name *.conf -o -name *.nginx -o -name docker-compose* -o -name Dockerfile* \\\\\\))",
+            "Bash(find /Users/matthiasredmann/workspace/diw-sources/customers/adamhall/adamhall-groupsite -type f \\\\\\(-name *.md -o -name *.example -o -name *.sample \\\\\\))",
+            "Bash(find /Users/matthiasredmann/workspace/diw-sources/customers/adamhall/adamhall-servers -type f \\\\\\(-name *.conf -o -name *.nginx \\\\\\))",
+            "Read(//Users/matthiasredmann/workspace/diw-sources/**)",
+            "Read(//Users/matthiasredmann/workspace/diw-installer/**)",
+            "Bash(2)",
+            "Bash(head -5 echo --- find /Users/matthiasredmann/workspace/diw-sources/customers/adamhall/adamhall-brands-2026/packages/base -name PreparedLink* 2)",
+            "Bash(/dev/null echo:*)",
+            "Bash(gh pr:*)",
+            "Bash(node -e \"const { algoliasearch } = require\\('./node_modules/algoliasearch/dist/algoliasearch.cjs'\\); console.log\\(typeof algoliasearch\\); const c = algoliasearch\\('app', 'key', {}\\); console.log\\(Object.keys\\(c\\)\\);\")"
+        ]
+    }
+}
