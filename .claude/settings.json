@@ -1,1 +1,25 @@
-{}
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"/Users/matthiasredmann/.claude/skills/sightline/scripts/bootstrap.py\""
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"/Users/matthiasredmann/.claude/skills/sightline/scripts/track_files.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

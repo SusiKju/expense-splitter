@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks generated="2026-05-27T12:28" prefix="MS">
+<tasks generated="2026-05-27T13:51" prefix="MS">
   <task id="1" status="backlog">
     <title>Multi-User-Sync für Urlaubskasse</title>
     <summary>App-Stand zwischen mehreren Smartphones synchron halten. Drei Optionen evaluiert (Cloud-File, WebRTC, CF-Worker), Richtung noch offen.</summary>
@@ -17,14 +17,14 @@
       <event ts="2026-05-26T13:00">eingegangen, backlog</event>
     </history>
   </task>
-  <task id="2" status="backlog">
-    <title>Ich möchte, dass mehrere User das HTML aufrufen können und es soll sich auch bei Änderungen synchronisieren.</title>
-    <summary />
+  <task id="2" status="done">
+    <title>Multi-User-Zugang mit Echtzeit-Synchronisation für HTML-Oberfläche</title>
+    <summary>Mehrere Benutzer sollen die HTML-Oberfläche gleichzeitig nutzen können. Änderungen werden in Echtzeit für alle verbundenen Nutzer synchronisiert (via GitHub).</summary>
     <created>2026-05-27T12:28</created>
-    <started />
-    <done />
-    <human_estimate>30min</human_estimate>
-    <story_points>3</story_points>
+    <started>2026-05-27T13:33</started>
+    <done>2026-05-27T13:33</done>
+    <human_estimate>mehrere tage</human_estimate>
+    <story_points>13</story_points>
     <agents>Claude</agents>
     <concept>tasks/MS-2.md</concept>
     <parent />
@@ -33,12 +33,19 @@
     <external_url />
     <backlog_rank />
     <informational />
-    <kind />
+    <kind>feature</kind>
     <testing_tool />
-    <lane_id />
+    <lane_id>run-7f74f1c2</lane_id>
     <lane_order />
     <history>
       <event ts="2026-05-27T12:28">received, backlog</event>
+      <event ts="2026-05-27T12:56">reformulated</event>
+      <event ts="2026-05-27T12:56">reformulated</event>
+      <event ts="2026-05-27T12:57">reformulated</event>
+      <event ts="2026-05-27T13:33">started</event>
+      <event ts="2026-05-27T13:33">started run lane run-7f74f1c2</event>
+      <event ts="2026-05-27T13:33">Muss klären: was genau bedeutet 'via GitHub' als Sync-Backend?</event>
+      <event ts="2026-05-27T13:33">completed</event>
     </history>
   </task>
 </tasks>

@@ -645,6 +645,29 @@
 
   /* Hidden file input */
   input[type="file"] { display: none; }
+
+  /* GitHub Sync */
+  .sync-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: background 0.3s;
+  }
+  .sync-dot.ok   { background: var(--green-500); }
+  .sync-dot.busy { background: var(--amber-500); animation: sync-pulse 1s ease-in-out infinite; }
+  .sync-dot.err  { background: var(--red-500); }
+  @keyframes sync-pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  .sync-section { margin-bottom: 18px; }
+  .sync-section label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 8px; font-weight: 500; }
+  .sync-section input { margin-bottom: 8px; }
+  .sync-section input:last-of-type { margin-bottom: 0; }
+  .sync-row { display: flex; gap: 8px; }
+  .sync-row input { flex: 1; }
+  .sync-info { font-size: 12px; color: var(--text-soft); margin-top: 8px; line-height: 1.4; }
+  .sync-info.ok  { color: var(--green-500); }
+  .sync-info.err { color: var(--red-500); }
 </style>
 </head>
 <body>
@@ -656,6 +679,7 @@
       <span id="brand-title">Kasse</span>
     </div>
     <div class="topbar-actions">
+      <span class="sync-dot" id="sync-dot" hidden title="GitHub Sync"></span>
       <button class="icon-btn" id="theme-btn" aria-label="Theme wechseln" title="Theme">☀</button>
       <button class="icon-btn" id="menu-btn" aria-label="Menü" title="Mehr">⋯</button>
     </div>
@@ -786,6 +810,22 @@
       <div class="person-pick" id="round-pick"></div>
       <div class="muted" id="round-hint" style="margin-top:6px;font-size:12px"></div>
     </div>
+
+    <div class="sync-section">
+      <label>GitHub Sync</label>
+      <input type="text" id="sync-repo" placeholder="user/repo-name" autocomplete="off" spellcheck="false">
+      <div class="sync-row">
+        <input type="text" id="sync-branch" placeholder="Branch (main)" autocomplete="off" spellcheck="false">
+        <input type="text" id="sync-path" placeholder="Dateiname (trip-data.json)" autocomplete="off" spellcheck="false">
+      </div>
+      <input type="password" id="sync-token" placeholder="GitHub Token (für Schreibzugriff)" autocomplete="off">
+      <div class="h-stack" style="margin-top:10px">
+        <button class="btn primary" id="sync-toggle-btn">Sync aktivieren</button>
+        <button class="btn ghost" id="sync-copy-link-btn">Link kopieren</button>
+      </div>
+      <div class="sync-info" id="sync-info"></div>
+    </div>
+
     <div class="stack">
       <button class="btn" id="export-btn">Daten als JSON exportieren</button>
       <button class="btn" id="import-btn">Daten aus JSON importieren</button>
@@ -1624,12 +1664,6 @@
   document.getElementById('person-delete').addEventListener('click', deletePerson);
   document.getElementById('copy-plan-btn').addEventListener('click', copyPlan);
   document.getElementById('reset-checks-btn').addEventListener('click', resetChecks);
-  document.getElementById('menu-btn').addEventListener('click', () => {
-    renderRoundingPicker();
-    const tn = document.getElementById('trip-name-input');
-    if (tn) tn.value = state.settings.tripName || '';
-    openModal('modal-menu');
-  });
   document.getElementById('trip-name-input').addEventListener('input', (e) => {
     state.settings.tripName = e.target.value;
     applyTripName();
@@ -1665,6 +1699,292 @@
       navigator.serviceWorker.register('sw.js').catch(() => {});
     });
   }
+
+  // ===== GitHub Sync =====
+  const SYNC_KEY = 'urlaubskasse:github-sync';
+  const GH_API   = 'https://api.github.com';
+  const POLL_MS  = 8000;
+  const WRITE_DEBOUNCE_MS = 2000;
+
+  let syncCfg        = null;  // { repo, branch, path, token, active }
+  let syncSHA        = null;  // SHA of the remote file as last seen
+  let syncPollTimer  = null;
+  let syncWriteTimer = null;
+  let syncPolling    = false;
+  let syncPending    = false; // write queued but not yet sent
+
+  function loadSyncCfg() {
+    try {
+      const raw = localStorage.getItem(SYNC_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch { return null; }
+  }
+
+  function saveSyncCfg(cfg) {
+    try { localStorage.setItem(SYNC_KEY, JSON.stringify(cfg)); } catch {}
+  }
+
+  function b64Encode(str) {
+    const bytes = new TextEncoder().encode(str);
+    let bin = '';
+    for (const b of bytes) bin += String.fromCharCode(b);
+    return btoa(bin);
+  }
+
+  function b64Decode(str) {
+    const bin = atob(str.replace(/\s/g, ''));
+    const bytes = Uint8Array.from(bin, c => c.charCodeAt(0));
+    return new TextDecoder().decode(bytes);
+  }
+
+  function ghHeaders(token) {
+    const h = { Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28' };
+    if (token) h['Authorization'] = 'token ' + token;
+    return h;
+  }
+
+  async function ghGet(cfg) {
+    const branch = cfg.branch || 'main';
+    const path   = cfg.path   || 'trip-data.json';
+    const url    = `${GH_API}/repos/${cfg.repo}/contents/${path}?ref=${encodeURIComponent(branch)}`;
+    try {
+      const res = await fetch(url, { headers: ghHeaders(cfg.token) });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return { content: JSON.parse(b64Decode(data.content)), sha: data.sha };
+    } catch { return null; }
+  }
+
+  async function ghPut(cfg, json, sha) {
+    const branch = cfg.branch || 'main';
+    const path   = cfg.path   || 'trip-data.json';
+    const url    = `${GH_API}/repos/${cfg.repo}/contents/${path}`;
+    const body   = { message: 'urlaubskasse sync', content: b64Encode(json), branch };
+    if (sha) body.sha = sha;
+    return fetch(url, {
+      method: 'PUT',
+      headers: { ...ghHeaders(cfg.token), 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+  }
+
+  function setSyncDot(status) {
+    // status: null | 'ok' | 'busy' | 'err'
+    const dot = document.getElementById('sync-dot');
+    if (!dot) return;
+    if (!status) { dot.hidden = true; dot.className = 'sync-dot'; return; }
+    dot.hidden = false;
+    dot.className = 'sync-dot ' + status;
+    dot.title = status === 'ok' ? 'Sync aktiv' : status === 'busy' ? 'Synchronisiert…' : 'Sync-Fehler';
+  }
+
+  function setSyncInfo(msg, cls) {
+    const el = document.getElementById('sync-info');
+    if (!el) return;
+    el.textContent = msg;
+    el.className = 'sync-info' + (cls ? ' ' + cls : '');
+  }
+
+  function validateRemoteState(data) {
+    if (!data || !Array.isArray(data.people) || !Array.isArray(data.expenses)) return null;
+    if (!data.settled)  data.settled  = {};
+    if (!data.settings) data.settings = { roundStep: 1, tripName: DEFAULT_TRIP_NAME };
+    if (!ROUND_STEPS.some(r => r.step === data.settings.roundStep)) data.settings.roundStep = 1;
+    if (typeof data.settings.tripName !== 'string') data.settings.tripName = DEFAULT_TRIP_NAME;
+    for (const p of data.people) {
+      if (p.avatar === undefined) p.avatar = AVATARS[p.name] || null;
+    }
+    return data;
+  }
+
+  async function syncPoll() {
+    if (syncPolling || !syncCfg?.active) return;
+    syncPolling = true;
+    try {
+      const remote = await ghGet(syncCfg);
+      if (!remote) { setSyncDot('err'); setSyncInfo('Verbindung fehlgeschlagen', 'err'); return; }
+      if (remote.sha !== syncSHA) {
+        const prev = syncSHA;
+        syncSHA = remote.sha;
+        if (!syncPending) {
+          const validated = validateRemoteState(remote.content);
+          if (validated) {
+            state = validated;
+            _saveStateOrig(); // write to localStorage only, don't trigger GitHub write
+            render();
+            applyTripName();
+            if (prev !== null) toast('Sync: neue Daten geladen');
+          }
+        }
+      }
+      if (!syncPending) { setSyncDot('ok'); setSyncInfo('Verbunden · ' + syncCfg.repo, 'ok'); }
+    } catch {
+      setSyncDot('err');
+    } finally {
+      syncPolling = false;
+    }
+  }
+
+  async function doSyncWrite() {
+    if (!syncCfg?.active || !syncCfg?.token) return;
+    try {
+      const json = JSON.stringify(state, null, 2);
+      const res  = await ghPut(syncCfg, json, syncSHA);
+      if (res.ok) {
+        const data = await res.json();
+        syncSHA = data.content?.sha;
+        syncPending = false;
+        setSyncDot('ok');
+        setSyncInfo('Verbunden · ' + syncCfg.repo, 'ok');
+      } else if (res.status === 409) {
+        const fresh = await ghGet(syncCfg);
+        if (fresh) { syncSHA = fresh.sha; doSyncWrite(); }
+        else { setSyncDot('err'); }
+      } else if (res.status === 404) {
+        syncSHA = null;
+        doSyncWrite();
+      } else {
+        setSyncDot('err');
+        setSyncInfo('Schreibfehler (Status ' + res.status + ')', 'err');
+      }
+    } catch {
+      setSyncDot('err');
+    }
+  }
+
+  function queueSyncWrite() {
+    if (!syncCfg?.active || !syncCfg?.token) return;
+    syncPending = true;
+    setSyncDot('busy');
+    clearTimeout(syncWriteTimer);
+    syncWriteTimer = setTimeout(doSyncWrite, WRITE_DEBOUNCE_MS);
+  }
+
+  function startSync(cfg) {
+    syncCfg = cfg;
+    clearInterval(syncPollTimer);
+    syncPollTimer = setInterval(syncPoll, POLL_MS);
+    setSyncDot('busy');
+    setSyncInfo('Verbinde…');
+    syncPoll();
+  }
+
+  function stopSync() {
+    if (syncCfg) syncCfg.active = false;
+    clearInterval(syncPollTimer);
+    clearTimeout(syncWriteTimer);
+    syncPollTimer = null;
+    syncWriteTimer = null;
+    syncSHA = null;
+    syncPending = false;
+    setSyncDot(null);
+    setSyncInfo('');
+  }
+
+  function syncUrlParams() {
+    try {
+      const p = new URLSearchParams(location.search);
+      const repo   = p.get('repo');
+      const branch = p.get('branch');
+      const path   = p.get('path');
+      return repo ? { repo, branch: branch || 'main', path: path || 'trip-data.json' } : null;
+    } catch { return null; }
+  }
+
+  function renderSyncModal() {
+    if (!syncCfg) return;
+    const repoEl   = document.getElementById('sync-repo');
+    const branchEl = document.getElementById('sync-branch');
+    const pathEl   = document.getElementById('sync-path');
+    const tokenEl  = document.getElementById('sync-token');
+    const toggleBtn = document.getElementById('sync-toggle-btn');
+    if (repoEl)   repoEl.value   = syncCfg.repo   || '';
+    if (branchEl) branchEl.value = syncCfg.branch  || '';
+    if (pathEl)   pathEl.value   = syncCfg.path    || '';
+    if (tokenEl)  tokenEl.value  = syncCfg.token   || '';
+    if (toggleBtn) toggleBtn.textContent = syncCfg.active ? 'Sync deaktivieren' : 'Sync aktivieren';
+  }
+
+  // Patch saveState so it also queues a sync write
+  const _saveStateOrig = saveState;
+  saveState = function() {
+    _saveStateOrig();
+    queueSyncWrite();
+  };
+
+  // Init from URL params or localStorage
+  const urlSync = syncUrlParams();
+  const storedSync = loadSyncCfg();
+
+  if (storedSync?.active) {
+    syncCfg = storedSync;
+    // URL params override stored repo/branch/path (but not token)
+    if (urlSync) {
+      syncCfg.repo   = urlSync.repo;
+      syncCfg.branch = urlSync.branch;
+      syncCfg.path   = urlSync.path;
+    }
+    startSync(syncCfg);
+  } else if (urlSync) {
+    syncCfg = { ...urlSync, token: storedSync?.token || '' };
+  }
+
+  // Wire up sync UI
+  document.getElementById('menu-btn').addEventListener('click', () => {
+    renderRoundingPicker();
+    const tn = document.getElementById('trip-name-input');
+    if (tn) tn.value = state.settings.tripName || '';
+    if (!syncCfg) syncCfg = { repo: '', branch: 'main', path: 'trip-data.json', token: '' };
+    renderSyncModal();
+    if (syncCfg.active) {
+      setSyncInfo('Verbunden · ' + syncCfg.repo, 'ok');
+    } else {
+      setSyncInfo('');
+    }
+    openModal('modal-menu');
+  }, { once: false });
+
+  document.getElementById('sync-toggle-btn').addEventListener('click', () => {
+    const repo   = document.getElementById('sync-repo').value.trim();
+    const branch = document.getElementById('sync-branch').value.trim() || 'main';
+    const path   = document.getElementById('sync-path').value.trim() || 'trip-data.json';
+    const token  = document.getElementById('sync-token').value.trim();
+
+    if (syncCfg?.active) {
+      stopSync();
+      syncCfg = { repo, branch, path, token, active: false };
+      saveSyncCfg(syncCfg);
+      document.getElementById('sync-toggle-btn').textContent = 'Sync aktivieren';
+      toast('Sync deaktiviert');
+    } else {
+      if (!repo) { toast('Bitte Repository angeben (user/repo-name)'); return; }
+      syncCfg = { repo, branch, path, token, active: true };
+      saveSyncCfg(syncCfg);
+      startSync(syncCfg);
+      document.getElementById('sync-toggle-btn').textContent = 'Sync deaktivieren';
+      toast('Sync wird gestartet…');
+    }
+  });
+
+  document.getElementById('sync-copy-link-btn').addEventListener('click', () => {
+    const repo   = document.getElementById('sync-repo').value.trim() || syncCfg?.repo || '';
+    const branch = document.getElementById('sync-branch').value.trim() || syncCfg?.branch || 'main';
+    const path   = document.getElementById('sync-path').value.trim() || syncCfg?.path || 'trip-data.json';
+    if (!repo) { toast('Kein Repository angegeben'); return; }
+    const url = `${location.origin}${location.pathname}?repo=${encodeURIComponent(repo)}&branch=${encodeURIComponent(branch)}&path=${encodeURIComponent(path)}`;
+    const fallback = () => {
+      const ta = document.createElement('textarea');
+      ta.value = url;
+      ta.style.cssText = 'position:fixed;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); toast('Link kopiert'); } catch { toast('Kopieren fehlgeschlagen'); }
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(url).then(() => toast('Link kopiert'), fallback);
+    } else { fallback(); }
+  });
 
   // Initial render
   applyTripName();
