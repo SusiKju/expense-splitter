@@ -871,13 +871,13 @@
   // ===== Firebase-Konfiguration =====
   // Setup: console.firebase.google.com → Neues Projekt → Realtime Database → Web-App hinzufügen → Config kopieren
   const FIREBASE_CONFIG = {
-    apiKey:            "",
-    authDomain:        "",
-    databaseURL:       "",   // z.B. https://mein-projekt-default-rtdb.europe-west1.firebasedatabase.app
-    projectId:         "",
-    storageBucket:     "",
-    messagingSenderId: "",
-    appId:             "",
+    apiKey:            "AIzaSyBy7zylaPTGdlqXGpwsbCthB2sFJKsVtc8",
+    authDomain:        "expense-splitter-b2943.firebaseapp.com",
+    databaseURL:       "https://expense-splitter-b2943-default-rtdb.firebaseio.com/",
+    projectId:         "expense-splitter-b2943",
+    storageBucket:     "expense-splitter-b2943.firebasestorage.app",
+    messagingSenderId: "374405793355",
+    appId:             "1:374405793355:web:3908491c67d2dec473efce",
   };
 
   const SESSION_ID = crypto.randomUUID();
@@ -1821,7 +1821,7 @@
   });
 
   // Theme init
-  applyTheme(localStorage.getItem(THEME_KEY) || 'system');
+  applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
 
   // Service Worker nur registrieren, wenn http(s) verfügbar (nicht bei file://)
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
