@@ -1,0 +1,9 @@
+{
+  "name": "urlaubskasse",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Single-HTML-File Expense Splitter (Urlaubskasse)",
+  "scripts": {
+    "test": "node --test"
+  }
+}

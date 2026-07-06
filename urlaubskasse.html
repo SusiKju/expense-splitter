@@ -806,11 +806,15 @@
       <input type="file" id="import-file" accept="application/json,.json">
       <button class="btn danger" id="reset-btn">Trip komplett zurücksetzen</button>
     </div>
-    <div class="section-title" style="margin-top:20px">Teilen &amp; Sync</div>
+    <div class="section-title" style="margin-top:20px">Echtzeit-Sync</div>
     <!-- Sync: kein Raum aktiv -->
     <div id="sync-idle-ui">
-      <p class="muted" style="margin:0 0 10px;font-size:13px">Erstelle einen Link mit dem aktuellen Stand – teile ihn in der Gruppe. Andere öffnen den Link und sehen dieselbe Kasse.</p>
-      <button class="btn primary" id="sync-create-btn">Link zum Teilen erstellen</button>
+      <p class="muted" style="margin:0 0 12px;font-size:13px">Erstelle einen Raum und teile den 6-stelligen Code mit der Gruppe – alle sehen Änderungen sofort.</p>
+      <button class="btn primary" id="sync-create-btn">Raum erstellen</button>
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <input id="sync-join-input" placeholder="Code eingeben (z.B. AB3X9Z)" style="flex:1;padding:10px 12px;border:1.5px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:14px;font-family:monospace;outline:none;text-transform:uppercase;letter-spacing:.12em" maxlength="6">
+        <button class="btn" id="sync-join-btn">Beitreten</button>
+      </div>
     </div>
     <!-- Sync: Raum aktiv -->
     <div id="sync-active-ui" hidden>
@@ -819,16 +823,13 @@
         <span id="sync-status-text" class="muted" style="font-size:13px">Verbunden</span>
       </div>
       <div style="background:var(--bg-muted);border-radius:var(--radius-md);padding:12px;margin-bottom:10px">
-        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-soft);font-weight:600;margin-bottom:6px">Geteilter Link</div>
+        <div style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-soft);font-weight:600;margin-bottom:6px">Raum-Code</div>
         <div style="display:flex;align-items:center;gap:8px">
-          <span id="sync-code-display" class="sync-code"></span>
+          <span id="sync-code-display" class="sync-code" style="font-size:22px;letter-spacing:.2em"></span>
           <button class="icon-btn" id="sync-copy-btn" title="Code kopieren">⎘</button>
         </div>
       </div>
-      <div class="h-stack">
-        <button class="btn" id="sync-pull-btn">↑ Link aktualisieren &amp; kopieren</button>
-        <button class="btn danger" id="sync-leave-btn">Teilen beenden</button>
-      </div>
+      <button class="btn danger" id="sync-leave-btn">Raum verlassen</button>
     </div>
 
     <div class="muted" style="margin-top:16px;font-size:12px">
@@ -855,6 +856,9 @@
 
 <div class="toast" id="toast"></div>
 
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="settlement.js"></script>
 <script>
 (() => {
   'use strict';
@@ -862,6 +866,21 @@
   // ===== State =====
   const STORAGE_KEY = 'urlaubskasse:v1';
   const THEME_KEY   = 'urlaubskasse:theme';
+  const ROOM_KEY    = 'urlaubskasse:room';
+
+  // ===== Firebase-Konfiguration =====
+  // Setup: console.firebase.google.com → Neues Projekt → Realtime Database → Web-App hinzufügen → Config kopieren
+  const FIREBASE_CONFIG = {
+    apiKey:            "",
+    authDomain:        "",
+    databaseURL:       "",   // z.B. https://mein-projekt-default-rtdb.europe-west1.firebasedatabase.app
+    projectId:         "",
+    storageBucket:     "",
+    messagingSenderId: "",
+    appId:             "",
+  };
+
+  const SESSION_ID = crypto.randomUUID();
   // SVG-Karikaturen pro Teilnehmer (viewBox 120x120, ohne <defs>, flat colors)
   const AVATARS = {
     Ulbert: '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><circle cx="60" cy="60" r="58" fill="#3a5a40"/><path d="M0,90 Q15,75 30,90 Q45,72 60,90 Q75,72 90,90 Q105,75 120,90 L120,120 L0,120 Z" fill="#2d4a32" opacity="0.6"/><ellipse cx="60" cy="118" rx="42" ry="14" fill="#2a2a2a"/><ellipse cx="60" cy="64" rx="26" ry="32" fill="#e6b58a"/><ellipse cx="60" cy="76" rx="22" ry="22" fill="#dca57a" opacity="0.4"/><g fill="#9e9e9e"><circle cx="34" cy="38" r="10"/><circle cx="42" cy="28" r="11"/><circle cx="54" cy="22" r="12"/><circle cx="66" cy="22" r="12"/><circle cx="78" cy="28" r="11"/><circle cx="86" cy="38" r="10"/><circle cx="30" cy="50" r="9"/><circle cx="90" cy="50" r="9"/><circle cx="26" cy="62" r="8"/><circle cx="94" cy="62" r="8"/><circle cx="28" cy="74" r="7"/><circle cx="92" cy="74" r="7"/><circle cx="48" cy="20" r="8"/><circle cx="72" cy="20" r="8"/></g><g fill="#b8b8b8"><circle cx="38" cy="35" r="3"/><circle cx="56" cy="20" r="3"/><circle cx="72" cy="20" r="3"/></g><path d="M40,55 Q47,52 54,55" stroke="#7a7a7a" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M66,55 Q73,52 80,55" stroke="#7a7a7a" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="36" y="57" width="20" height="12" rx="2" fill="none" stroke="#1a1a1a" stroke-width="2.8"/><rect x="64" y="57" width="20" height="12" rx="2" fill="none" stroke="#1a1a1a" stroke-width="2.8"/><line x1="56" y1="62" x2="64" y2="62" stroke="#1a1a1a" stroke-width="2.5"/><line x1="35" y1="60" x2="28" y2="58" stroke="#1a1a1a" stroke-width="2"/><line x1="85" y1="60" x2="92" y2="58" stroke="#1a1a1a" stroke-width="2"/><circle cx="46" cy="63" r="2" fill="#2a1f12"/><circle cx="74" cy="63" r="2" fill="#2a1f12"/><path d="M60,68 Q58,78 60,82 Q62,82 62,80" stroke="#c89878" stroke-width="1.5" fill="none"/><path d="M32,80 Q34,68 40,72 Q50,68 60,70 Q70,68 80,72 Q86,68 88,80 Q90,98 80,104 Q60,110 40,104 Q30,98 32,80 Z" fill="#8a8a8a"/><path d="M36,78 Q38,72 44,74 M76,74 Q82,72 84,78" stroke="#6a6a6a" stroke-width="1.5" fill="none"/><path d="M52,86 Q60,84 68,86" stroke="#5a3a30" stroke-width="2" fill="none" stroke-linecap="round"/></svg>',
@@ -936,7 +955,7 @@
     } catch (e) {
       toast('Speichern fehlgeschlagen');
     }
-    // Kein Auto-Push mehr – Link wird manuell über das Menü geteilt
+    if (_roomRef && !syncPullInProgress) roomPush();
   }
 
   let state = loadState();
@@ -985,90 +1004,18 @@
   }
 
   // ===== Settlement calculation =====
-  // Liefert pro Person: { paid, exactShare } und den exakten Saldo (Float in Cent).
-  // Saldobasierte Methode: erst alle Eigenanteile exakt summieren,
-  // dann mit Largest Remainder auf Cent runden — vermeidet pro-Ausgabe-Rundungs-Drift.
+  // Reine Rechenlogik liegt in settlement.js (per <script> vor diesem Block
+  // eingebunden), damit sie ohne Browser/DOM mit Node getestet werden kann.
   function computeRaw() {
-    const paid = {};
-    const exactShare = {};
-    for (const p of state.people) { paid[p.id] = 0; exactShare[p.id] = 0; }
-    for (const exp of state.expenses) {
-      if (!paid.hasOwnProperty(exp.payerId)) continue;
-      const amt = Math.round(Number(exp.amount) * 100);
-      const parts = (exp.participantIds || []).filter(id => paid.hasOwnProperty(id));
-      const n = parts.length;
-      if (n === 0 || amt <= 0) continue;
-      paid[exp.payerId] += amt;
-      const share = amt / n;
-      for (const pid of parts) exactShare[pid] += share;
-    }
-    return { paid, exactShare };
+    return Settlement.computeRaw(state.people, state.expenses);
   }
 
-  // Largest-Remainder-Rundung: rundet Salden in Einheiten von stepCent (Default 1),
-  // sodass die Summe weiterhin 0 ist. Bei stepCent > 1 werden die Salden
-  // grobgerastert (z.B. auf 5 Cent / 50 Cent / Euro).
-  function roundBalances(exactCent, stepCent) {
-    const step = Math.max(1, stepCent | 0);
-    const ids = Object.keys(exactCent);
-    if (ids.length === 0) return {};
-    // Sortierung: nach Person-Reihenfolge in state.people (deterministisch)
-    ids.sort((a, b) => state.people.findIndex(p => p.id === a) - state.people.findIndex(p => p.id === b));
-
-    const flUnits = {};
-    const remainders = [];
-    for (const pid of ids) {
-      const e = exactCent[pid];
-      const exactUnits = e / step;
-      const fl = Math.floor(exactUnits);
-      flUnits[pid] = fl;
-      remainders.push({ pid, rem: exactUnits - fl });
-    }
-    let floorSum = 0;
-    for (const v of Object.values(flUnits)) floorSum += v;
-    // Wir müssen so viele Einheiten von 1 verteilen, dass Summe wieder 0 ergibt
-    let toDistribute = -floorSum;
-    // Sortiere stabil: nach rem desc, bei Gleichstand nach ursprünglicher Reihenfolge
-    remainders.sort((a, b) => b.rem - a.rem);
-    for (let i = 0; i < toDistribute && i < remainders.length; i++) {
-      flUnits[remainders[i].pid] += 1;
-    }
-    const out = {};
-    for (const pid of ids) out[pid] = flUnits[pid] * step;
-    return out;
-  }
-
-  // Liefert die Saldo-Map { personId: cent } in der aktuellen Rundungsstufe.
   function computeBalances() {
-    const { paid, exactShare } = computeRaw();
-    const exact = {};
-    for (const pid of Object.keys(paid)) exact[pid] = paid[pid] - exactShare[pid];
-    return roundBalances(exact, state.settings.roundStep);
+    return Settlement.computeBalances(state.people, state.expenses, state.settings.roundStep);
   }
 
   function computeSettlement() {
-    const bal = computeBalances();
-    const creditors = [];
-    const debtors = [];
-    for (const [pid, c] of Object.entries(bal)) {
-      if (c > 0) creditors.push({ pid, c });
-      else if (c < 0) debtors.push({ pid, c: -c });
-    }
-    creditors.sort((a, b) => b.c - a.c);
-    debtors.sort((a, b) => b.c - a.c);
-    const transfers = [];
-    let i = 0, j = 0;
-    while (i < debtors.length && j < creditors.length) {
-      const amt = Math.min(debtors[i].c, creditors[j].c);
-      if (amt > 0) {
-        transfers.push({ from: debtors[i].pid, to: creditors[j].pid, cent: amt });
-      }
-      debtors[i].c -= amt;
-      creditors[j].c -= amt;
-      if (debtors[i].c === 0) i++;
-      if (creditors[j].c === 0) j++;
-    }
-    return transfers;
+    return Settlement.computeSettlement(computeBalances());
   }
 
   // ===== Rendering =====
@@ -1617,23 +1564,27 @@
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
-  // ===== Teilen per Link (kein Backend) =====
-  // JSONBlob entfernt: Actual POST/GET/PUT responses fehlt Access-Control-Allow-Origin → TypeError: Failed to fetch
-  const SYNC_ACTIVE_KEY = 'urlaubskasse:shareMode';
+  // ===== Echtzeit-Sync via Firebase Realtime Database =====
 
-  let syncPushInProgress = false;
   let syncPullInProgress = false;
+  let _db = null;
+  let _roomRef = null;
+  let _roomCode = localStorage.getItem(ROOM_KEY) || null;
+  let _unsubscribe = null;
 
-  function getSyncId() {
-    // Alten JSONBlob-Key migrieren
-    const old = localStorage.getItem('urlaubskasse:syncId');
-    if (old && old !== '1') localStorage.removeItem('urlaubskasse:syncId');
-    return localStorage.getItem(SYNC_ACTIVE_KEY) === '1' ? '1' : null;
+  function getDb() {
+    if (!_db) {
+      if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+      _db = firebase.database();
+    }
+    return _db;
   }
 
-  function setSyncId(val) {
-    if (val) localStorage.setItem(SYNC_ACTIVE_KEY, '1');
-    else localStorage.removeItem(SYNC_ACTIVE_KEY);
+  function generateRoomCode() {
+    const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let code = '';
+    for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+    return code;
   }
 
   function stateForSync() {
@@ -1649,152 +1600,126 @@
     }
   }
 
-  async function stateToCode() {
-    const bytes = new TextEncoder().encode(JSON.stringify(stateForSync()));
-    const cs = new CompressionStream('gzip');
-    const writer = cs.writable.getWriter();
-    writer.write(bytes);
-    writer.close();
-    const buf = await new Response(cs.readable).arrayBuffer();
-    const u8 = new Uint8Array(buf);
-    let bin = '';
-    for (let i = 0; i < u8.length; i += 8192) bin += String.fromCharCode(...u8.subarray(i, i + 8192));
-    return 'v1:' + btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+  function loadFromFirebase(loaded) {
+    if (!Array.isArray(loaded?.people) || !Array.isArray(loaded?.expenses)) return;
+    restoreAvatarsFromSync(loaded);
+    if (!loaded.settled) loaded.settled = {};
+    if (!loaded.settings) loaded.settings = { roundStep: 1, tripName: DEFAULT_TRIP_NAME };
+    if (typeof loaded.settings.tripName !== 'string') loaded.settings.tripName = DEFAULT_TRIP_NAME;
+    loaded.people.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
+    state = loaded;
+    syncPullInProgress = true;
+    saveState();
+    syncPullInProgress = false;
+    render();
+    applyTripName();
   }
 
-  async function codeToState(code) {
-    if (!code.startsWith('v1:')) throw new Error('Unbekanntes Format');
-    const b64url = code.slice(3);
-    const b64 = b64url.replace(/-/g, '+').replace(/_/g, '/');
-    const bin = atob(b64);
-    const u8 = Uint8Array.from(bin, c => c.charCodeAt(0));
-    const ds = new DecompressionStream('gzip');
-    const writer = ds.writable.getWriter();
-    writer.write(u8);
-    writer.close();
-    const buf = await new Response(ds.readable).arrayBuffer();
-    return JSON.parse(new TextDecoder().decode(buf));
+  function subscribeRoom() {
+    if (_unsubscribe) _unsubscribe();
+    const handler = _roomRef.on('value', (snap) => {
+      const data = snap.val();
+      if (!data || data.pushedBy === SESSION_ID) return;
+      setSyncDot('ok');
+      loadFromFirebase(data.state);
+    });
+    _unsubscribe = () => _roomRef.off('value', handler);
   }
 
-  function extractCode(raw) {
-    const hashIdx = raw.indexOf('#');
-    const fragment = hashIdx !== -1 ? raw.slice(hashIdx + 1) : raw;
-    return fragment.startsWith('v1:') ? fragment : null;
+  async function roomPush() {
+    if (!_roomRef) return;
+    try {
+      await _roomRef.set({ state: stateForSync(), updatedAt: Date.now(), pushedBy: SESSION_ID });
+    } catch(e) {
+      console.error('[Kasse] Push fehlgeschlagen:', e);
+      setSyncDot('error');
+    }
   }
 
-  function getShareUrl(code) {
-    return location.href.split('#')[0] + '#' + code;
+  async function roomCreate() {
+    if (!FIREBASE_CONFIG.apiKey) { toast('Firebase nicht konfiguriert – bitte Config eintragen'); return; }
+    setSyncDot('syncing');
+    try {
+      const code = generateRoomCode();
+      const ref = getDb().ref(`rooms/${code}`);
+      await ref.set({ state: stateForSync(), updatedAt: Date.now(), pushedBy: SESSION_ID });
+      _roomRef = ref;
+      _roomCode = code;
+      localStorage.setItem(ROOM_KEY, code);
+      subscribeRoom();
+      updateSyncUI();
+      setSyncDot('ok');
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(code).catch(() => {});
+        toast(`Raum ${code} erstellt – Code kopiert!`);
+      } else {
+        toast(`Raum erstellt: ${code}`);
+      }
+    } catch(e) {
+      console.error('[Kasse] Raum erstellen fehlgeschlagen:', e);
+      setSyncDot('error');
+      toast('Raum konnte nicht erstellt werden');
+    }
+  }
+
+  async function roomJoin(inputVal) {
+    const code = (inputVal || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '');
+    if (code.length !== 6) { toast('Ungültiger Code – 6 Zeichen erwartet'); return; }
+    if (!FIREBASE_CONFIG.apiKey) { toast('Firebase nicht konfiguriert – bitte Config eintragen'); return; }
+    setSyncDot('syncing');
+    try {
+      const ref = getDb().ref(`rooms/${code}`);
+      const snap = await ref.get();
+      if (!snap.exists()) { setSyncDot('error'); toast('Raum nicht gefunden'); return; }
+      _roomRef = ref;
+      _roomCode = code;
+      localStorage.setItem(ROOM_KEY, code);
+      subscribeRoom();
+      loadFromFirebase(snap.val().state);
+      updateSyncUI();
+      setSyncDot('ok');
+      toast(`Raum ${code} beigetreten`);
+    } catch(e) {
+      console.error('[Kasse] Raum beitreten fehlgeschlagen:', e);
+      setSyncDot('error');
+      toast('Beitreten fehlgeschlagen');
+    }
+  }
+
+  function roomLeave() {
+    if (_unsubscribe) { _unsubscribe(); _unsubscribe = null; }
+    _roomRef = null;
+    _roomCode = null;
+    localStorage.removeItem(ROOM_KEY);
+    updateSyncUI();
+    toast('Raum verlassen');
   }
 
   function setSyncDot(mode) {
     const dot = document.getElementById('sync-dot');
     const txt = document.getElementById('sync-status-text');
     if (!dot || !txt) return;
-    if (mode === 'ok')      { dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green-500);flex-shrink:0'; txt.textContent = 'Link aktiv'; }
-    if (mode === 'syncing') { dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--amber-500);flex-shrink:0;animation:syncpulse 1s ease-in-out infinite'; txt.textContent = 'Link wird erstellt…'; }
+    if (mode === 'ok')      { dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green-500);flex-shrink:0'; txt.textContent = 'Verbunden'; }
+    if (mode === 'syncing') { dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--amber-500);flex-shrink:0;animation:syncpulse 1s ease-in-out infinite'; txt.textContent = 'Verbinde…'; }
     if (mode === 'error')   { dot.style.cssText = 'display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red-500);flex-shrink:0'; txt.textContent = 'Fehler'; }
   }
 
   function updateSyncUI() {
-    const id = getSyncId();
     const idleUI   = document.getElementById('sync-idle-ui');
     const activeUI = document.getElementById('sync-active-ui');
     const display  = document.getElementById('sync-code-display');
     if (!idleUI || !activeUI) return;
-    idleUI.hidden   = !!id;
-    activeUI.hidden = !id;
-    if (id && display) display.textContent = 'Link bereit – ⎘ zum Kopieren';
+    idleUI.hidden   = !!_roomCode;
+    activeUI.hidden = !_roomCode;
+    if (_roomCode && display) display.textContent = _roomCode;
   }
 
-  async function syncCreate() {
-    setSyncDot('syncing');
-    try {
-      const code = await stateToCode();
-      setSyncId('1');
-      updateSyncUI();
-      setSyncDot('ok');
-      const url = getShareUrl(code);
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(url).catch(() => {});
-        toast('Link kopiert – jetzt teilen!');
-      } else {
-        toast('Link: ' + url);
-      }
-    } catch(e) {
-      console.error('[Kasse] Link erstellen fehlgeschlagen:', e);
-      setSyncDot('error');
-      toast('Link konnte nicht erstellt werden');
-    }
-  }
-
-  async function syncPush() {
-    // Kein Server – Link wird manuell geteilt
-  }
-
-  async function syncPull() {
-    if (!getSyncId()) return;
-    setSyncDot('syncing');
-    try {
-      const code = await stateToCode();
-      setSyncDot('ok');
-      const url = getShareUrl(code);
-      if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(url).catch(() => {});
-        toast('Link aktualisiert & kopiert');
-      } else {
-        toast('Link: ' + url);
-      }
-    } catch(e) {
-      console.error('[Kasse] Link aktualisieren fehlgeschlagen:', e);
-      setSyncDot('error');
-    }
-  }
-
-  async function syncJoin(inputVal) {
-    const code = extractCode((inputVal || '').trim());
-    if (!code) { toast('Ungültiger Link oder Code'); return; }
-    setSyncDot('syncing');
-    syncPullInProgress = true;
-    try {
-      const loaded = await codeToState(code);
-      if (!Array.isArray(loaded.people) || !Array.isArray(loaded.expenses)) throw new Error('Ungültige Daten');
-      restoreAvatarsFromSync(loaded);
-      if (!loaded.settled) loaded.settled = {};
-      if (!loaded.settings) loaded.settings = { roundStep: 1, tripName: DEFAULT_TRIP_NAME };
-      if (typeof loaded.settings.tripName !== 'string') loaded.settings.tripName = DEFAULT_TRIP_NAME;
-      loaded.people.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
-      state = loaded;
-      setSyncId('1');
-      syncPullInProgress = false;
-      saveState();
-      render();
-      applyTripName();
-      setSyncDot('ok');
-      updateSyncUI();
-      toast('Daten geladen');
-    } catch(e) {
-      console.error('[Kasse] Laden fehlgeschlagen:', e);
-      syncPullInProgress = false;
-      setSyncDot('error');
-      toast('Code ungültig oder beschädigt');
-    }
-  }
-
-  function syncLeave() {
-    setSyncId(null);
-    updateSyncUI();
-    if (location.hash) history.replaceState(null, '', location.pathname + location.search);
-    toast('Teilen beendet');
-  }
-
-  async function copySyncCode() {
-    if (!getSyncId()) return;
-    const code = await stateToCode();
-    const url = getShareUrl(code);
+  function copySyncCode() {
+    if (!_roomCode) return;
     if (navigator.clipboard?.writeText) {
-      navigator.clipboard.writeText(url).then(() => toast('Link kopiert'), () => toast('Link: ' + url));
+      navigator.clipboard.writeText(_roomCode).then(() => toast('Code kopiert'), () => toast('Code: ' + _roomCode));
     } else {
-      toast('Link: ' + url);
+      toast('Code: ' + _roomCode);
     }
   }
 
@@ -1870,14 +1795,19 @@
   // Sync event listeners
   document.getElementById('sync-create-btn').addEventListener('click', async function() {
     this.disabled = true;
-    await syncCreate();
+    await roomCreate();
     this.disabled = false;
   });
-document.getElementById('sync-pull-btn').addEventListener('click', syncPull);
+  document.getElementById('sync-join-btn').addEventListener('click', async function() {
+    this.disabled = true;
+    await roomJoin(document.getElementById('sync-join-input').value);
+    this.disabled = false;
+  });
+  document.getElementById('sync-join-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('sync-join-btn').click();
+  });
   document.getElementById('sync-copy-btn').addEventListener('click', copySyncCode);
-  document.getElementById('sync-leave-btn').addEventListener('click', syncLeave);
-
-  // Kein Auto-Pull mehr – kein Server
+  document.getElementById('sync-leave-btn').addEventListener('click', roomLeave);
 
   // ESC to close
   document.addEventListener('keydown', (e) => {
@@ -1902,12 +1832,12 @@ document.getElementById('sync-pull-btn').addEventListener('click', syncPull);
   applyTripName();
   render();
 
-  // Sync: UI-Status wiederherstellen
-  if (getSyncId()) updateSyncUI();
-
-  // Geteilten Link automatisch laden (URL-Fragment #v1:…)
-  const _hashFragment = location.hash?.slice(1);
-  if (_hashFragment?.startsWith('v1:')) syncJoin(_hashFragment);
+  // Sync: UI-Status wiederherstellen und ggf. Raum auto-reconnect
+  if (_roomCode && FIREBASE_CONFIG.apiKey) {
+    roomJoin(_roomCode);
+  } else {
+    updateSyncUI();
+  }
 })();
 </script>
 </body>

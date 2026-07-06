@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks generated="2026-05-27T23:40" prefix="EXPSPL">
+<tasks generated="2026-07-06T16:08" prefix="EXPSPL">
   <task id="2" status="done">
     <title>Multi-User-Zugang mit Echtzeit-Synchronisation für HTML-Oberfläche</title>
     <summary>Mehrere Benutzer sollen die HTML-Oberfläche gleichzeitig nutzen können. Änderungen werden in Echtzeit für alle verbundenen Nutzer synchronisiert (via GitHub).</summary>
@@ -134,7 +134,7 @@
     <summary>Der Erstellungsprozess für einen neuen Raum schlägt fehl. Ursache im Browser prüfen und beheben.</summary>
     <created>2026-05-27T16:16</created>
     <started>2026-05-27T16:17</started>
-    <done>2026-05-27T23:32</done>
+    <done>2026-05-27T23:56</done>
     <human_estimate>1h</human_estimate>
     <story_points>5</story_points>
     <agents>Claude</agents>
@@ -155,9 +155,192 @@
       <event ts="2026-05-27T16:17">auto-aktiviert via prompt-hook</event>
       <event ts="2026-05-27T16:17">started run lane run-10bbbb24</event>
       <event ts="2026-05-27T23:32">completed</event>
+      <event ts="2026-05-27T23:48">User fragt nach Sync-Einschränkung – warte auf Entscheidung A/B/C</event>
+      <event ts="2026-05-27T23:52">feedback erhalten, weiter aktiv (auto via prompt-hook)</event>
+      <event ts="2026-05-27T23:52">completed</event>
+      <event ts="2026-05-27T23:56">started</event>
+      <event ts="2026-05-27T23:56">completed</event>
     </history>
     <files>
       <file path="urlaubskasse.html" ts="2026-05-27T23:36" />
     </files>
+  </task>
+  <task id="7" status="done">
+    <title>Brainstorming: Echten Sync implementieren</title>
+    <summary>Gemeinsam erarbeiten, wie ein echter Sync-Mechanismus am besten umgesetzt werden kann. Ideen und Ansätze diskutieren.</summary>
+    <created>2026-05-27T23:57</created>
+    <started>2026-05-27T23:59</started>
+    <done>2026-05-28T08:46</done>
+    <human_estimate>1h</human_estimate>
+    <story_points>3</story_points>
+    <agents>Claude</agents>
+    <concept>tasks/EXPSPL-7.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <informational />
+    <kind>question</kind>
+    <testing_tool />
+    <lane_id>run-20c5eac1</lane_id>
+    <lane_order />
+    <history>
+      <event ts="2026-05-27T23:57">received, backlog</event>
+      <event ts="2026-05-27T23:57">refined (title, summary, human_estimate, story_points, kind)</event>
+      <event ts="2026-05-27T23:59">auto-aktiviert via prompt-hook</event>
+      <event ts="2026-05-27T23:59">started run lane run-20c5eac1</event>
+      <event ts="2026-05-28T00:00">Sync-Optionen A/B/C/D präsentiert – warte auf Entscheidung</event>
+      <event ts="2026-05-28T08:45">feedback erhalten, weiter aktiv (auto via prompt-hook)</event>
+      <event ts="2026-05-28T08:46">completed</event>
+    </history>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-05-28T08:49" />
+    </files>
+  </task>
+  <task id="8" status="backlog">
+    <title>Trip-Reset setzt gelöschte User nicht zurück</title>
+    <summary>Beim kompletten Zurücksetzen eines Trips werden aktuell nur Einträge gelöscht. Gelöschte User sollen dabei ebenfalls zurückgesetzt werden, sodass sie danach standardmäßig wieder sichtbar sind.</summary>
+    <created>2026-05-28T09:33</created>
+    <started />
+    <done />
+    <human_estimate>1h</human_estimate>
+    <story_points>3</story_points>
+    <agents>Claude</agents>
+    <concept>tasks/EXPSPL-8.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <lane_id />
+    <lane_order />
+    <history>
+      <event ts="2026-05-28T09:33">received, backlog</event>
+      <event ts="2026-05-28T09:33">refined (title, summary, human_estimate, story_points, kind)</event>
+    </history>
+  </task>
+  <task id="9" status="done">
+    <title>Tests für Abrechnungs-/Settlement-Berechnung</title>
+    <summary>Reine Berechnungslogik (computeRaw, roundBalances, computeBalances, computeSettlement) aus urlaubskasse.html in ein testbares Modul extrahieren und mit Node-Test-Suite gegen Rundungs- und Split-Fehler absichern.</summary>
+    <created>2026-07-06T14:16</created>
+    <started>2026-07-06T14:16</started>
+    <done>2026-07-06T14:30</done>
+    <human_estimate>2h</human_estimate>
+    <story_points>5</story_points>
+    <agents>Claude</agents>
+    <concept>tasks/EXPSPL-9.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <informational />
+    <kind />
+    <testing_tool />
+    <lane_id>run-22969eb9</lane_id>
+    <lane_order />
+    <history>
+      <event ts="2026-07-06T14:16">received, backlog</event>
+      <event ts="2026-07-06T14:16">started</event>
+      <event ts="2026-07-06T14:16">started run lane run-22969eb9</event>
+      <event ts="2026-07-06T14:22">in testing — running node --test</event>
+      <event ts="2026-07-06T14:30">completed</event>
+    </history>
+    <files>
+      <file path="settlement.js" ts="2026-07-06T14:19" />
+      <file path="urlaubskasse.html" ts="2026-07-06T14:19" />
+      <file path="package.json" ts="2026-07-06T14:20" />
+      <file path="tests/settlement.test.js" ts="2026-07-06T14:21" />
+      <file path="README.md" ts="2026-07-06T14:41" />
+    </files>
+  </task>
+  <task id="10" status="done">
+    <title>nvm Default-Node-Version auf 20 setzen</title>
+    <summary>Globalen nvm-Default auf Node 20 (20.20.0) umstellen, damit npm test ohne manuelles nvm exec läuft.</summary>
+    <created>2026-07-06T14:47</created>
+    <started>2026-07-06T14:47</started>
+    <done>2026-07-06T14:52</done>
+    <human_estimate>15min</human_estimate>
+    <story_points>1</story_points>
+    <agents>Claude</agents>
+    <concept>tasks/EXPSPL-10.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <informational>true</informational>
+    <kind />
+    <testing_tool />
+    <lane_id>run-3155b3a5</lane_id>
+    <lane_order />
+    <history>
+      <event ts="2026-07-06T14:47">received, backlog</event>
+      <event ts="2026-07-06T14:47">started</event>
+      <event ts="2026-07-06T14:47">started run lane run-3155b3a5</event>
+      <event ts="2026-07-06T14:52">completed (informational only — no code changes)</event>
+    </history>
+  </task>
+  <task id="11" status="done">
+    <title>PATH-Reihenfolge in ~/.zshrc fixen (nvm vor Homebrew-Node)</title>
+    <summary>Nutzer wählte Option 2: ~/.zshrc so anpassen, dass der nvm-Default (Node 20) Vorrang vor /usr/local/bin/node (Homebrew node@22) hat.</summary>
+    <created>2026-07-06T15:03</created>
+    <started>2026-07-06T15:03</started>
+    <done>2026-07-06T15:10</done>
+    <human_estimate>15min</human_estimate>
+    <story_points>2</story_points>
+    <agents>Claude</agents>
+    <concept>tasks/EXPSPL-11.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <informational />
+    <kind />
+    <testing_tool />
+    <lane_id>run-49f09a5e</lane_id>
+    <lane_order />
+    <history>
+      <event ts="2026-07-06T15:03">received, backlog</event>
+      <event ts="2026-07-06T15:03">started</event>
+      <event ts="2026-07-06T15:03">started run lane run-49f09a5e</event>
+      <event ts="2026-07-06T15:10">completed</event>
+    </history>
+  </task>
+  <task id="12" status="done">
+    <title>Abrechnung end-to-end verifizieren (App + Tests)</title>
+    <summary>Nach der settlement.js-Extraktion sicherstellen, dass urlaubskasse.html in der Praxis korrekt abrechnet: Testsuite erneut grün, dazu manuelle Verifikation im Browser (Ausgaben anlegen, Saldo/Abrechnung prüfen, Rundungsstufen, keine Konsolenfehler).</summary>
+    <created>2026-07-06T15:29</created>
+    <started>2026-07-06T15:29</started>
+    <done>2026-07-06T16:20</done>
+    <human_estimate>1h</human_estimate>
+    <story_points>3</story_points>
+    <agents>Claude</agents>
+    <concept>tasks/EXPSPL-12.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <informational />
+    <kind />
+    <testing_tool />
+    <lane_id>run-51d8107f</lane_id>
+    <lane_order />
+    <history>
+      <event ts="2026-07-06T15:29">received, backlog</event>
+      <event ts="2026-07-06T15:29">started</event>
+      <event ts="2026-07-06T15:29">started run lane run-51d8107f</event>
+      <event ts="2026-07-06T15:29">in testing — running node --test</event>
+      <event ts="2026-07-06T15:35">completed</event>
+      <event ts="2026-07-06T15:55">reopened: Browser jetzt verbunden, End-to-End-Verifikation nachholen</event>
+      <event ts="2026-07-06T15:55">started</event>
+      <event ts="2026-07-06T16:20">completed</event>
+    </history>
   </task>
 </tasks>
