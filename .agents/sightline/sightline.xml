@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks generated="2026-07-07T13:02" prefix="EXPSPL">
+<tasks generated="2026-07-07T13:45" prefix="EXPSPL">
   <task id="2" status="done">
     <title>Multi-User-Zugang mit Echtzeit-Synchronisation für HTML-Oberfläche</title>
     <summary>Mehrere Benutzer sollen die HTML-Oberfläche gleichzeitig nutzen können. Änderungen werden in Echtzeit für alle verbundenen Nutzer synchronisiert (via GitHub).</summary>
@@ -377,12 +377,12 @@
       <file path="urlaubskasse.html" ts="2026-07-07T12:23" />
     </files>
   </task>
-  <task id="14" status="active">
+  <task id="14" status="done">
     <title>Neuer Raum: Namensabfrage + garantiert leere Kasse</title>
     <summary>Raum erstellen fragt zuerst nach Trip-Namen und startet mit freshState() statt aktuellem lokalen Stand zu kopieren</summary>
     <created>2026-07-07T12:57</created>
     <started>2026-07-07T12:57</started>
-    <done />
+    <done>2026-07-07T13:07</done>
     <human_estimate>1h</human_estimate>
     <story_points>3</story_points>
     <agents>Claude</agents>
@@ -403,9 +403,41 @@
       <event ts="2026-07-07T12:57">started run lane run-e841c16e</event>
       <event ts="2026-07-07T13:00">in testing — running Manual browser check</event>
       <event ts="2026-07-07T13:05">back to in-progress</event>
+      <event ts="2026-07-07T13:07">completed</event>
     </history>
     <files>
       <file path="urlaubskasse.html" ts="2026-07-07T12:58" />
+    </files>
+  </task>
+  <task id="15" status="active">
+    <title>Fix: Zombie-Listener beim Raum-Wechsel überschreibt Session</title>
+    <summary>subscribeRoom() schliesst _unsubscribe über die veraenderliche Variable _roomRef statt die tatsaechliche Ref zu capturen, dadurch bleibt der alte Room-Listener nach einem Wechsel aktiv und ueberschreibt die neue Session</summary>
+    <created>2026-07-07T13:30</created>
+    <started>2026-07-07T13:30</started>
+    <done />
+    <human_estimate>30min</human_estimate>
+    <story_points>3</story_points>
+    <agents>Claude</agents>
+    <concept>tasks/EXPSPL-15.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <informational />
+    <kind />
+    <testing_tool />
+    <lane_id>run-4c6855d6</lane_id>
+    <lane_order />
+    <history>
+      <event ts="2026-07-07T13:30">received, backlog</event>
+      <event ts="2026-07-07T13:30">started</event>
+      <event ts="2026-07-07T13:30">started run lane run-4c6855d6</event>
+      <event ts="2026-07-07T13:32">in testing — running Manual browser + Firebase repro</event>
+      <event ts="2026-07-07T13:45">back to in-progress</event>
+    </history>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-07-07T13:31" />
     </files>
   </task>
 </tasks>

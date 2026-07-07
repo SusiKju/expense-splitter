@@ -1717,7 +1717,8 @@
   }
 
   function loadFromFirebase(loaded) {
-    if (!Array.isArray(loaded?.people) || !Array.isArray(loaded?.expenses)) return;
+    if (!Array.isArray(loaded?.people)) return;
+    if (!Array.isArray(loaded.expenses)) loaded.expenses = []; // Firebase speichert leere Arrays nicht
     restoreAvatarsFromSync(loaded);
     if (!loaded.settled) loaded.settled = {};
     if (!loaded.settings) loaded.settings = { roundStep: 1, tripName: DEFAULT_TRIP_NAME };
@@ -1733,13 +1734,15 @@
 
   function subscribeRoom() {
     if (_unsubscribe) _unsubscribe();
-    const handler = _roomRef.on('value', (snap) => {
+    const ref = _roomRef;
+    const handler = ref.on('value', (snap) => {
+      if (ref !== _roomRef) return; // Raum wurde inzwischen gewechselt, dieser Listener ist obsolet
       const data = snap.val();
       if (!data || data.pushedBy === SESSION_ID) return;
       setSyncDot('ok');
       loadFromFirebase(data.state);
     });
-    _unsubscribe = () => _roomRef.off('value', handler);
+    _unsubscribe = () => ref.off('value', handler);
   }
 
   async function roomPush() {
