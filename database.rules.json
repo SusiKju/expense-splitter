@@ -1,6 +1,28 @@
 {
   "rules": {
-    ".read": true,
-    ".write": true
+    "rooms": {
+      "$roomCode": {
+        ".read": true,
+        ".write": true,
+        ".validate": "newData.hasChildren(['state', 'updatedAt', 'pushedBy'])",
+        "state": { ".validate": true },
+        "updatedAt": { ".validate": "newData.isNumber()" },
+        "pushedBy": { ".validate": "newData.isString()" },
+        "$other": { ".validate": false }
+      }
+    },
+    "deviceHistory": {
+      "$deviceId": {
+        ".read": true,
+        "$roomCode": {
+          ".write": true,
+          ".validate": "newData.hasChildren(['tripName', 'lastActive'])",
+          "tripName": { ".validate": "newData.isString()" },
+          "lastActive": { ".validate": "newData.isNumber()" },
+          "$other": { ".validate": false }
+        }
+      }
+    },
+    "$other": { ".validate": false }
   }
 }

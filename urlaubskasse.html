@@ -832,6 +832,9 @@
       <button class="btn danger" id="sync-leave-btn">Raum verlassen</button>
     </div>
 
+    <div class="section-title">Meine Kassen</div>
+    <div id="history-list"></div>
+
     <div class="muted" style="margin-top:16px;font-size:12px">
       Theme: <span id="theme-status">System</span> • PWA-tauglich, alles lokal gespeichert.
     </div>
@@ -867,6 +870,7 @@
   const STORAGE_KEY = 'urlaubskasse:v1';
   const THEME_KEY   = 'urlaubskasse:theme';
   const ROOM_KEY    = 'urlaubskasse:room';
+  const DEVICE_KEY  = 'urlaubskasse:deviceId';
 
   // ===== Firebase-Konfiguration =====
   // Setup: console.firebase.google.com → Neues Projekt → Realtime Database → Web-App hinzufügen → Config kopieren
@@ -1587,6 +1591,101 @@
     return code;
   }
 
+  // Persistente, rein lokal erzeugte Geräte-ID. Dient nur als Schlüssel für die
+  // Raum-History in der Cloud (deviceHistory/{deviceId}) — kein Login/Auth.
+  // Geht sie lokal verloren, ist die Verknüpfung zur Cloud-History ebenfalls weg.
+  function getDeviceId() {
+    let id = localStorage.getItem(DEVICE_KEY);
+    if (!id) {
+      id = crypto.randomUUID();
+      localStorage.setItem(DEVICE_KEY, id);
+    }
+    return id;
+  }
+
+  async function touchHistory(code, tripName) {
+    if (!FIREBASE_CONFIG.apiKey) return;
+    try {
+      await getDb().ref(`deviceHistory/${getDeviceId()}/${code}`).set({
+        tripName: (tripName || DEFAULT_TRIP_NAME).trim() || DEFAULT_TRIP_NAME,
+        lastActive: Date.now(),
+      });
+    } catch (e) {
+      console.error('[Kasse] History-Update fehlgeschlagen:', e);
+    }
+  }
+
+  async function deleteHistoryEntry(code) {
+    if (!FIREBASE_CONFIG.apiKey) return;
+    try {
+      await getDb().ref(`deviceHistory/${getDeviceId()}/${code}`).remove();
+    } catch (e) {
+      console.error('[Kasse] History-Eintrag löschen fehlgeschlagen:', e);
+    }
+  }
+
+  let _historyUnsubscribe = null;
+  let _historyData = {};
+
+  function subscribeHistory() {
+    if (!FIREBASE_CONFIG.apiKey) return;
+    const ref = getDb().ref(`deviceHistory/${getDeviceId()}`);
+    const handler = ref.on('value', (snap) => {
+      _historyData = snap.val() || {};
+      renderHistoryList();
+    }, (err) => {
+      console.error('[Kasse] History laden fehlgeschlagen:', err);
+    });
+    _historyUnsubscribe = () => ref.off('value', handler);
+  }
+
+  function renderHistoryList() {
+    const list = document.getElementById('history-list');
+    if (!list) return;
+    const entries = Object.entries(_historyData);
+    if (entries.length === 0) {
+      list.innerHTML = '<div class="muted" style="padding:4px">Noch keine Räume in der History.</div>';
+      return;
+    }
+    entries.sort((a, b) => (b[1].lastActive || 0) - (a[1].lastActive || 0));
+    list.innerHTML = entries.map(([code, entry]) => {
+      const isActive = code === _roomCode;
+      const when = entry.lastActive ? new Date(entry.lastActive).toLocaleDateString('de-DE', { day:'2-digit', month:'2-digit', year:'2-digit' }) : '';
+      return `
+        <div class="person-row">
+          <div style="flex:1;min-width:0">
+            <div class="name" style="display:flex;align-items:center;gap:6px">
+              ${escapeHtml(entry.tripName || DEFAULT_TRIP_NAME)}
+              ${isActive ? '<span class="chip">aktuell</span>' : ''}
+            </div>
+            <div class="stat">Code ${escapeHtml(code)} • zuletzt aktiv ${when}</div>
+          </div>
+          ${isActive ? '' : `<button class="icon-btn" data-history-switch="${escapeHtml(code)}" aria-label="Wechseln" title="Wechseln">⇄</button>`}
+          <button class="icon-btn danger" data-history-delete="${escapeHtml(code)}" aria-label="Löschen" title="Löschen">🗑</button>
+        </div>`;
+    }).join('');
+  }
+
+  async function switchToRoom(code) {
+    if (!code || code === _roomCode) return;
+    await roomJoin(code);
+  }
+
+  function deleteHistoryFromList(code) {
+    confirmAction({
+      title: 'Raum aus History löschen?',
+      text: code === _roomCode
+        ? 'Du bist gerade mit diesem Raum verbunden — er wird zuerst verlassen.'
+        : 'Diese Aktion kann nicht rückgängig gemacht werden.',
+      onConfirm: async () => {
+        if (code === _roomCode) roomLeave();
+        await deleteHistoryEntry(code);
+        closeAllModals();
+        toast('Raum aus History gelöscht');
+      },
+    });
+  }
+
   function stateForSync() {
     return {
       ...state,
@@ -1630,6 +1729,7 @@
     if (!_roomRef) return;
     try {
       await _roomRef.set({ state: stateForSync(), updatedAt: Date.now(), pushedBy: SESSION_ID });
+      touchHistory(_roomCode, state.settings.tripName);
     } catch(e) {
       console.error('[Kasse] Push fehlgeschlagen:', e);
       setSyncDot('error');
@@ -1649,6 +1749,7 @@
       subscribeRoom();
       updateSyncUI();
       setSyncDot('ok');
+      touchHistory(code, state.settings.tripName);
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(code).catch(() => {});
         toast(`Raum ${code} erstellt – Code kopiert!`);
@@ -1678,6 +1779,7 @@
       loadFromFirebase(snap.val().state);
       updateSyncUI();
       setSyncDot('ok');
+      touchHistory(code, state.settings.tripName);
       toast(`Raum ${code} beigetreten`);
     } catch(e) {
       console.error('[Kasse] Raum beitreten fehlgeschlagen:', e);
@@ -1712,6 +1814,7 @@
     idleUI.hidden   = !!_roomCode;
     activeUI.hidden = !_roomCode;
     if (_roomCode && display) display.textContent = _roomCode;
+    renderHistoryList();
   }
 
   function copySyncCode() {
@@ -1754,6 +1857,10 @@
     if (delPid) { editingPersonId = delPid; deletePerson(); return; }
     const settleKey = t.closest('[data-settle-key]')?.dataset.settleKey;
     if (settleKey) { toggleSettle(settleKey); return; }
+    const switchCode = t.closest('[data-history-switch]')?.dataset.historySwitch;
+    if (switchCode) { switchToRoom(switchCode); return; }
+    const deleteCode = t.closest('[data-history-delete]')?.dataset.historyDelete;
+    if (deleteCode) { deleteHistoryFromList(deleteCode); return; }
   });
 
   document.getElementById('fab').addEventListener('click', () => openExpenseModal(null));
@@ -1838,6 +1945,7 @@
   } else {
     updateSyncUI();
   }
+  subscribeHistory();
 })();
 </script>
 </body>
