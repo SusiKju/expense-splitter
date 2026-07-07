@@ -800,12 +800,6 @@
       <div class="person-pick" id="round-pick"></div>
       <div class="muted" id="round-hint" style="margin-top:6px;font-size:12px"></div>
     </div>
-    <div class="stack">
-      <button class="btn" id="export-btn">Daten als JSON exportieren</button>
-      <button class="btn" id="import-btn">Daten aus JSON importieren</button>
-      <input type="file" id="import-file" accept="application/json,.json">
-      <button class="btn danger" id="reset-btn">Trip komplett zurücksetzen</button>
-    </div>
     <div class="section-title" style="margin-top:20px">Echtzeit-Sync</div>
     <!-- Sync: kein Raum aktiv -->
     <div id="sync-idle-ui">
@@ -1462,69 +1456,6 @@
     toast('Häkchen zurückgesetzt');
   }
 
-  // ===== Export / Import / Reset =====
-  function exportJson() {
-    const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const d = today();
-    a.href = url;
-    a.download = `urlaubskasse-${d}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    setTimeout(() => URL.revokeObjectURL(url), 1000);
-    toast('Export gestartet');
-  }
-
-  function importJson(file) {
-    const reader = new FileReader();
-    reader.onload = () => {
-      try {
-        const data = JSON.parse(String(reader.result));
-        if (!Array.isArray(data.people) || !Array.isArray(data.expenses)) {
-          toast('Ungültige Datei'); return;
-        }
-        confirmAction({
-          title: 'Daten importieren?',
-          text: 'Der aktuelle Stand wird überschrieben (' + data.people.length + ' Teilnehmer, ' + data.expenses.length + ' Ausgaben).',
-          onConfirm: () => {
-            state = {
-              people: data.people,
-              expenses: data.expenses,
-              settled: data.settled || {},
-              settings: (data.settings && ROUND_STEPS.some(r => r.step === data.settings.roundStep))
-                ? data.settings : { roundStep: 1 },
-            };
-            sortPeople();
-            saveState();
-            render();
-            closeAllModals();
-            toast('Daten importiert');
-          },
-        });
-      } catch {
-        toast('Datei nicht lesbar');
-      }
-    };
-    reader.readAsText(file);
-  }
-
-  function resetTrip() {
-    confirmAction({
-      title: 'Trip zurücksetzen?',
-      text: 'Alle Ausgaben werden gelöscht. Teilnehmerliste bleibt erhalten.',
-      onConfirm: () => {
-        state.expenses = [];
-        state.settled = {};
-        saveState();
-        render();
-        closeAllModals();
-        toast('Trip zurückgesetzt');
-      },
-    });
-  }
-
   // ===== Trip Name =====
   function applyTripName() {
     const name = (state.settings.tripName || DEFAULT_TRIP_NAME).trim() || DEFAULT_TRIP_NAME;
@@ -1928,14 +1859,6 @@
     saveState();
   });
   document.getElementById('theme-btn').addEventListener('click', cycleTheme);
-  document.getElementById('export-btn').addEventListener('click', exportJson);
-  document.getElementById('import-btn').addEventListener('click', () => document.getElementById('import-file').click());
-  document.getElementById('import-file').addEventListener('change', (e) => {
-    const f = e.target.files[0];
-    if (f) importJson(f);
-    e.target.value = '';
-  });
-  document.getElementById('reset-btn').addEventListener('click', resetTrip);
 
   // Sync event listeners
   document.getElementById('sync-create-btn').addEventListener('click', () => {
