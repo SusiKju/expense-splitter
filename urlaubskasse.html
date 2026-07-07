@@ -844,6 +844,23 @@
   </div>
 </div>
 
+<!-- Modal: Willkommen (nur beim allerersten Start) -->
+<div class="modal-backdrop" id="modal-welcome">
+  <div class="modal" role="dialog" aria-labelledby="modal-welcome-title">
+    <div class="modal-handle"></div>
+    <h2 id="modal-welcome-title">Willkommen bei Kasse! 👋</h2>
+    <p class="muted" style="margin:0 0 16px;font-size:14px">Erstelle einen gemeinsamen Raum, damit alle in der Gruppe dieselben Ausgaben sehen – oder tritt einem bestehenden Raum mit einem 6-stelligen Code bei.</p>
+    <button class="btn primary" id="welcome-create-btn" style="width:100%;margin-bottom:12px">Neuen Raum erstellen</button>
+    <div style="display:flex;gap:8px;margin-bottom:16px">
+      <input id="welcome-join-input" placeholder="Code eingeben (z.B. AB3X9Z)" style="flex:1;padding:10px 12px;border:1.5px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:14px;font-family:monospace;outline:none;text-transform:uppercase;letter-spacing:.12em" maxlength="6">
+      <button class="btn" id="welcome-join-btn">Beitreten</button>
+    </div>
+    <div class="modal-footer" style="justify-content:center;margin-top:4px">
+      <button class="btn ghost" id="welcome-skip-btn" style="font-size:13px">Erstmal ohne Sync starten</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal: Neuer Raum -->
 <div class="modal-backdrop" id="modal-new-room">
   <div class="modal" role="dialog">
@@ -888,6 +905,7 @@
   const THEME_KEY   = 'urlaubskasse:theme';
   const ROOM_KEY    = 'urlaubskasse:room';
   const DEVICE_KEY  = 'urlaubskasse:deviceId';
+  const ONBOARDED_KEY = 'urlaubskasse:onboarded';
 
   // ===== Firebase-Konfiguration =====
   // Setup: console.firebase.google.com → Neues Projekt → Realtime Database → Web-App hinzufügen → Config kopieren
@@ -1953,6 +1971,29 @@
   document.getElementById('sync-copy-btn').addEventListener('click', copySyncCode);
   document.getElementById('sync-leave-btn').addEventListener('click', roomLeave);
 
+  // Welcome/Onboarding event listeners
+  document.getElementById('welcome-create-btn').addEventListener('click', () => {
+    localStorage.setItem(ONBOARDED_KEY, '1');
+    const input = document.getElementById('new-room-name');
+    input.value = '';
+    openModal('modal-new-room');
+    setTimeout(() => input.focus(), 100);
+  });
+  document.getElementById('welcome-join-btn').addEventListener('click', async function() {
+    this.disabled = true;
+    localStorage.setItem(ONBOARDED_KEY, '1');
+    await roomJoin(document.getElementById('welcome-join-input').value);
+    if (_roomCode) closeAllModals();
+    this.disabled = false;
+  });
+  document.getElementById('welcome-join-input').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('welcome-join-btn').click();
+  });
+  document.getElementById('welcome-skip-btn').addEventListener('click', () => {
+    localStorage.setItem(ONBOARDED_KEY, '1');
+    closeAllModals();
+  });
+
   // ESC to close
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') closeAllModals();
@@ -1983,6 +2024,11 @@
     updateSyncUI();
   }
   subscribeHistory();
+
+  // Onboarding: allererster Start auf diesem Gerät (kein gespeicherter State, kein Raum) -> Willkommens-Modal
+  if (!localStorage.getItem(STORAGE_KEY) && !_roomCode && !localStorage.getItem(ONBOARDED_KEY)) {
+    openModal('modal-welcome');
+  }
 })();
 </script>
 </body>

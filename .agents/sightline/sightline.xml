@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks generated="2026-07-07T13:45" prefix="EXPSPL">
+<tasks generated="2026-07-07T14:36" prefix="EXPSPL">
   <task id="2" status="done">
     <title>Multi-User-Zugang mit Echtzeit-Synchronisation für HTML-Oberfläche</title>
     <summary>Mehrere Benutzer sollen die HTML-Oberfläche gleichzeitig nutzen können. Änderungen werden in Echtzeit für alle verbundenen Nutzer synchronisiert (via GitHub).</summary>
@@ -439,5 +439,33 @@
     <files>
       <file path="urlaubskasse.html" ts="2026-07-07T13:31" />
     </files>
+  </task>
+  <task id="16" status="done">
+    <title>Willkommens-Modal für Erstbesuch</title>
+    <summary>Beim allerersten App-Start (kein STORAGE_KEY, kein ROOM_KEY in localStorage) ein Onboarding-Modal zeigen mit 'Neuen Raum erstellen', 'Code eingeben' und unauffälligem Skip-Link 'Erstmal ohne Sync starten'.</summary>
+    <created>2026-07-07T14:12</created>
+    <started>2026-07-07T14:12</started>
+    <done>2026-07-07T14:38</done>
+    <human_estimate>1h</human_estimate>
+    <story_points />
+    <agents>Claude</agents>
+    <concept>tasks/EXPSPL-16.md</concept>
+    <parent />
+    <subtasks />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <informational />
+    <kind />
+    <testing_tool />
+    <lane_id>run-46fd45c3</lane_id>
+    <lane_order />
+    <history>
+      <event ts="2026-07-07T14:12">received, backlog</event>
+      <event ts="2026-07-07T14:12">started</event>
+      <event ts="2026-07-07T14:12">started run lane run-46fd45c3</event>
+      <event ts="2026-07-07T14:16">in testing — running Chrome (manual)</event>
+      <event ts="2026-07-07T14:38">completed</event>
+    </history>
   </task>
 </tasks>
