@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks generated="2026-07-07T15:49" prefix="EXPSPL">
+<tasks generated="2026-07-07T15:55" prefix="EXPSPL">
   <task id="2" status="done">
     <title>Multi-User-Zugang mit Echtzeit-Synchronisation für HTML-Oberfläche</title>
     <summary>Mehrere Benutzer sollen die HTML-Oberfläche gleichzeitig nutzen können. Änderungen werden in Echtzeit für alle verbundenen Nutzer synchronisiert (via GitHub).</summary>
@@ -528,12 +528,12 @@
       <file path="urlaubskasse.html" ts="2026-07-07T15:26" />
     </files>
   </task>
-  <task id="19" status="feedback_required">
+  <task id="19" status="done">
     <title>Änderungen committen und pushen</title>
     <summary>Uncommittete Änderungen (EXPSPL-17 Kasse schließen, EXPSPL-18 Button-Entfernung) sichten und pushen.</summary>
     <created>2026-07-07T15:33</created>
     <started />
-    <done />
+    <done>2026-07-07T15:50</done>
     <human_estimate>15min</human_estimate>
     <story_points />
     <agents>Claude</agents>
@@ -551,6 +551,7 @@
     <history>
       <event ts="2026-07-07T15:33">received, backlog</event>
       <event ts="2026-07-07T15:33">Frage zu unverifiziertem EXPSPL-17 und settings.local.json gestellt</event>
+      <event ts="2026-07-07T15:50">completed</event>
     </history>
   </task>
 </tasks>

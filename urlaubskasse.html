@@ -694,6 +694,9 @@
         <div class="value" id="sum-count">0</div>
       </div>
     </div>
+    <div class="card empty" id="closed-banner" style="display:none;padding:12px 16px">
+      🔒 Diese Kasse ist geschlossen – keine Änderungen möglich.
+    </div>
     <div id="expense-list"></div>
   </section>
 
@@ -794,6 +797,11 @@
     <div class="field">
       <label for="trip-name-input">Name dieser Kasse</label>
       <input type="text" id="trip-name-input" placeholder="z.B. Urlaub Mallorca 2026" autocomplete="off" maxlength="60">
+    </div>
+    <div class="field" id="close-room-field">
+      <label>Kasse-Status</label>
+      <div class="muted" id="close-status-text" style="font-size:13px;margin-bottom:10px"></div>
+      <button class="btn" id="close-room-btn" hidden></button>
     </div>
     <div class="field" style="margin-bottom:18px">
       <label>Rundung der Aufteilung</label>
@@ -946,7 +954,7 @@
       people: DEFAULT_PEOPLE.map(name => ({ id: newId(), name, avatar: AVATARS[name] || null })),
       expenses: [],
       settled: {}, // key "from->to" -> true
-      settings: { roundStep: 1, tripName: DEFAULT_TRIP_NAME },
+      settings: { roundStep: 1, tripName: DEFAULT_TRIP_NAME, closed: false, creatorDeviceId: getDeviceId() },
     };
   }
 
@@ -962,6 +970,8 @@
         parsed.settings.roundStep = 1;
       }
       if (typeof parsed.settings.tripName !== 'string') parsed.settings.tripName = DEFAULT_TRIP_NAME;
+      if (typeof parsed.settings.closed !== 'boolean') parsed.settings.closed = false;
+      if (typeof parsed.settings.creatorDeviceId !== 'string') parsed.settings.creatorDeviceId = getDeviceId();
       // Migration: bestehenden Default-Personen Avatar zuweisen, wenn noch keiner gesetzt
       for (const p of parsed.people) {
         if (p.avatar === undefined) p.avatar = AVATARS[p.name] || null;
@@ -1031,6 +1041,68 @@
   const personUsedInExpenses = (personId) =>
     state.expenses.filter(e => e.payerId === personId || (e.participantIds || []).includes(personId));
 
+  // ===== Kasse schließen =====
+  // Geschlossen blockiert Änderungen für alle; nur wer die Kasse erstellt hat
+  // (creatorDeviceId === eigene Geräte-ID) darf wieder öffnen/schließen.
+  function isRoomClosed() {
+    return !!(state.settings && state.settings.closed);
+  }
+  function isCreatorDevice() {
+    return !!(state.settings && state.settings.creatorDeviceId === getDeviceId());
+  }
+  function guardClosed() {
+    if (isRoomClosed()) {
+      toast('Kasse ist geschlossen – keine Änderungen möglich');
+      return true;
+    }
+    return false;
+  }
+
+  function updateCloseUI() {
+    const statusText = document.getElementById('close-status-text');
+    const btn = document.getElementById('close-room-btn');
+    if (!statusText || !btn) return;
+    const closed = isRoomClosed();
+    const owner = isCreatorDevice();
+    if (owner) {
+      btn.style.display = '';
+      btn.textContent = closed ? 'Kasse wieder öffnen' : 'Kasse schließen';
+      btn.className = closed ? 'btn primary' : 'btn danger';
+      statusText.textContent = closed
+        ? 'Diese Kasse ist geschlossen. Niemand kann mehr Änderungen vornehmen.'
+        : 'Diese Kasse ist offen. Alle Teilnehmer können Änderungen vornehmen.';
+    } else {
+      btn.style.display = 'none';
+      statusText.textContent = closed
+        ? 'Diese Kasse ist geschlossen. Nur die Person, die sie erstellt hat, kann sie wieder öffnen.'
+        : 'Diese Kasse ist offen. Nur die Person, die sie erstellt hat, kann sie schließen.';
+    }
+  }
+
+  function toggleRoomClosed() {
+    if (!isCreatorDevice()) { toast('Nur die Erstellerin/der Ersteller kann die Kasse schließen'); return; }
+    if (isRoomClosed()) {
+      state.settings.closed = false;
+      saveState();
+      render();
+      updateCloseUI();
+      toast('Kasse wieder geöffnet');
+    } else {
+      confirmAction({
+        title: 'Kasse schließen?',
+        text: 'Danach kann niemand mehr Ausgaben, Teilnehmer oder Einstellungen ändern, bis du sie wieder öffnest.',
+        onConfirm: () => {
+          state.settings.closed = true;
+          saveState();
+          render();
+          updateCloseUI();
+          closeAllModals();
+          toast('Kasse geschlossen');
+        },
+      });
+    }
+  }
+
   // Teilnehmer alphabetisch sortieren (deutsche Sortier-Regel, also Umlaute korrekt)
   function sortPeople() {
     state.people.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
@@ -1058,6 +1130,17 @@
     renderBalance();
     renderSettlement();
     renderPeople();
+    renderClosedState();
+  }
+
+  function renderClosedState() {
+    const closed = isRoomClosed();
+    const banner = document.getElementById('closed-banner');
+    if (banner) banner.style.display = closed ? '' : 'none';
+    const fab = document.getElementById('fab');
+    if (fab) fab.style.display = closed ? 'none' : '';
+    const addPersonBtn = document.getElementById('add-person-btn');
+    if (addPersonBtn) addPersonBtn.style.display = closed ? 'none' : '';
   }
 
   function renderSummary() {
@@ -1107,10 +1190,11 @@
             </div>
             <div>
               <div class="expense-amount">${fmtEur(Math.round(Number(exp.amount) * 100))}</div>
+              ${isRoomClosed() ? '' : `
               <div class="expense-actions">
                 <button class="icon-btn" data-edit="${exp.id}" aria-label="Bearbeiten" title="Bearbeiten">✎</button>
                 <button class="icon-btn danger" data-del="${exp.id}" aria-label="Löschen" title="Löschen">🗑</button>
-              </div>
+              </div>`}
             </div>
           </div>
         </div>`;
@@ -1197,7 +1281,9 @@
       btn.textContent = r.label;
       btn.dataset.step = String(r.step);
       btn.setAttribute('aria-pressed', state.settings.roundStep === r.step ? 'true' : 'false');
+      btn.disabled = isRoomClosed();
       btn.addEventListener('click', () => {
+        if (guardClosed()) return;
         state.settings.roundStep = r.step;
         saveState();
         render();
@@ -1222,8 +1308,9 @@
         <div class="person-row">
           ${personAvatarHtml(p, 'avatar')}
           <div class="name">${escapeHtml(p.name)}<div class="stat">${usedCount === 0 ? 'keine Ausgaben' : usedCount + (usedCount === 1 ? ' Ausgabe' : ' Ausgaben')}</div></div>
+          ${isRoomClosed() ? '' : `
           <button class="icon-btn" data-edit-person="${p.id}" aria-label="Bearbeiten">✎</button>
-          <button class="icon-btn danger" data-del-person="${p.id}" aria-label="Löschen">🗑</button>
+          <button class="icon-btn danger" data-del-person="${p.id}" aria-label="Löschen">🗑</button>`}
         </div>`;
     }).join('');
     list.innerHTML = html;
@@ -1294,6 +1381,7 @@
   }
 
   function saveExpense() {
+    if (guardClosed()) return;
     const desc   = document.getElementById('exp-desc').value.trim();
     const amount = parseFloat(document.getElementById('exp-amount').value);
     const date   = document.getElementById('exp-date').value || today();
@@ -1331,6 +1419,7 @@
 
   function deleteExpense() {
     if (!editingExpenseId) return;
+    if (guardClosed()) return;
     confirmAction({
       title: 'Ausgabe löschen?',
       text: 'Diese Aktion kann nicht rückgängig gemacht werden.',
@@ -1366,6 +1455,7 @@
   }
 
   function savePerson() {
+    if (guardClosed()) return;
     const name = document.getElementById('person-name').value.trim();
     if (!name) { toast('Name fehlt'); return; }
     if (editingPersonId) {
@@ -1385,6 +1475,7 @@
 
   function deletePerson() {
     if (!editingPersonId) return;
+    if (guardClosed()) return;
     const used = personUsedInExpenses(editingPersonId);
     if (used.length > 0) {
       const names = used.slice(0, 3).map(e => '"' + (e.desc || 'Ausgabe') + '"').join(', ');
@@ -1408,6 +1499,7 @@
 
   // ===== Settle Plan =====
   function toggleSettle(key) {
+    if (guardClosed()) return;
     state.settled[key] = !state.settled[key];
     saveState();
     renderSettlement();
@@ -1450,6 +1542,7 @@
   }
 
   function resetChecks() {
+    if (guardClosed()) return;
     state.settled = {};
     saveState();
     renderSettlement();
@@ -1672,6 +1765,8 @@
     if (!loaded.settled) loaded.settled = {};
     if (!loaded.settings) loaded.settings = { roundStep: 1, tripName: DEFAULT_TRIP_NAME };
     if (typeof loaded.settings.tripName !== 'string') loaded.settings.tripName = DEFAULT_TRIP_NAME;
+    if (typeof loaded.settings.closed !== 'boolean') loaded.settings.closed = false;
+    if (typeof loaded.settings.creatorDeviceId !== 'string') loaded.settings.creatorDeviceId = getDeviceId();
     loaded.people.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
     state = loaded;
     syncPullInProgress = true;
@@ -1849,16 +1944,19 @@
   document.getElementById('menu-btn').addEventListener('click', () => {
     renderRoundingPicker();
     const tn = document.getElementById('trip-name-input');
-    if (tn) tn.value = state.settings.tripName || '';
+    if (tn) { tn.value = state.settings.tripName || ''; tn.disabled = isRoomClosed(); }
     updateSyncUI();
+    updateCloseUI();
     openModal('modal-menu');
   });
   document.getElementById('trip-name-input').addEventListener('input', (e) => {
+    if (guardClosed()) { e.target.value = state.settings.tripName || ''; return; }
     state.settings.tripName = e.target.value;
     applyTripName();
     saveState();
   });
   document.getElementById('theme-btn').addEventListener('click', cycleTheme);
+  document.getElementById('close-room-btn').addEventListener('click', toggleRoomClosed);
 
   // Sync event listeners
   document.getElementById('sync-create-btn').addEventListener('click', () => {
