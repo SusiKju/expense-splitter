@@ -844,6 +844,23 @@
   </div>
 </div>
 
+<!-- Modal: Neuer Raum -->
+<div class="modal-backdrop" id="modal-new-room">
+  <div class="modal" role="dialog">
+    <div class="modal-handle"></div>
+    <h2>Neuen Raum erstellen</h2>
+    <div class="field">
+      <label for="new-room-name">Name dieser Kasse</label>
+      <input type="text" id="new-room-name" placeholder="z.B. Wochenende Hamburg" autocomplete="off" maxlength="60">
+    </div>
+    <p class="muted" style="margin:0;font-size:13px">Startet mit einer leeren Kasse (keine Ausgaben, Standard-Teilnehmerliste).</p>
+    <div class="modal-footer">
+      <button class="btn ghost" data-close>Abbrechen</button>
+      <button class="btn primary" id="new-room-create">Raum erstellen</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal: Confirm -->
 <div class="modal-backdrop" id="modal-confirm">
   <div class="modal" role="dialog">
@@ -1900,8 +1917,25 @@
   document.getElementById('reset-btn').addEventListener('click', resetTrip);
 
   // Sync event listeners
-  document.getElementById('sync-create-btn').addEventListener('click', async function() {
+  document.getElementById('sync-create-btn').addEventListener('click', () => {
+    const input = document.getElementById('new-room-name');
+    input.value = '';
+    openModal('modal-new-room');
+    setTimeout(() => input.focus(), 100);
+  });
+  document.getElementById('new-room-name').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') document.getElementById('new-room-create').click();
+  });
+  document.getElementById('new-room-create').addEventListener('click', async function() {
+    const name = document.getElementById('new-room-name').value.trim();
     this.disabled = true;
+    state = freshState();
+    state.settings.tripName = name || DEFAULT_TRIP_NAME;
+    sortPeople();
+    saveState();
+    render();
+    applyTripName();
+    closeAllModals();
     await roomCreate();
     this.disabled = false;
   });
