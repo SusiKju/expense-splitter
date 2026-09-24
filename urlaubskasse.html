@@ -179,6 +179,8 @@
   #event-card { line-height: 1.5; white-space: pre-wrap; color: var(--text-muted); }
   .brand-text { min-width: 0; display: flex; flex-direction: column; }
   #brand-title { line-height: 1.2; }
+  #brand-identity { font-size: 12px; font-weight: 400; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; cursor: pointer; transition: color 0.15s; }
+  #brand-identity:hover { color: var(--accent); }
   #brand-event { font-size: 12px; font-weight: 400; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; }
   #brand-event a { color: var(--accent); }
   .event-place-link { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 8px; margin: -8px; border-radius: 6px; cursor: pointer; transition: background-color 0.2s; }
@@ -271,6 +273,12 @@
     white-space: nowrap;
     text-align: right;
     color: var(--text);
+  }
+  .expense-orig {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-align: right;
+    white-space: nowrap;
   }
   .expense-actions {
     display: flex;
@@ -699,6 +707,7 @@
       <span class="logo">€</span>
       <div class="brand-text">
         <span id="brand-title">Kasse</span>
+        <span id="brand-identity" hidden title="Klick zum Wechseln"></span>
         <span id="brand-event" hidden></span>
       </div>
     </div>
@@ -785,14 +794,26 @@
     </div>
     <div class="row">
       <div class="field">
-        <label for="exp-amount">Betrag (€)</label>
-        <input type="number" id="exp-amount" inputmode="decimal" step="0.01" min="0" placeholder="0,00">
+        <label for="exp-amount">Betrag</label>
+        <div style="display:flex;gap:8px">
+          <input type="number" id="exp-amount" inputmode="decimal" step="0.01" min="0" placeholder="0,00" style="flex:1;min-width:0">
+          <input type="text" id="exp-currency" list="currency-list" maxlength="3" autocomplete="off" aria-label="Währung" style="width:5.5em;text-transform:uppercase">
+        </div>
       </div>
       <div class="field">
         <label for="exp-date">Datum</label>
         <input type="date" id="exp-date">
       </div>
     </div>
+    <div class="field" id="exp-rate-field" hidden>
+      <label for="exp-rate">Wechselkurs: 1 € = … <span id="exp-rate-cur"></span></label>
+      <input type="number" id="exp-rate" inputmode="decimal" step="any" min="0" placeholder="z.B. 0,95">
+      <div class="muted" id="exp-rate-preview" style="font-size:13px;margin-top:4px"></div>
+    </div>
+    <datalist id="currency-list">
+      <option value="EUR"><option value="CHF"><option value="GBP"><option value="USD"><option value="DKK"><option value="SEK"><option value="NOK">
+      <option value="PLN"><option value="CZK"><option value="HUF"><option value="HRK"><option value="TRY"><option value="THB"><option value="JPY">
+    </datalist>
     <div class="field">
       <label for="exp-payer">Wer hat bezahlt?</label>
       <select id="exp-payer"></select>
@@ -943,6 +964,26 @@
     </div>
     <div class="modal-footer" style="justify-content:center;margin-top:4px">
       <button class="btn ghost" id="welcome-skip-btn" style="font-size:13px">Erstmal ohne Sync starten</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Wer bist du? (Pflicht in jedem Raum, nicht wegklickbar) -->
+<div class="modal-backdrop" id="modal-identity">
+  <div class="modal" role="dialog" aria-labelledby="modal-identity-title">
+    <div class="modal-handle"></div>
+    <h2 id="modal-identity-title">Wer bist du?</h2>
+    <p class="muted" style="margin:0 0 16px;font-size:14px">Wähle deinen Namen, damit alle Eingaben von diesem Gerät dir zugeordnet werden. Ändern kannst du das später im Änderungsprotokoll.</p>
+    <div class="person-pick" id="identity-list"></div>
+    <div class="field" id="identity-new" style="margin-top:16px">
+      <label for="identity-name">Noch nicht dabei? Name eintragen</label>
+      <div style="display:flex;gap:8px">
+        <input type="text" id="identity-name" placeholder="Vorname" autocomplete="off" maxlength="32" style="flex:1">
+        <button class="btn" id="identity-add-btn">Das bin ich</button>
+      </div>
+    </div>
+    <div class="modal-footer" style="justify-content:center">
+      <button class="btn ghost" id="identity-leave-btn" style="font-size:13px">Raum verlassen</button>
     </div>
   </div>
 </div>
@@ -1111,6 +1152,8 @@
     return sign + euros.toLocaleString('de-DE') + ',' + String(c).padStart(2, '0') + ' €';
   };
 
+  const fmtOrig = (amount, cur) =>
+    Number(amount).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' ' + escapeHtml(cur);
   const fmtEurSigned = (cent) => (cent > 0 ? '+' : '') + fmtEur(cent);
 
   const fmtDate = (iso) => {
@@ -1229,7 +1272,9 @@
     renderPeople();
     renderClosedState();
     renderEvent();
+    renderCurrentIdentity();
     renderLog();
+    ensureIdentity();
   }
 
   // ===== Änderungsprotokoll =====
@@ -1275,6 +1320,19 @@
     line.hidden = !parts.length;
     card.textContent = eventInfo.trim();
     card.hidden = !eventInfo.trim();
+  }
+
+  function renderCurrentIdentity() {
+    const el = document.getElementById('brand-identity');
+    if (!el) return;
+    const currentPersonId = (state.devices || {})[getDeviceId()];
+    const person = currentPersonId ? personById(currentPersonId) : null;
+    if (person) {
+      el.textContent = '👤 ' + escapeHtml(person.name);
+      el.hidden = false;
+    } else {
+      el.hidden = true;
+    }
   }
 
   function renderClosedState() {
@@ -1334,6 +1392,7 @@
             </div>
             <div>
               <div class="expense-amount">${fmtEur(Math.round(Number(exp.amount) * 100))}</div>
+              ${exp.currency ? `<div class="expense-orig" title="Kurs 1 € = ${String(exp.rate).replace('.', ',')} ${escapeHtml(exp.currency)}">${fmtOrig(exp.origAmount, exp.currency)}</div>` : ''}
               <div class="expense-actions">
                 ${exp.hasReceipt ? `<button class="icon-btn" data-receipt="${exp.id}" aria-label="Beleg ansehen" title="Beleg ansehen">📎</button>` : ''}
               ${isRoomClosed() ? '' : `
@@ -1507,7 +1566,9 @@
       const exp = state.expenses.find(e => e.id === expenseId);
       titleEl.textContent = 'Ausgabe bearbeiten';
       descEl.value = exp.desc || '';
-      amountEl.value = exp.amount;
+      amountEl.value = exp.currency ? exp.origAmount : exp.amount;
+      document.getElementById('exp-currency').value = exp.currency || 'EUR';
+      document.getElementById('exp-rate').value = exp.currency ? exp.rate : '';
       dateEl.value = exp.date || today();
       payerEl.value = exp.payerId;
       for (const btn of partEl.querySelectorAll('button[data-pid]')) {
@@ -1518,8 +1579,13 @@
       titleEl.textContent = 'Ausgabe hinzufügen';
       descEl.value = '';
       amountEl.value = '';
+      // Im Urlaub ist meist jede Ausgabe in derselben Währung → letzte Währung/Kurs vorschlagen
+      const last = state.expenses.reduce((a, e) => (!a || (e.createdAt || 0) > (a.createdAt || 0) ? e : a), null);
+      document.getElementById('exp-currency').value = last?.currency || 'EUR';
+      document.getElementById('exp-rate').value = last?.currency ? last.rate : '';
       dateEl.value = today();
-      payerEl.value = state.people[0].id;
+      const currentPersonId = state.devices && state.devices[getDeviceId()];
+      payerEl.value = currentPersonId || state.people[0].id;
       // alle vorausgewählt (Default)
       for (const btn of partEl.querySelectorAll('button[data-pid]')) {
         btn.setAttribute('aria-pressed', 'true');
@@ -1533,6 +1599,7 @@
     document.getElementById('exp-receipt-hint').hidden = !!_roomCode;
     showReceiptPreview(null);
     if (exp?.hasReceipt && _roomCode) loadReceipt(exp.id).then(url => { if (editingExpenseId === exp.id && pendingReceipt === undefined) showReceiptPreview(url); });
+    updateCurrencyUI();
     openModal('modal-expense');
     setTimeout(() => descEl.focus(), 100);
   }
@@ -1540,14 +1607,22 @@
   async function saveExpense() {
     if (guardClosed()) return;
     const desc   = document.getElementById('exp-desc').value.trim();
-    const amount = parseFloat(document.getElementById('exp-amount').value);
+    const inputAmount = parseFloat(document.getElementById('exp-amount').value);
+    const currency = expCurrency();
+    const rate = parseFloat(document.getElementById('exp-rate').value);
+    const amount = currency ? Settlement.toEur(inputAmount, rate) : inputAmount;
     const date   = document.getElementById('exp-date').value || today();
     const payerId = document.getElementById('exp-payer').value;
     const parts = Array.from(document.querySelectorAll('#exp-participants button[data-pid][aria-pressed="true"]'))
       .map(b => b.dataset.pid);
 
     if (!desc) { toast('Beschreibung fehlt'); return; }
-    if (!(amount > 0)) { toast('Betrag muss größer 0 sein'); return; }
+    if (!(inputAmount > 0)) { toast('Betrag muss größer 0 sein'); return; }
+    if (currency && !/^[A-Z]{3}$/.test(currency)) { toast('Währung als 3-Buchstaben-Code, z.B. CHF'); return; }
+    if (currency && !(rate > 0)) { toast('Wechselkurs fehlt'); return; }
+    if (!(amount > 0)) { toast('Betrag in EUR zu klein'); return; }
+    // null statt undefined: Firebase lehnt undefined ab, null löscht das Feld
+    const fx = currency ? { currency, rate, origAmount: inputAmount } : { currency: null, rate: null, origAmount: null };
     if (!payerId) { toast('Zahler auswählen'); return; }
     if (parts.length === 0) { toast('Mindestens einen Beteiligten auswählen'); return; }
 
@@ -1571,11 +1646,12 @@
 
     logChange(editingExpenseId ? 'edit' : 'add', desc);
     if (prev) {
-      Object.assign(prev, { desc, amount, date, payerId, participantIds: parts, hasReceipt });
+      Object.assign(prev, { desc, amount, date, payerId, participantIds: parts, hasReceipt, ...fx });
     } else {
       state.expenses.push({
         id,
         desc, amount, date, payerId,
+        ...fx,
         participantIds: parts,
         hasReceipt,
         createdAt: Date.now(),
@@ -1585,6 +1661,21 @@
     render();
     closeAllModals();
     toast(editingExpenseId ? 'Ausgabe aktualisiert' : 'Ausgabe gespeichert');
+  }
+
+  // '' = EUR, sonst ISO-Code der Fremdwährung
+  function expCurrency() {
+    const c = document.getElementById('exp-currency').value.trim().toUpperCase();
+    return c === 'EUR' || c === '€' || c === '' ? '' : c;
+  }
+
+  function updateCurrencyUI() {
+    const cur = expCurrency();
+    document.getElementById('exp-rate-field').hidden = !cur;
+    if (!cur) return;
+    document.getElementById('exp-rate-cur').textContent = cur;
+    const eur = Settlement.toEur(document.getElementById('exp-amount').value, document.getElementById('exp-rate').value);
+    document.getElementById('exp-rate-preview').textContent = eur > 0 ? '= ' + fmtEur(Math.round(eur * 100)) : '';
   }
 
   function deleteExpense() {
@@ -1765,15 +1856,55 @@
 
   // ===== Modal helpers =====
   function openModal(id) {
+    if (needsIdentity() && id !== 'modal-identity') return; // Identitätswahl blockiert alles andere
     closeAllModals();
     document.getElementById(id).classList.add('open');
     document.body.style.overflow = 'hidden';
   }
   function closeAllModals() {
+    const keep = needsIdentity() ? 'modal-identity' : null;
     for (const m of document.querySelectorAll('.modal-backdrop')) {
-      m.classList.remove('open');
+      if (m.id !== keep) m.classList.remove('open');
     }
-    document.body.style.overflow = '';
+    if (!keep) document.body.style.overflow = '';
+  }
+
+  // ===== Identität: in einem Raum muss jedes Gerät einer Person zugeordnet sein =====
+  // ponytail: nur clientseitig — ohne Firebase-Auth ist die Geräte-ID nicht fälschungssicher, Rules könnten sie nicht prüfen
+  function needsIdentity() {
+    return !!_roomCode && !personById((state.devices || {})[getDeviceId()]);
+  }
+
+  function setIdentity(personId) {
+    state.devices = { ...(state.devices || {}), [getDeviceId()]: personId || null };
+    saveState();
+    render();
+  }
+
+  function ensureIdentity() {
+    const modal = document.getElementById('modal-identity');
+    if (!needsIdentity()) {
+      if (modal.classList.contains('open')) closeAllModals();
+      return;
+    }
+    document.getElementById('identity-list').innerHTML = state.people
+      .map(p => `<button type="button" data-identity="${p.id}">${escapeHtml(p.name)}</button>`).join('');
+    document.getElementById('identity-new').hidden = isRoomClosed();
+    if (!modal.classList.contains('open')) openModal('modal-identity');
+  }
+
+  function addSelfAsPerson() {
+    if (guardClosed()) return;
+    const name = document.getElementById('identity-name').value.trim();
+    if (!name) { toast('Name fehlt'); return; }
+    const dup = state.people.find(p => p.name.toLowerCase() === name.toLowerCase());
+    if (dup) { toast('Name existiert schon – bitte oben auswählen'); return; }
+    const p = { id: newId(), name };
+    state.people.push(p);
+    sortPeople();
+    document.getElementById('identity-name').value = '';
+    setIdentity(p.id);
+    toast('Willkommen, ' + name + '!');
   }
 
   function confirmAction({ title, text, onConfirm }) {
@@ -2050,6 +2181,7 @@
       updateSyncUI();
       setSyncDot('ok');
       touchHistory(code, state.settings.tripName);
+      ensureIdentity();
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(inviteUrl(code)).catch(() => {});
         toast(`Raum ${code} erstellt – Einladungslink kopiert!`);
@@ -2093,6 +2225,7 @@
     _roomRef = null;
     _roomCode = null;
     localStorage.removeItem(ROOM_KEY);
+    ensureIdentity();
     updateSyncUI();
     toast('Raum verlassen');
   }
@@ -2194,6 +2327,7 @@
 
   document.getElementById('fab').addEventListener('click', () => openExpenseModal(null));
   document.getElementById('exp-save').addEventListener('click', saveExpense);
+  for (const id of ['exp-amount', 'exp-currency', 'exp-rate']) document.getElementById(id).addEventListener('input', updateCurrencyUI);
   document.getElementById('exp-receipt').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -2219,11 +2353,17 @@
     document.querySelectorAll('#exp-participants button[data-pid]').forEach(b => b.setAttribute('aria-pressed', 'false'));
   });
   document.getElementById('add-person-btn').addEventListener('click', () => openPersonModal(null));
-  document.getElementById('log-device-person').addEventListener('change', (e) => {
-    state.devices = { ...(state.devices || {}), [getDeviceId()]: e.target.value || null };
-    saveState();
-    renderLog();
+  document.getElementById('log-device-person').addEventListener('change', (e) => setIdentity(e.target.value));
+  document.getElementById('identity-list').addEventListener('click', (e) => {
+    const id = e.target.closest('[data-identity]')?.dataset.identity;
+    if (id) setIdentity(id);
   });
+  document.getElementById('brand-identity').addEventListener('click', () => ensureIdentity());
+  document.getElementById('identity-add-btn').addEventListener('click', addSelfAsPerson);
+  document.getElementById('identity-name').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') addSelfAsPerson();
+  });
+  document.getElementById('identity-leave-btn').addEventListener('click', roomLeave);
   document.getElementById('person-save').addEventListener('click', savePerson);
   document.getElementById('person-delete').addEventListener('click', deletePerson);
   document.getElementById('copy-plan-btn').addEventListener('click', copyPlan);
