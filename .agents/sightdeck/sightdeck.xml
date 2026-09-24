@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks prefix="ES" generated="2026-09-24T18:17" label="expense-splitter" next_id="35">
+<tasks prefix="ES" generated="2026-09-24T18:36" label="expense-splitter" next_id="39">
   <task id="1" status="done">
     <title>Event-Details: Ort (Google Maps), Datum/Uhrzeit, Infos</title>
     <summary>Pro Kasse/Event Ort (klickbar → Google Maps), Datum/Uhrzeit und Freitext-Infos hinterlegen, damit Freunde eine Übersicht haben.</summary>
@@ -414,6 +414,8 @@
       <event ts="2026-09-24T12:38">started run lane run-f46e2356</event>
       <event ts="2026-09-24T12:39">verification: node --test + manual browser check (mobile width) passed</event>
       <event ts="2026-09-24T12:38">completed</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
     </history>
     <is_design>true</is_design>
     <predicted_files>
@@ -575,6 +577,8 @@
       <event ts="2026-09-24T12:54">started run lane run-d65bbee2</event>
       <event ts="2026-09-24T12:54">progress plan: 5 steps</event>
       <event ts="2026-09-24T12:56">completed (informational only — no code changes)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
     </history>
     <is_design />
     <predicted_files>
@@ -724,6 +728,8 @@
       <event ts="2026-09-24T14:11">started</event>
       <event ts="2026-09-24T14:15">verification: manual browser check passed</event>
       <event ts="2026-09-24T14:11">completed</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
     </history>
     <predicted_files>
       <file path="urlaubskasse.html" source="predicted" ts="2026-09-24T13:26" />
@@ -874,6 +880,8 @@
       <event ts="2026-09-24T13:29">started run lane run-5bb255f4</event>
       <event ts="2026-09-24T13:29">progress plan: 5 steps</event>
       <event ts="2026-09-24T13:31">completed</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
     </history>
     <predicted_files>
       <file path="urlaubskasse.html" source="predicted" ts="2026-09-24T13:26" />
@@ -962,6 +970,8 @@
       <event ts="2026-09-24T13:40">progress plan: 6 steps</event>
       <event ts="2026-09-24T13:43">verification: Browser-Check (lokal, ohne Raum) passed</event>
       <event ts="2026-09-24T13:40">completed</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
     </history>
     <predicted_files>
       <file path="urlaubskasse.html" source="predicted" ts="2026-09-24T13:26" />
@@ -1116,6 +1126,8 @@
       <event ts="2026-09-24T13:28">in testing — running node --test</event>
       <event ts="2026-09-24T13:30">verification: manual browser check passed</event>
       <event ts="2026-09-24T13:28">completed</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
     </history>
     <predicted_files>
       <file path="urlaubskasse.html" source="predicted" ts="2026-09-24T13:26" />
@@ -1203,6 +1215,8 @@
       <event ts="2026-09-24T13:29">progress plan: 5 steps</event>
       <event ts="2026-09-24T13:34">in testing — running node --check + npm test</event>
       <event ts="2026-09-24T13:36">completed</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
     </history>
     <predicted_files>
       <file path="urlaubskasse.html" source="predicted" ts="2026-09-24T13:26" />
@@ -1287,6 +1301,8 @@
       <event ts="2026-09-24T13:42">started run lane run-49c5dd34</event>
       <event ts="2026-09-24T13:43">progress plan: 4 steps</event>
       <event ts="2026-09-24T13:47">completed (informational only — no code changes)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
     </history>
     <is_design />
     <predicted_files>
@@ -1509,6 +1525,8 @@
       <event ts="2026-09-24T14:05">progress plan: 4 steps</event>
       <event ts="2026-09-24T14:07">verification: manual browser check passed</event>
       <event ts="2026-09-24T14:04">completed</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
     </history>
     <is_design />
     <predicted_files>
@@ -1600,6 +1618,8 @@
       <event ts="2026-09-24T14:10">waiting for user feedback: Statisch finde ich keinen Fehler im Sync/Render-Pfad. Betrifft es Teilnehmer, die per Einladungslink beitreten, oder auch bestehende Geräte – und zeigt die Browser-Konsole beim Beitritt einen Fehler?</event>
       <event ts="2026-09-24T14:15">feedback erhalten, weiter aktiv (auto via prompt-hook)</event>
       <event ts="2026-09-24T14:20">completed</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
     </history>
     <is_design />
     <predicted_files>
@@ -1691,6 +1711,8 @@
       <event ts="2026-09-24T14:10">started</event>
       <event ts="2026-09-24T14:10">progress plan: 3 steps</event>
       <event ts="2026-09-24T14:10">completed</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
     </history>
     <is_design />
     <predicted_files>
@@ -1773,6 +1795,8 @@
       <event ts="2026-09-24T14:11">started</event>
       <event ts="2026-09-24T14:12">progress plan: 4 steps</event>
       <event ts="2026-09-24T14:11">completed</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
     </history>
     <predicted_files>
       <file path="urlaubskasse.html" source="predicted" ts="2026-09-24T14:09" />
@@ -1857,6 +1881,8 @@
       <event ts="2026-09-24T14:18">started</event>
       <event ts="2026-09-24T14:19">progress plan: 4 steps</event>
       <event ts="2026-09-24T14:18">completed</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
     </history>
     <is_design />
     <predicted_files>
@@ -1943,6 +1969,8 @@
       <event ts="2026-09-24T14:18">started run lane run-dbdd1d02</event>
       <event ts="2026-09-24T14:18">progress plan: 3 steps</event>
       <event ts="2026-09-24T14:20">completed</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
     </history>
     <is_design />
     <predicted_files>
@@ -2027,6 +2055,8 @@
       <event ts="2026-09-24T14:20">started</event>
       <event ts="2026-09-24T14:20">progress plan: 3 steps</event>
       <event ts="2026-09-24T14:20">completed (informational only — no code changes)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
     </history>
     <is_design />
     <predicted_files>
@@ -2112,6 +2142,8 @@
       <event ts="2026-09-24T14:20">progress plan: 5 steps</event>
       <event ts="2026-09-24T17:44">verification: manual browser check passed</event>
       <event ts="2026-09-24T17:41">completed</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
     </history>
     <is_design />
     <predicted_files>
@@ -2204,6 +2236,8 @@
       <event ts="2026-09-24T17:41">progress plan: 5 steps</event>
       <event ts="2026-09-24T17:44">verification: Browser-Check 127.0.0.1 passed</event>
       <event ts="2026-09-24T17:41">completed</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
     </history>
     <tokens>
       <usage ts="2026-09-24T17:44" provider="claude-cli" model="claude-opus-5-5" input="120" output="34325" cache_read="8872836" cache_write="387230" session="2bf1f653-27f8-4a2c-a44f-85dd86e8f529" />
@@ -2287,6 +2321,8 @@
       <event ts="2026-09-24T17:41">progress plan: 3 steps</event>
       <event ts="2026-09-24T17:43">verification: manual browser check passed</event>
       <event ts="2026-09-24T17:41">completed</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
     </history>
     <tokens>
       <usage ts="2026-09-24T17:43" provider="claude-cli" model="claude-opus-5-5" input="104" output="17970" cache_read="6665353" cache_write="279113" session="72907ff5-0848-4f9d-9cb8-6cf6c7d3401d" />
@@ -2452,13 +2488,16 @@
       <event ts="2026-09-24T18:16">started</event>
       <event ts="2026-09-24T18:16">started run lane run-b425d377</event>
       <event ts="2026-09-24T18:16">completed</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
     </history>
     <is_design />
     <predicted_files>
       <file path="urlaubskasse.html" source="predicted" ts="2026-09-24T18:09" />
     </predicted_files>
     <tokens>
-      <usage ts="2026-09-24T18:17" provider="claude-cli" model="claude-haiku-4-5-20251001" input="942" output="37497" cache_read="11854471" cache_write="259562" session="18351746-59c8-451f-9dd1-91e3f2338fcb" />
+      <usage ts="2026-09-24T18:27" provider="claude-cli" model="claude-haiku-4-5-20251001" input="1988" output="58446" cache_read="30578662" cache_write="556674" session="18351746-59c8-451f-9dd1-91e3f2338fcb" />
+      <usage ts="2026-09-24T18:21" provider="claude-cli" model="claude-opus-5-5" input="6" output="696" cache_read="60267" cache_write="63580" session="edff4d43-d324-46c8-8ead-0f12bce9001e" attributed="inferred" />
     </tokens>
     <skills>
       <skill name="sightdeck-ai" ts="2026-09-24T18:09" session="18351746-59c8-451f-9dd1-91e3f2338fcb" />
@@ -2468,5 +2507,316 @@
     </files>
     <spans file="runs/34.json" runs="1" calls="37" ms="28184" failed="0" wall_ms="434000" idle_pct="94" updated="2026-09-24T18:16" />
     <execution_seconds>420</execution_seconds>
+  </task>
+  <task id="35" status="done">
+    <title>Browser-Aufruf ohne Bestätigung dauerhaft zulassen</title>
+    <summary>Der Browser-Aufruf soll nicht mehr jedes Mal bestätigt werden müssen. Die Berechtigung soll dauerhaft erteilt werden.</summary>
+    <created>2026-09-24T18:21</created>
+    <started>2026-09-24T18:21</started>
+    <done>2026-09-24T18:22</done>
+    <human_estimate>30min</human_estimate>
+    <story_points>2</story_points>
+    <story_points_refined>2</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-35.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>haiku</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible>false</end_customer_visible>
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet />
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-24T18:21">received, backlog</event>
+      <event ts="2026-09-24T18:21">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-24T18:21">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-24T18:21">auto-aktiviert via prompt-hook</event>
+      <event ts="2026-09-24T18:21">started run lane run-bff7abb8</event>
+      <event ts="2026-09-24T18:22">completed</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path=".claude" source="predicted" ts="2026-09-24T18:21" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-24T18:33" provider="claude-cli" model="claude-haiku-4-5-20251001" input="273" output="12689" cache_read="2836701" cache_write="219942" session="808c6972-7392-4db3-9cc8-3bd83d82754c" />
+      <usage ts="2026-09-24T18:25" provider="claude-cli" model="claude-opus-5-5" input="10" output="1317" cache_read="142263" cache_write="64608" session="96f6972e-4a1b-4b24-a3f1-effb0342e210" />
+      <usage ts="2026-09-24T18:34" provider="claude-cli" model="claude-opus-5-5" input="70" output="16695" cache_read="4079968" cache_write="292568" session="94e1418a-c025-443f-8a4d-d8707b36ea5f" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-24T18:22" session="808c6972-7392-4db3-9cc8-3bd83d82754c" />
+    </skills>
+    <files>
+      <file path="sw.js" ts="2026-09-24T18:24" />
+      <file path="urlaubskasse.html" ts="2026-09-24T18:27" />
+      <file path=".claude/settings.local.json" ts="2026-09-24T18:33" />
+    </files>
+    <spans file="runs/35.json" runs="4" calls="78" ms="774431" failed="1" wall_ms="1475000" idle_pct="47" updated="2026-09-24T18:22" />
+    <execution_seconds>60</execution_seconds>
+  </task>
+  <task id="36" status="done">
+    <title>Profilbilder (außer Reddi) in Schwarz-Weiß mit stärkerem Kontrast umwandeln</title>
+    <summary>Alle Standard-Profilbilder der Stamm-Truppe außer Reddi in Schwarz-Weiß umwandeln und den Kontrast erhöhen.</summary>
+    <created>2026-09-24T18:25</created>
+    <started>2026-09-24T18:28</started>
+    <done>2026-09-24T18:29</done>
+    <human_estimate>30min</human_estimate>
+    <story_points>2</story_points>
+    <story_points_refined>2</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-36.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>change</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>haiku</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Die Profilbilder der Stamm-Truppe sind jetzt in kontrastreichem Schwarz-Weiß.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-24T18:25">received, backlog</event>
+      <event ts="2026-09-24T18:25">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-24T18:28">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-24T18:28">auto-aktiviert via prompt-hook (parallel run)</event>
+      <event ts="2026-09-24T18:28">started run lane run-7581d6e7</event>
+      <event ts="2026-09-24T18:29">completed</event>
+      <event ts="2026-09-24T18:33">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-24T18:33">background run stopped by user</event>
+    </history>
+    <is_design>true</is_design>
+    <predicted_files>
+      <file path="avatars" source="predicted" ts="2026-09-24T18:25" />
+      <file path="sw.js" source="predicted" ts="2026-09-24T18:25" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-24T18:32" provider="claude-cli" model="claude-haiku-4-5-20251001" input="289" output="6418" cache_read="3611288" cache_write="259338" session="7a8254b4-9bc6-4132-8fd2-b43148fb9f8b" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-24T18:29" session="7a8254b4-9bc6-4132-8fd2-b43148fb9f8b" />
+    </skills>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-09-24T18:29" />
+      <file path=".claude/settings.local.json" ts="2026-09-24T18:32" />
+      <file path="sw.js" ts="2026-09-24T18:32" />
+      <file path="avatars/long.jpg" ts="2026-09-24T18:32" />
+      <file path="avatars/micha.jpg" ts="2026-09-24T18:32" />
+      <file path="avatars/ronny.jpg" ts="2026-09-24T18:32" />
+      <file path="avatars/rudi.jpg" ts="2026-09-24T18:32" />
+      <file path="avatars/thommy.jpg" ts="2026-09-24T18:32" />
+      <file path="avatars/ulbert.jpg" ts="2026-09-24T18:32" />
+    </files>
+    <spans file="runs/36.json" runs="2" calls="19" ms="206589" failed="0" wall_ms="249000" idle_pct="17" updated="2026-09-24T18:29" />
+    <execution_seconds>60</execution_seconds>
+  </task>
+  <task id="37" status="done">
+    <title>Währungs-Dropdown reparieren (EUR/PLN/CZK, Live-Kurse)</title>
+    <summary>Dropdown in urlaubskasse.html funktioniert nicht; EUR default, PLN, CZK, Kurse automatisch online laden.</summary>
+    <created>2026-09-24T18:28</created>
+    <started>2026-09-24T18:28</started>
+    <done>2026-09-24T18:28</done>
+    <human_estimate>1h</human_estimate>
+    <story_points>3</story_points>
+    <story_points_refined />
+    <agents>Claude</agents>
+    <concept>tasks/ES-37.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model />
+    <planning_recommended />
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Das Währungs-Dropdown zeigt jetzt alle Währungen (Euro, Złoty, Kronen …) und lädt den Wechselkurs automatisch.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-24T18:28">received, backlog</event>
+      <event ts="2026-09-24T18:28">started</event>
+      <event ts="2026-09-24T18:28">started run lane run-97a9b11b</event>
+      <event ts="2026-09-24T18:30">verification: manual browser check passed</event>
+      <event ts="2026-09-24T18:28">completed</event>
+    </history>
+    <verifications>
+      <verification ts="2026-09-24T18:30" tool="manual browser check" result="pass" />
+    </verifications>
+  </task>
+  <task id="38" status="done">
+    <title>Avatar-Kontrast an Reddi angleichen</title>
+    <summary>Avatare von Micha, Ronny, Rudi, Ulbert wirken flau; Kontrast wie bei Reddi einstellen.</summary>
+    <created>2026-09-24T18:34</created>
+    <started>2026-09-24T18:34</started>
+    <done>2026-09-24T18:34</done>
+    <human_estimate>30min</human_estimate>
+    <story_points>2</story_points>
+    <story_points_refined />
+    <agents>Claude</agents>
+    <concept>tasks/ES-38.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>change</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model />
+    <planning_recommended />
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Die Profilfotos der Stamm-Truppe haben jetzt einheitlich kräftigen Kontrast.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-24T18:34">received, backlog</event>
+      <event ts="2026-09-24T18:34">started</event>
+      <event ts="2026-09-24T18:34">started run lane run-ff7ed7f5</event>
+      <event ts="2026-09-24T18:36">verification: manual browser check passed</event>
+      <event ts="2026-09-24T18:34">completed</event>
+    </history>
+    <tokens>
+      <usage ts="2026-09-24T18:36" provider="claude-cli" model="claude-opus-5-5" input="54" output="12861" cache_read="3954304" cache_write="29326" session="94e1418a-c025-443f-8a4d-d8707b36ea5f" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-24T18:34" session="94e1418a-c025-443f-8a4d-d8707b36ea5f" />
+    </skills>
+    <files>
+      <file path="avatars/long.jpg" ts="2026-09-24T18:36" />
+      <file path="avatars/micha.jpg" ts="2026-09-24T18:36" />
+      <file path="avatars/ronny.jpg" ts="2026-09-24T18:36" />
+      <file path="avatars/rudi.jpg" ts="2026-09-24T18:36" />
+      <file path="avatars/thommy.jpg" ts="2026-09-24T18:36" />
+      <file path="avatars/ulbert.jpg" ts="2026-09-24T18:36" />
+      <file path="sw.js" ts="2026-09-24T18:36" />
+    </files>
+    <verifications>
+      <verification ts="2026-09-24T18:36" tool="manual browser check" result="pass" />
+    </verifications>
+    <spans file="runs/38.json" runs="1" calls="12" ms="64795" failed="1" wall_ms="104000" idle_pct="38" updated="2026-09-24T18:34" />
   </task>
 </tasks>
