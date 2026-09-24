@@ -176,6 +176,9 @@
     border: 1px solid var(--border);
     margin-bottom: 12px;
   }
+  #event-card { line-height: 1.5; }
+  #event-card a { color: var(--accent); }
+  #event-card .event-info { white-space: pre-wrap; color: var(--text-muted); margin-top: 6px; }
   .card.empty {
     text-align: center;
     color: var(--text-soft);
@@ -694,6 +697,7 @@
         <div class="value" id="sum-count">0</div>
       </div>
     </div>
+    <div class="card" id="event-card" hidden></div>
     <div class="card empty" id="closed-banner" style="display:none;padding:12px 16px">
       🔒 Diese Kasse ist geschlossen – keine Änderungen möglich.
     </div>
@@ -797,6 +801,24 @@
     <div class="field">
       <label for="trip-name-input">Name dieser Kasse</label>
       <input type="text" id="trip-name-input" placeholder="z.B. Urlaub Mallorca 2026" autocomplete="off" maxlength="60">
+    </div>
+    <div class="row">
+      <div class="field">
+        <label for="event-from-input">Von</label>
+        <input type="date" id="event-from-input">
+      </div>
+      <div class="field">
+        <label for="event-to-input">Bis</label>
+        <input type="date" id="event-to-input">
+      </div>
+    </div>
+    <div class="field">
+      <label for="event-place-input">Wo? (öffnet Google Maps)</label>
+      <input type="text" id="event-place-input" placeholder="z.B. Strandbar Palma, Mallorca" autocomplete="off" maxlength="120">
+    </div>
+    <div class="field">
+      <label for="event-info-input">Infos für alle</label>
+      <textarea id="event-info-input" rows="3" maxlength="500" placeholder="z.B. Treffpunkt, Mitbringen, Dresscode"></textarea>
     </div>
     <div class="field" id="close-room-field">
       <label>Kasse-Status</label>
@@ -1131,6 +1153,26 @@
     renderSettlement();
     renderPeople();
     renderClosedState();
+    renderEvent();
+  }
+
+  function renderEvent() {
+    const { eventFrom = '', eventTo = '', eventPlace = '', eventInfo = '' } = state.settings;
+    const card = document.getElementById('event-card');
+    const lines = [];
+    // 'T00:00' = lokale Mitternacht; ohne wird YYYY-MM-DD als UTC gelesen und kann einen Tag verrutschen
+    const fmtDay = (v) => new Date(v + 'T00:00').toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' });
+    if (eventFrom || eventTo) {
+      const range = eventFrom && eventTo && eventFrom !== eventTo ? fmtDay(eventFrom) + ' – ' + fmtDay(eventTo)
+        : eventFrom ? fmtDay(eventFrom) : 'bis ' + fmtDay(eventTo);
+      lines.push('📅 ' + escapeHtml(range));
+    }
+    if (eventPlace.trim()) {
+      const url = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(eventPlace.trim());
+      lines.push('📍 <a href="' + url + '" target="_blank" rel="noopener">' + escapeHtml(eventPlace.trim()) + '</a>');
+    }
+    card.innerHTML = lines.join('<br>') + (eventInfo.trim() ? '<div class="event-info">' + escapeHtml(eventInfo.trim()) + '</div>' : '');
+    card.hidden = !lines.length && !eventInfo.trim();
   }
 
   function renderClosedState() {
@@ -1945,6 +1987,11 @@
     renderRoundingPicker();
     const tn = document.getElementById('trip-name-input');
     if (tn) { tn.value = state.settings.tripName || ''; tn.disabled = isRoomClosed(); }
+    for (const [id, key] of EVENT_FIELDS) {
+      const el = document.getElementById(id);
+      el.value = state.settings[key] || '';
+      el.disabled = isRoomClosed();
+    }
     updateSyncUI();
     updateCloseUI();
     openModal('modal-menu');
@@ -1955,6 +2002,15 @@
     applyTripName();
     saveState();
   });
+  const EVENT_FIELDS = [['event-from-input', 'eventFrom'], ['event-to-input', 'eventTo'], ['event-place-input', 'eventPlace'], ['event-info-input', 'eventInfo']];
+  for (const [id, key] of EVENT_FIELDS) {
+    document.getElementById(id).addEventListener('input', (e) => {
+      if (guardClosed()) { e.target.value = state.settings[key] || ''; return; }
+      state.settings[key] = e.target.value;
+      saveState();
+      renderEvent();
+    });
+  }
   document.getElementById('theme-btn').addEventListener('click', cycleTheme);
   document.getElementById('close-room-btn').addEventListener('click', toggleRoomClosed);
 
