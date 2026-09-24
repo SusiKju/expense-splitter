@@ -1,5 +1,5 @@
 // Urlaubskasse Service Worker
-const CACHE = 'urlaubskasse-v3';
+const CACHE = 'urlaubskasse-v4';
 const ASSETS = [
   './',
   './urlaubskasse.html',
@@ -7,6 +7,12 @@ const ASSETS = [
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
+  './avatars/long.jpg',
+  './avatars/micha.jpg',
+  './avatars/ronny.jpg',
+  './avatars/rudi.jpg',
+  './avatars/thommy.jpg',
+  './avatars/ulbert.jpg',
 ];
 
 self.addEventListener('install', (event) => {
