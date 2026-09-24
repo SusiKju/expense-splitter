@@ -840,7 +840,21 @@
         <label for="exp-amount">Betrag</label>
         <div style="display:flex;gap:8px">
           <input type="number" id="exp-amount" inputmode="decimal" step="0.01" min="0" placeholder="0,00" style="flex:1;min-width:0">
-          <input type="text" id="exp-currency" list="currency-list" maxlength="3" aria-label="Währung" style="width:5.5em;text-transform:uppercase">
+          <select id="exp-currency" aria-label="Währung" style="width:6.5em">
+            <option value="EUR" title="€ Euro">EUR</option>
+            <option value="PLN" title="zł Polnischer Złoty">PLN</option>
+            <option value="CZK" title="Kč Tschechische Krone">CZK</option>
+            <option value="CHF" title="CHF Schweizer Franken">CHF</option>
+            <option value="GBP" title="£ Britisches Pfund">GBP</option>
+            <option value="USD" title="$ US-Dollar">USD</option>
+            <option value="DKK" title="DKK Dänische Krone">DKK</option>
+            <option value="SEK" title="SEK Schwedische Krone">SEK</option>
+            <option value="NOK" title="NOK Norwegische Krone">NOK</option>
+            <option value="HUF" title="Ft Ungarischer Forint">HUF</option>
+            <option value="TRY" title="TRY Türkische Lira">TRY</option>
+            <option value="THB" title="THB Thailändischer Baht">THB</option>
+            <option value="JPY" title="¥ Japanischer Yen">JPY</option>
+          </select>
         </div>
       </div>
       <div class="field">
@@ -854,22 +868,6 @@
       <div class="muted" id="exp-rate-preview" style="font-size:13px;margin-top:4px"></div>
       <div class="muted" id="exp-rate-live" style="font-size:13px;margin-top:2px"></div>
     </div>
-    <datalist id="currency-list">
-      <option value="EUR">EUR</option>
-      <option value="CHF">CHF</option>
-      <option value="GBP">GBP</option>
-      <option value="USD">USD</option>
-      <option value="DKK">DKK</option>
-      <option value="SEK">SEK</option>
-      <option value="NOK">NOK</option>
-      <option value="PLN">PLN</option>
-      <option value="CZK">CZK</option>
-      <option value="HUF">HUF</option>
-      <option value="HRK">HRK</option>
-      <option value="TRY">TRY</option>
-      <option value="THB">THB</option>
-      <option value="JPY">JPY</option>
-    </datalist>
     <div class="field">
       <label for="exp-payer">Wer hat bezahlt?</label>
       <select id="exp-payer"></select>
@@ -1650,7 +1648,7 @@
       titleEl.textContent = 'Ausgabe bearbeiten';
       descEl.value = exp.desc || '';
       amountEl.value = exp.currency ? exp.origAmount : exp.amount;
-      document.getElementById('exp-currency').value = exp.currency || 'EUR';
+      setExpCurrency(exp.currency || 'EUR');
       document.getElementById('exp-rate').value = exp.currency ? exp.rate : '';
       // gespeicherter Kurs bleibt fest, der Live-Kurs wird nur angezeigt
       document.getElementById('exp-rate').dataset.auto = exp.currency ? '0' : '1';
@@ -1666,7 +1664,7 @@
       amountEl.value = '';
       // Im Urlaub ist meist jede Ausgabe in derselben Währung → letzte Währung/Kurs vorschlagen
       const last = state.expenses.reduce((a, e) => (!a || (e.createdAt || 0) > (a.createdAt || 0) ? e : a), null);
-      document.getElementById('exp-currency').value = last?.currency || 'EUR';
+      setExpCurrency(last?.currency || 'EUR');
       document.getElementById('exp-rate').value = last?.currency ? last.rate : '';
       document.getElementById('exp-rate').dataset.auto = '1';
       dateEl.value = today();
@@ -1748,6 +1746,13 @@
     render();
     closeAllModals();
     toast(editingExpenseId ? 'Ausgabe aktualisiert' : 'Ausgabe gespeichert');
+  }
+
+  // unbekannte (alte) Währung als Option ergänzen, sonst fällt das Select still auf EUR zurück
+  function setExpCurrency(c) {
+    const sel = document.getElementById('exp-currency');
+    if (![...sel.options].some(o => o.value === c)) sel.add(new Option(c, c));
+    sel.value = c;
   }
 
   // '' = EUR, sonst ISO-Code der Fremdwährung

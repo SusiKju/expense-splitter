@@ -1,5 +1,5 @@
 // Urlaubskasse Service Worker
-const CACHE = 'urlaubskasse-v6';
+const CACHE = 'urlaubskasse-v8';
 const ASSETS = [
   './',
   './urlaubskasse.html',
