@@ -133,7 +133,7 @@
     display: flex;
     align-items: center;
     gap: 6px;
-    padding: 8px 12px;
+    padding: 4px 4px 4px 12px;
     background: transparent;
     border: 1px solid var(--border);
     border-radius: var(--radius-sm);
@@ -153,6 +153,23 @@
   #menu-btn:active {
     transform: scale(0.98);
   }
+  #menu-btn .user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 0 2px var(--bg-elevated);
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+    font-weight: 600;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+  #menu-btn .user-avatar.has-avatar { background: transparent; }
+  #menu-btn .user-avatar svg, #menu-btn .user-avatar img { width: 100%; height: 100%; display: block; object-fit: cover; }
 
   /* Tabs */
   nav.tabs {
@@ -204,8 +221,6 @@
   #event-card { line-height: 1.5; white-space: pre-wrap; color: var(--text-muted); }
   .brand-text { min-width: 0; display: flex; flex-direction: column; }
   #brand-title { line-height: 1.2; }
-  #brand-identity { font-size: 12px; font-weight: 400; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; cursor: pointer; transition: color 0.15s; }
-  #brand-identity:hover { color: var(--accent); }
   #brand-event { font-size: 12px; font-weight: 400; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; }
   #brand-event a { color: var(--accent); }
   .event-place-link { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 8px; margin: -8px; border-radius: 6px; cursor: pointer; transition: background-color 0.2s; }
@@ -254,11 +269,16 @@
     overflow: hidden;
   }
   .avatar.has-avatar svg,
-  .expense-avatar.has-avatar svg {
+  .expense-avatar.has-avatar svg,
+  .has-avatar img {
     width: 100%;
     height: 100%;
     display: block;
   }
+  .has-avatar img { object-fit: cover; border-radius: 50%; }
+  .photo-row { display: flex; align-items: center; gap: 10px; }
+  .photo-row .avatar { width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-weight: 600; }
+  #photo-input { display: none; }
   .expense-body {
     flex: 1;
     min-width: 0;
@@ -732,12 +752,11 @@
       <span class="logo">€</span>
       <div class="brand-text">
         <span id="brand-title">Kasse</span>
-        <span id="brand-identity" hidden title="Klick zum Wechseln"></span>
         <span id="brand-event" hidden></span>
       </div>
     </div>
     <div class="topbar-actions">
-      <button id="menu-btn" aria-label="Einstellungen" title="Einstellungen">👤 <span id="user-menu-name"></span></button>
+      <button id="menu-btn" aria-label="Einstellungen" title="Einstellungen"><span id="user-menu-name"></span><span id="user-menu-avatar"></span></button>
     </div>
   </header>
 
@@ -902,6 +921,15 @@
   <div class="modal" role="dialog">
     <div class="modal-handle"></div>
     <h2>Mehr</h2>
+    <div class="field" id="photo-field" hidden>
+      <label>Dein Profilbild</label>
+      <div class="photo-row">
+        <span id="photo-preview"></span>
+        <input type="file" id="photo-input" accept="image/*">
+        <button type="button" class="btn ghost" id="photo-pick-btn">Bild wählen</button>
+        <button type="button" class="btn ghost" id="photo-remove-btn">Entfernen</button>
+      </div>
+    </div>
     <div class="field">
       <label for="trip-name-input">Name dieser Kasse</label>
       <input type="text" id="trip-name-input" placeholder="z.B. Urlaub Mallorca 2026" autocomplete="off" maxlength="60">
@@ -1354,24 +1382,20 @@
     card.hidden = !eventInfo.trim();
   }
 
+  function currentPerson() {
+    const id = (state.devices || {})[getDeviceId()];
+    return id ? personById(id) : null;
+  }
+
   function renderCurrentIdentity() {
-    const el = document.getElementById('brand-identity');
-    const menuNameEl = document.getElementById('user-menu-name');
-    if (!el) return;
-    const currentPersonId = (state.devices || {})[getDeviceId()];
-    const person = currentPersonId ? personById(currentPersonId) : null;
-    if (person) {
-      el.textContent = '👤 ' + escapeHtml(person.name);
-      el.hidden = false;
-      if (menuNameEl) {
-        menuNameEl.textContent = escapeHtml(person.name);
-      }
-    } else {
-      el.hidden = true;
-      if (menuNameEl) {
-        menuNameEl.textContent = 'Einstellungen';
-      }
-    }
+    const person = currentPerson();
+    document.getElementById('photo-field').hidden = !person;
+    document.getElementById('photo-preview').innerHTML = person ? personAvatarHtml(person, 'avatar') : '';
+    document.getElementById('photo-remove-btn').hidden = !person?.photo;
+    document.getElementById('user-menu-name').textContent = person ? person.name : 'Einstellungen';
+    document.getElementById('user-menu-avatar').innerHTML = person
+      ? personAvatarHtml(person, 'user-avatar')
+      : '<div class="user-avatar">👤</div>';
   }
 
   function renderClosedState() {
@@ -1512,6 +1536,9 @@
   function personAvatarHtml(person, className) {
     const cls = className || 'avatar';
     const title = escapeHtml(person?.name || '');
+    if (isPhotoUrl(person?.photo)) {
+      return '<div class="' + cls + ' has-avatar" title="' + title + '"><img src="' + person.photo + '" alt=""></div>';
+    }
     if (person?.avatar) {
       return '<div class="' + cls + ' has-avatar" title="' + title + '">' + person.avatar + '</div>';
     }
@@ -1641,6 +1668,7 @@
     document.getElementById('exp-receipt-hint').hidden = !!_roomCode;
     showReceiptPreview(null);
     if (exp?.hasReceipt && _roomCode) loadReceipt(exp.id).then(url => { if (editingExpenseId === exp.id && pendingReceipt === undefined) showReceiptPreview(url); });
+    fxShownCur = null; // Live-Kurs bei jedem Öffnen neu laden/anzeigen
     updateCurrencyUI();
     openModal('modal-expense');
     setTimeout(() => descEl.focus(), 100);
@@ -2036,6 +2064,21 @@
     throw new Error('Bild zu groß');
   }
 
+  // Profilbild: mittig quadratisch zuschneiden, 128 px JPEG als Base64 (~4–8 KB) direkt an der Person im State,
+  // so synct es ohne Extra-Pfad zu allen. Rund wird es erst per CSS.
+  const PHOTO_PX = 128;
+  const isPhotoUrl = (u) => typeof u === 'string' && /^data:image\/jpeg;base64,[A-Za-z0-9+/=]+$/.test(u); // kommt aus dem Sync → Attribut-Injection verhindern
+
+  async function compressPhoto(file) {
+    const bmp = await createImageBitmap(file);
+    const side = Math.min(bmp.width, bmp.height);
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = PHOTO_PX;
+    canvas.getContext('2d').drawImage(bmp, (bmp.width - side) / 2, (bmp.height - side) / 2, side, side, 0, 0, PHOTO_PX, PHOTO_PX);
+    bmp.close();
+    return canvas.toDataURL('image/jpeg', 0.75);
+  }
+
   function receiptRef(expenseId) {
     return getDb().ref(`receipts/${_roomCode}/${expenseId}`);
   }
@@ -2424,7 +2467,6 @@
     const id = e.target.closest('[data-identity]')?.dataset.identity;
     if (id) setIdentity(id);
   });
-  document.getElementById('brand-identity').addEventListener('click', () => ensureIdentity());
   document.getElementById('identity-add-btn').addEventListener('click', addSelfAsPerson);
   document.getElementById('identity-name').addEventListener('keydown', (e) => {
     if (e.key === 'Enter') addSelfAsPerson();
@@ -2462,6 +2504,29 @@
       renderEvent();
     });
   }
+  document.getElementById('photo-input').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    e.target.value = '';
+    const person = currentPerson();
+    if (!file || !person) return;
+    try {
+      person.photo = await compressPhoto(file);
+    } catch (err) {
+      console.error('[Kasse] Profilbild fehlgeschlagen:', err);
+      toast('Bild konnte nicht gelesen werden');
+      return;
+    }
+    saveState();
+    render();
+  });
+  document.getElementById('photo-pick-btn').addEventListener('click', () => document.getElementById('photo-input').click());
+  document.getElementById('photo-remove-btn').addEventListener('click', () => {
+    const person = currentPerson();
+    if (!person) return;
+    delete person.photo;
+    saveState();
+    render();
+  });
   document.getElementById('theme-select').addEventListener('change', (e) => applyTheme(e.target.value));
   document.getElementById('close-room-btn').addEventListener('click', toggleRoomClosed);
 

@@ -8,6 +8,7 @@ const {
   computeBalances,
   computeSettlement,
   paymentAction,
+  toEur,
 } = require('../settlement.js');
 
 const people = (ids) => ids.map((id) => ({ id }));
@@ -248,5 +249,19 @@ describe('paymentAction', () => {
   test('leer oder ungültig -> null', () => {
     assert.equal(paymentAction('', 100), null);
     assert.equal(paymentAction('a b<c>', 100), null);
+  });
+});
+
+describe('toEur', () => {
+  test('rechnet Fremdwährung per Kurs "1 € = rate" in EUR um, auf Cent gerundet', () => {
+    assert.equal(toEur(100, 0.95), 105.26);   // 100 CHF bei 1 € = 0,95 CHF
+    assert.equal(toEur(3950, 395), 10);       // HUF
+    assert.equal(toEur(12.5, 1), 12.5);
+  });
+
+  test('ungültiger Betrag oder Kurs -> NaN', () => {
+    assert.ok(Number.isNaN(toEur(10, 0)));
+    assert.ok(Number.isNaN(toEur(10, '')));
+    assert.ok(Number.isNaN(toEur(0, 1.1)));
   });
 });

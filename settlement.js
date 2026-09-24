@@ -109,5 +109,13 @@
     return { type: 'paypal', url: 'https://paypal.me/' + name + '/' + (cent / 100).toFixed(2) + 'EUR' };
   }
 
-  return { computeRaw, roundBalances, computeBalances, computeSettlement, paymentAction };
+  // Fremdwährung → EUR. rate = Einheiten Fremdwährung pro 1 € ("1 € = rate CUR").
+  // Liefert EUR auf Cent gerundet, oder NaN bei ungültiger Eingabe.
+  function toEur(amount, rate) {
+    const a = Number(amount), r = Number(rate);
+    if (!(a > 0) || !(r > 0)) return NaN;
+    return Math.round(a / r * 100) / 100;
+  }
+
+  return { computeRaw, roundBalances, computeBalances, computeSettlement, paymentAction, toEur };
 });

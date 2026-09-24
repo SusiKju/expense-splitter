@@ -1,8 +1,9 @@
 // Urlaubskasse Service Worker
-const CACHE = 'urlaubskasse-v2';
+const CACHE = 'urlaubskasse-v3';
 const ASSETS = [
   './',
   './urlaubskasse.html',
+  './settlement.js',
   './manifest.webmanifest',
   './icon-192.png',
   './icon-512.png',
@@ -26,8 +27,8 @@ self.addEventListener('fetch', (event) => {
   const req = event.request;
   if (req.method !== 'GET') return;
 
-  // Network-first für Navigationen, Cache-Fallback offline
-  if (req.mode === 'navigate') {
+  // Network-first für Navigationen und Skripte (HTML und settlement.js müssen zusammenpassen), Cache-Fallback offline
+  if (req.mode === 'navigate' || req.destination === 'script') {
     event.respondWith(
       fetch(req)
         .then((res) => {
@@ -35,7 +36,7 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE).then((c) => c.put(req, copy));
           return res;
         })
-        .catch(() => caches.match('./urlaubskasse.html'))
+        .catch(() => caches.match(req).then((hit) => hit || caches.match('./urlaubskasse.html')))
     );
     return;
   }
