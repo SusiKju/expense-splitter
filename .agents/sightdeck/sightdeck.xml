@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks prefix="ES" generated="2026-09-24T18:36" label="expense-splitter" next_id="39">
+<tasks prefix="ES" generated="2026-09-24T21:08" label="expense-splitter" next_id="41">
   <task id="1" status="done">
     <title>Event-Details: Ort (Google Maps), Datum/Uhrzeit, Infos</title>
     <summary>Pro Kasse/Event Ort (klickbar → Google Maps), Datum/Uhrzeit und Freitext-Infos hinterlegen, damit Freunde eine Übersicht haben.</summary>
@@ -1003,66 +1003,6 @@
     </verifications>
     <spans file="runs/14.json" runs="3" calls="32" ms="71789" failed="1" wall_ms="826000" idle_pct="91" updated="2026-09-24T13:40" />
     <execution_seconds>120</execution_seconds>
-  </task>
-  <task id="15" status="backlog">
-    <title>Abrechnung als PDF, CSV oder Teilen-Text exportieren</title>
-    <summary>Neben "Plan kopieren" die Abrechnung als PDF (Print-CSS), CSV-Download oder Teilen-Text anbieten.</summary>
-    <created>2026-09-24T13:26</created>
-    <started />
-    <done />
-    <human_estimate>2h</human_estimate>
-    <story_points>3</story_points>
-    <story_points_refined>3</story_points_refined>
-    <agents>Claude</agents>
-    <concept>tasks/ES-15.md</concept>
-    <parent />
-    <subtasks />
-    <dependencies />
-    <external_id />
-    <external_url />
-    <backlog_rank />
-    <queue_seq />
-    <informational />
-    <kind>feature</kind>
-    <testing_tool />
-    <testing_tool_locked />
-    <lane_id />
-    <lane_order />
-    <lane_source />
-    <answer_read />
-    <branch />
-    <branch_base_sha />
-    <worktree />
-    <question />
-    <question_about_tests />
-    <question_topic />
-    <question_blocking />
-    <gate_rule />
-    <tags />
-    <run_window_id />
-    <claude_model>sonnet</claude_model>
-    <planning_recommended>false</planning_recommended>
-    <planning_active />
-    <auto_run />
-    <changelog_entry />
-    <end_customer_visible />
-    <start_date />
-    <end_date />
-    <deadline />
-    <version />
-    <session_id />
-    <changelog_snippet>Die Abrechnung lässt sich jetzt als PDF oder CSV exportieren oder direkt teilen.</changelog_snippet>
-    <changelog_snippet_stale />
-    <changelog_snippet_source />
-    <jira_sync_failed />
-    <jira_sync_error />
-    <is_design />
-    <history>
-      <event ts="2026-09-24T13:26">received, backlog</event>
-    </history>
-    <predicted_files>
-      <file path="urlaubskasse.html" source="predicted" ts="2026-09-24T13:26" />
-    </predicted_files>
   </task>
   <task id="17" status="done">
     <title>Änderungsprotokoll für Ausgaben in einer Kasse</title>
@@ -2800,7 +2740,8 @@
       <event ts="2026-09-24T18:34">completed</event>
     </history>
     <tokens>
-      <usage ts="2026-09-24T18:36" provider="claude-cli" model="claude-opus-5-5" input="54" output="12861" cache_read="3954304" cache_write="29326" session="94e1418a-c025-443f-8a4d-d8707b36ea5f" />
+      <usage ts="2026-09-24T18:37" provider="claude-cli" model="claude-opus-5-5" input="60" output="14368" cache_read="4415465" cache_write="31855" session="94e1418a-c025-443f-8a4d-d8707b36ea5f" />
+      <usage ts="2026-09-24T20:35" provider="claude-cli" model="claude-opus-5-5" input="6" output="732" cache_read="57396" cache_write="66956" session="e7359197-6a8d-4434-af59-c19911450fa7" attributed="inferred" />
     </tokens>
     <skills>
       <skill name="sightdeck-ai" ts="2026-09-24T18:34" session="94e1418a-c025-443f-8a4d-d8707b36ea5f" />
@@ -2818,5 +2759,166 @@
       <verification ts="2026-09-24T18:36" tool="manual browser check" result="pass" />
     </verifications>
     <spans file="runs/38.json" runs="1" calls="12" ms="64795" failed="1" wall_ms="104000" idle_pct="38" updated="2026-09-24T18:34" />
+  </task>
+  <task id="39" status="done">
+    <title>Klären, wo die Profilbilder der Standardpersonen gespeichert werden</title>
+    <summary>Herausfinden, wo die Profilbilder der Standardpersonen gespeichert sind. In einem neu geöffneten Event haben die Standardpersonen wieder das aktuelle Profilbild.</summary>
+    <created>2026-09-24T20:35</created>
+    <started>2026-09-24T20:35</started>
+    <done>2026-09-24T20:35</done>
+    <human_estimate>30min</human_estimate>
+    <story_points>2</story_points>
+    <story_points_refined>2</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-39.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>research</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>haiku</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible>false</end_customer_visible>
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Die Standard-Profilbilder werden nicht in Firebase gespeichert, sondern per Person-Name aus dem hardcodierten AVATARS-Objekt nachgeschlagen – daher zeigen neue Events automatisch die aktuellen Bilder.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-24T20:35">received, backlog</event>
+      <event ts="2026-09-24T20:35">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-24T20:35">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-24T20:35">auto-aktiviert via prompt-hook</event>
+      <event ts="2026-09-24T20:35">started run lane run-cf6e402e</event>
+      <event ts="2026-09-24T20:35">started</event>
+      <event ts="2026-09-24T20:36">progress plan: 4 steps</event>
+      <event ts="2026-09-24T20:35">completed</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path="avatars" source="predicted" ts="2026-09-24T20:35" />
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-24T20:35" />
+      <file path="database.rules.json" source="predicted" ts="2026-09-24T20:35" />
+      <file path="sw.js" source="predicted" ts="2026-09-24T20:35" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-24T20:38" provider="claude-cli" model="claude-haiku-4-5-20251001" input="457" output="20226" cache_read="5172268" cache_write="265399" session="7b9484eb-10fd-4301-b19b-80a15db57ed4" />
+      <usage ts="2026-09-24T21:07" provider="claude-cli" model="claude-opus-5-5" input="36" output="8540" cache_read="934819" cache_write="191973" session="60565b7b-0f36-4146-b1fd-83e8355f69c6" attributed="inferred" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-24T20:35" session="7b9484eb-10fd-4301-b19b-80a15db57ed4" />
+    </skills>
+    <progress step="4" of="4" started="2026-09-24T20:36" label="Ergebnis dokumentieren">
+      <step n="1" label="Repo nach Avatar-Speicherort durchsuchen" done="2026-09-24T20:35" />
+      <step n="2" label="Code zur Avatar-Anzeige untersuchen" done="2026-09-24T20:35" />
+      <step n="3" label="Firebase Avatar-Config prüfen" done="2026-09-24T20:35" />
+      <step n="4" label="Ergebnis dokumentieren" />
+    </progress>
+    <spans file="runs/39.json" runs="1" calls="31" ms="52664" failed="2" wall_ms="129000" idle_pct="59" updated="2026-09-24T20:35" />
+  </task>
+  <task id="40" status="done">
+    <title>Karikatur-Avatare statt echter Fotos</title>
+    <summary>Echte Fotos in avatars/ durch gezeichnete Karikaturen ersetzen (inkl. neuem Reddi-Avatar).</summary>
+    <created>2026-09-24T21:07</created>
+    <started>2026-09-24T21:07</started>
+    <done>2026-09-24T21:07</done>
+    <human_estimate>30min</human_estimate>
+    <story_points>2</story_points>
+    <story_points_refined />
+    <agents>Claude</agents>
+    <concept>tasks/ES-40.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>change</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model />
+    <planning_recommended />
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Die Avatare der Stamm-Truppe sind jetzt gezeichnete Karikaturen statt echter Fotos, Reddi hat auch eine bekommen.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-24T21:07">received, backlog</event>
+      <event ts="2026-09-24T21:07">started</event>
+      <event ts="2026-09-24T21:07">started run lane run-4de26e31</event>
+      <event ts="2026-09-24T21:07">completed</event>
+    </history>
+    <tokens>
+      <usage ts="2026-09-24T21:09" provider="claude-cli" model="claude-opus-5-5" input="44" output="10626" cache_read="3230527" cache_write="29041" session="60565b7b-0f36-4146-b1fd-83e8355f69c6" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-24T21:07" session="60565b7b-0f36-4146-b1fd-83e8355f69c6" />
+    </skills>
+    <files>
+      <file path="avatars/long.jpg" ts="2026-09-24T21:07" />
+      <file path="avatars/micha.jpg" ts="2026-09-24T21:07" />
+      <file path="avatars/reddi.jpg" ts="2026-09-24T21:07" />
+      <file path="avatars/ronny.jpg" ts="2026-09-24T21:07" />
+      <file path="avatars/rudi.jpg" ts="2026-09-24T21:07" />
+      <file path="avatars/thommy.jpg" ts="2026-09-24T21:07" />
+      <file path="avatars/ulbert.jpg" ts="2026-09-24T21:07" />
+      <file path="sw.js" ts="2026-09-24T21:08" />
+      <file path="urlaubskasse.html" ts="2026-09-24T21:08" />
+    </files>
+    <spans file="runs/40.json" runs="1" calls="5" ms="6038" failed="0" wall_ms="33000" idle_pct="82" updated="2026-09-24T21:07" />
   </task>
 </tasks>
