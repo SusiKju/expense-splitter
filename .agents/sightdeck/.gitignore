@@ -1,0 +1,21 @@
+# Sightdeck runtime files - not project state.
+/.state/
+/*.lock
+/*.pre-archive.bak
+/.bash-files-*
+/config.local.json
+/sightdeck.local.xml
+/sightdeck.merged.xml
+/groupings.json
+/.bootstrap-out.txt
+/.token_cursor.json
+/*.wlock
+/*.recovered
+/*.broken-*
+/*.pre-split.bak
+/.trash/
+/dependency-suggestions.json
+/_*
+/.tmp*
+/scratch/
+/runs/

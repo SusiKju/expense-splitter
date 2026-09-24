@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks prefix="ES" generated="2026-09-24T14:21" label="expense-splitter" next_id="31">
+<tasks prefix="ES" generated="2026-09-24T18:17" label="expense-splitter" next_id="35">
   <task id="1" status="done">
     <title>Event-Details: Ort (Google Maps), Datum/Uhrzeit, Infos</title>
     <summary>Pro Kasse/Event Ort (klickbar → Google Maps), Datum/Uhrzeit und Freitext-Infos hinterlegen, damit Freunde eine Übersicht haben.</summary>
@@ -1440,7 +1440,7 @@
       <event ts="2026-09-24T14:00">completed</event>
     </history>
     <tokens>
-      <usage ts="2026-09-24T14:03" provider="claude-cli" model="claude-opus-5-5" input="32" output="8269" cache_read="2150568" cache_write="20177" session="35954cdd-cd8d-4f6a-83a3-5d85ed9123a6" />
+      <usage ts="2026-09-24T17:51" provider="claude-cli" model="claude-opus-5-5" input="48" output="10671" cache_read="3061842" cache_write="259310" session="35954cdd-cd8d-4f6a-83a3-5d85ed9123a6" />
       <usage ts="2026-09-24T14:02" provider="claude-cli" model="claude-opus-5-5" input="6" output="955" cache_read="60613" cache_write="62871" session="5903c000-80b4-4e43-b245-223016919204" attributed="inferred" />
     </tokens>
     <files>
@@ -1796,12 +1796,12 @@
     </files>
     <spans file="runs/26.json" runs="2" calls="46" ms="19838" failed="2" wall_ms="171000" idle_pct="88" updated="2026-09-24T14:11" />
   </task>
-  <task id="27" status="active">
+  <task id="27" status="done">
     <title>User-Icon mit Benutzernamen statt Drei-Punkte-Menü für Settings im Header anzeigen</title>
     <summary>Da der User nach der Identitätsauswahl identifiziert ist, ersetzt das vorgesehene User-Icon die drei Punkte für die Settings. Daneben steht als Label der Benutzername.</summary>
     <created>2026-09-24T14:17</created>
     <started>2026-09-24T14:18</started>
-    <done />
+    <done>2026-09-24T14:18</done>
     <human_estimate>30min</human_estimate>
     <story_points>2</story_points>
     <story_points_refined>2</story_points_refined>
@@ -1856,6 +1856,7 @@
       <event ts="2026-09-24T14:18">started run lane run-fbed575c</event>
       <event ts="2026-09-24T14:18">started</event>
       <event ts="2026-09-24T14:19">progress plan: 4 steps</event>
+      <event ts="2026-09-24T14:18">completed</event>
     </history>
     <is_design />
     <predicted_files>
@@ -1867,20 +1868,20 @@
       <file path="urlaubskasse.html" ts="2026-09-24T14:19" />
     </files>
     <tokens>
-      <usage ts="2026-09-24T14:21" provider="claude-cli" model="claude-haiku-4-5-20251001" input="865" output="41011" cache_read="11802295" cache_write="289070" session="e2e7629c-5c1d-4399-aa60-8b5b516e603b" />
+      <usage ts="2026-09-24T14:22" provider="claude-cli" model="claude-haiku-4-5-20251001" input="929" output="43851" cache_read="12875442" cache_write="292845" session="e2e7629c-5c1d-4399-aa60-8b5b516e603b" />
       <usage ts="2026-09-24T14:19" provider="claude-cli" model="claude-opus-5-5" input="8" output="742" cache_read="103211" cache_write="64147" session="9e56d68f-8ba6-4f35-b556-35902ffff5c4" />
       <usage ts="2026-09-24T14:20" provider="claude-cli" model="claude-opus-5-5" input="8" output="1077" cache_read="104043" cache_write="65039" session="910f1560-d473-43a4-b4d5-4adf7f7ad1a2" />
     </tokens>
     <skills>
       <skill name="sightdeck-ai" ts="2026-09-24T14:18" session="e2e7629c-5c1d-4399-aa60-8b5b516e603b" />
     </skills>
-    <spans file="runs/27.json" runs="1" calls="5" ms="3823" failed="0" wall_ms="14000" idle_pct="73" updated="2026-09-24T14:18" />
     <progress step="4" of="4" started="2026-09-24T14:19" label="Test and verify">
       <step n="1" label="Understand current structure" done="2026-09-24T14:18" />
       <step n="2" label="Replace menu button with user icon" done="2026-09-24T14:18" />
       <step n="3" label="Update styles" done="2026-09-24T14:18" />
       <step n="4" label="Test and verify" />
     </progress>
+    <spans file="runs/27.json" runs="3" calls="52" ms="23687" failed="1" wall_ms="241000" idle_pct="90" updated="2026-09-24T14:18" />
   </task>
   <task id="28" status="done">
     <title>Theme-Auswahl nur in den Settings, Standard ist Dark</title>
@@ -1965,12 +1966,12 @@
     <spans file="runs/28.json" runs="2" calls="12" ms="25677" failed="0" wall_ms="68000" idle_pct="62" updated="2026-09-24T14:20" />
     <execution_seconds>120</execution_seconds>
   </task>
-  <task id="29" status="active">
+  <task id="29" status="done">
     <title>Tschechische Kronen (CZK) und polnische Złoty (PLN) als Währungen hinzufügen</title>
     <summary>Die Währungsauswahl um CZK und PLN erweitern.</summary>
     <created>2026-09-24T14:19</created>
     <started>2026-09-24T14:20</started>
-    <done />
+    <done>2026-09-24T14:20</done>
     <human_estimate>30min</human_estimate>
     <story_points>2</story_points>
     <story_points_refined>2</story_points_refined>
@@ -1983,7 +1984,7 @@
     <external_url />
     <backlog_rank />
     <queue_seq />
-    <informational />
+    <informational>true</informational>
     <kind>feature</kind>
     <testing_tool />
     <testing_tool_locked />
@@ -2025,6 +2026,7 @@
       <event ts="2026-09-24T14:20">started run lane run-60410e58</event>
       <event ts="2026-09-24T14:20">started</event>
       <event ts="2026-09-24T14:20">progress plan: 3 steps</event>
+      <event ts="2026-09-24T14:20">completed (informational only — no code changes)</event>
     </history>
     <is_design />
     <predicted_files>
@@ -2033,24 +2035,28 @@
       <file path="tests" source="predicted" ts="2026-09-24T14:19" />
     </predicted_files>
     <tokens>
-      <usage ts="2026-09-24T14:21" provider="claude-cli" model="claude-haiku-4-5-20251001" input="271" output="7385" cache_read="2898712" cache_write="200646" session="28287826-6af6-4023-9485-55dd49838576" />
+      <usage ts="2026-09-24T17:50" provider="claude-cli" model="claude-haiku-4-5-20251001" input="717" output="17054" cache_read="8778233" cache_write="632685" session="28287826-6af6-4023-9485-55dd49838576" />
     </tokens>
     <skills>
       <skill name="sightdeck-ai" ts="2026-09-24T14:20" session="28287826-6af6-4023-9485-55dd49838576" />
     </skills>
-    <spans file="runs/29.json" runs="1" calls="7" ms="6305" failed="1" wall_ms="26000" idle_pct="76" updated="2026-09-24T14:20" />
-    <progress step="2" of="3" started="2026-09-24T14:20" label="CZK und PLN hinzufügen">
+    <progress step="3" of="3" started="2026-09-24T14:20" label="UI-Test im Browser">
       <step n="1" label="Währungskonfiguration lesen" done="2026-09-24T14:20" />
-      <step n="2" label="CZK und PLN hinzufügen" />
+      <step n="2" label="CZK und PLN hinzufügen" done="2026-09-24T14:20" />
       <step n="3" label="UI-Test im Browser" />
     </progress>
+    <files>
+      <file path="sw.js" ts="2026-09-24T17:48" />
+      <file path="urlaubskasse.html" ts="2026-09-24T17:48" />
+    </files>
+    <spans file="runs/29.json" runs="2" calls="35" ms="12523804" failed="1" wall_ms="12617000" idle_pct="1" updated="2026-09-24T14:20" />
   </task>
-  <task id="30" status="active">
+  <task id="30" status="done">
     <title>Wechselkurs der eingestellten Währung automatisch laden und anzeigen</title>
     <summary>Der aktuelle Kurs der eingestellten Währung soll aus dem Internet geladen und aktuell gehalten werden. Der Kurs soll irgendwo in der Oberfläche sichtbar sein.</summary>
     <created>2026-09-24T14:20</created>
     <started>2026-09-24T14:20</started>
-    <done />
+    <done>2026-09-24T17:41</done>
     <human_estimate>halber tag</human_estimate>
     <story_points>5</story_points>
     <story_points_refined>5</story_points_refined>
@@ -2092,7 +2098,7 @@
     <deadline />
     <version />
     <session_id />
-    <changelog_snippet>Der Wechselkurs der eingestellten Währung wird jetzt automatisch aus dem Internet geladen, aktuell gehalten und angezeigt.</changelog_snippet>
+    <changelog_snippet>Bei Fremdwährungen wird der aktuelle EZB-Wechselkurs automatisch geladen, eingetragen und im Ausgaben-Dialog angezeigt.</changelog_snippet>
     <changelog_snippet_stale />
     <changelog_snippet_source />
     <jira_sync_failed />
@@ -2104,6 +2110,8 @@
       <event ts="2026-09-24T14:20">auto-aktiviert via prompt-hook (parallel run)</event>
       <event ts="2026-09-24T14:20">started run lane run-9b25646c</event>
       <event ts="2026-09-24T14:20">progress plan: 5 steps</event>
+      <event ts="2026-09-24T17:44">verification: manual browser check passed</event>
+      <event ts="2026-09-24T17:41">completed</event>
     </history>
     <is_design />
     <predicted_files>
@@ -2113,20 +2121,352 @@
       <file path="tests" source="predicted" ts="2026-09-24T14:20" />
     </predicted_files>
     <tokens>
-      <usage ts="2026-09-24T14:21" provider="claude-cli" model="claude-opus-5-5" input="34" output="16740" cache_read="1918808" cache_write="190946" session="bad98557-f04f-4850-9cb1-072760091f72" />
+      <usage ts="2026-09-24T17:44" provider="claude-cli" model="claude-opus-5-5" input="150" output="45624" cache_read="9985477" cache_write="584482" session="bad98557-f04f-4850-9cb1-072760091f72" />
     </tokens>
     <skills>
       <skill name="sightdeck-ai" ts="2026-09-24T14:20" session="bad98557-f04f-4850-9cb1-072760091f72" />
     </skills>
-    <progress step="2" of="5" started="2026-09-24T14:20" label="Kurs laden + cachen">
+    <progress step="5" of="5" started="2026-09-24T14:20" label="Browser-Check">
       <step n="1" label="Code lesen" done="2026-09-24T14:20" />
-      <step n="2" label="Kurs laden + cachen" />
-      <step n="3" label="Anzeige" />
-      <step n="4" label="Tests" />
+      <step n="2" label="Kurs laden + cachen" done="2026-09-24T14:20" />
+      <step n="3" label="Anzeige" done="2026-09-24T14:20" />
+      <step n="4" label="Tests" done="2026-09-24T14:20" />
       <step n="5" label="Browser-Check" />
     </progress>
     <files>
       <file path="urlaubskasse.html" ts="2026-09-24T14:21" />
+      <file path="sw.js" ts="2026-09-24T14:22" />
     </files>
+    <verifications>
+      <verification ts="2026-09-24T17:44" tool="manual browser check" result="pass" />
+    </verifications>
+    <spans file="runs/30.json" runs="2" calls="39" ms="141950" failed="0" wall_ms="12234000" idle_pct="99" updated="2026-09-24T17:41" />
+    <execution_seconds>12060</execution_seconds>
+  </task>
+  <task id="31" status="done">
+    <title>Der User darf sein eigenes Bild hochladen. Dieses Bild wird dann als Icon für die angelegten Items benutzt. Auch soll das Icon oben im Header erscheinen, um die Settings zu öffnen. Das Icon soll immer rund dargestellt werden, egal was man hochlädt. Lasst ihr eine sinnvolle Komprimierung einfallen, vielleicht auch Data Source oder Base64?</title>
+    <summary />
+    <created>2026-09-24T14:22</created>
+    <started>2026-09-24T14:24</started>
+    <done>2026-09-24T17:41</done>
+    <human_estimate>30min</human_estimate>
+    <story_points>3</story_points>
+    <story_points_refined />
+    <agents>Claude</agents>
+    <concept>tasks/ES-31.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>feature</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model />
+    <planning_recommended />
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Jede Person kann in den Einstellungen ein eigenes Profilbild hochladen, das rund bei ihren Ausgaben, Salden und oben im Header angezeigt wird.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-24T14:22">received, backlog</event>
+      <event ts="2026-09-24T14:24">refinement failed: exit-code — exit 1 — You've hit your session limit · resets 5:10pm (Europe/Berlin)</event>
+      <event ts="2026-09-24T14:24">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-24T14:24">auto-aktiviert via prompt-hook (parallel run)</event>
+      <event ts="2026-09-24T14:24">started run lane run-2b0b42d8</event>
+      <event ts="2026-09-24T17:41">progress plan: 5 steps</event>
+      <event ts="2026-09-24T17:44">verification: Browser-Check 127.0.0.1 passed</event>
+      <event ts="2026-09-24T17:41">completed</event>
+    </history>
+    <tokens>
+      <usage ts="2026-09-24T17:44" provider="claude-cli" model="claude-opus-5-5" input="120" output="34325" cache_read="8872836" cache_write="387230" session="2bf1f653-27f8-4a2c-a44f-85dd86e8f529" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-24T17:41" session="2bf1f653-27f8-4a2c-a44f-85dd86e8f529" />
+    </skills>
+    <progress step="5" of="5" started="2026-09-24T17:41" label="Tests + Browsercheck" elapsed="11820" step_ts="2026-09-24T17:41">
+      <step n="1" label="Code lesen" done="2026-09-24T17:41" />
+      <step n="2" label="Foto-Kompression + Datenmodell" done="2026-09-24T17:41" />
+      <step n="3" label="Upload-UI in Settings" done="2026-09-24T17:41" />
+      <step n="4" label="Header-Icon" done="2026-09-24T17:41" />
+      <step n="5" label="Tests + Browsercheck" />
+    </progress>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-09-24T17:42" />
+    </files>
+    <verifications>
+      <verification ts="2026-09-24T17:44" tool="Browser-Check 127.0.0.1" result="pass" />
+    </verifications>
+    <spans file="runs/31.json" runs="1" calls="31" ms="61536" failed="3" wall_ms="203000" idle_pct="70" updated="2026-09-24T17:41" />
+    <execution_seconds>11820</execution_seconds>
+  </task>
+  <task id="32" status="done">
+    <title>Im Header sehe ich zweimal meinen Namen. Links kann raus. Rechts soll ein rundes Icon erzeugt werden: entweder das Icon, was unter Personen schon gespeichert ist, oder das hochgeladene vom User. Verwende immer kreisförmig mit einem schönen Rand drumherum. Links daneben im Header soll dann der Name erscheinen.</title>
+    <summary />
+    <created>2026-09-24T14:23</created>
+    <started>2026-09-24T14:25</started>
+    <done>2026-09-24T17:41</done>
+    <human_estimate>30min</human_estimate>
+    <story_points>3</story_points>
+    <story_points_refined />
+    <agents>Claude</agents>
+    <concept>tasks/ES-32.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>unclassified</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model />
+    <planning_recommended />
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Im Header steht dein Name jetzt nur noch einmal — rechts neben einem runden Profilbild mit Rand.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-24T14:23">received, backlog</event>
+      <event ts="2026-09-24T14:25">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-24T14:25">auto-aktiviert via prompt-hook (parallel run)</event>
+      <event ts="2026-09-24T14:25">started run lane run-86a3ecc7</event>
+      <event ts="2026-09-24T17:41">progress plan: 3 steps</event>
+      <event ts="2026-09-24T17:43">verification: manual browser check passed</event>
+      <event ts="2026-09-24T17:41">completed</event>
+    </history>
+    <tokens>
+      <usage ts="2026-09-24T17:43" provider="claude-cli" model="claude-opus-5-5" input="104" output="17970" cache_read="6665353" cache_write="279113" session="72907ff5-0848-4f9d-9cb8-6cf6c7d3401d" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-24T17:41" session="72907ff5-0848-4f9d-9cb8-6cf6c7d3401d" />
+    </skills>
+    <progress step="3" of="3" started="2026-09-24T17:41" label="Browser-Check" elapsed="11760" step_ts="2026-09-24T17:41">
+      <step n="1" label="Header-Code lesen" done="2026-09-24T17:41" />
+      <step n="2" label="Umbau Header" done="2026-09-24T17:41" />
+      <step n="3" label="Browser-Check" />
+    </progress>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-09-24T17:42" />
+    </files>
+    <verifications>
+      <verification ts="2026-09-24T17:43" tool="manual browser check" result="pass" />
+    </verifications>
+    <spans file="runs/32.json" runs="1" calls="31" ms="58492" failed="0" wall_ms="150000" idle_pct="61" updated="2026-09-24T17:41" />
+    <execution_seconds>11760</execution_seconds>
+  </task>
+  <task id="33" status="done">
+    <title>Avatar-Fotos für Personen der Kasse setzen</title>
+    <summary>Sechs Fotos (long, Micha, Ronny, Rudi, thommy, Ulbert) den gleichnamigen Personen als Avatar zuweisen.</summary>
+    <created>2026-09-24T18:04</created>
+    <started>2026-09-24T18:04</started>
+    <done>2026-09-24T18:04</done>
+    <human_estimate>30min</human_estimate>
+    <story_points>2</story_points>
+    <story_points_refined />
+    <agents>Claude</agents>
+    <concept>tasks/ES-33.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>change</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model />
+    <planning_recommended />
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Long, Micha, Ronny, Rudi, Thommy und Ulbert haben jetzt echte Fotos als Avatar.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-24T18:04">received, backlog</event>
+      <event ts="2026-09-24T18:04">started</event>
+      <event ts="2026-09-24T18:04">started run lane run-af11110e</event>
+      <event ts="2026-09-24T18:06">verification: manual browser check passed</event>
+      <event ts="2026-09-24T18:04">completed</event>
+    </history>
+    <tokens>
+      <usage ts="2026-09-24T18:06" provider="claude-cli" model="claude-opus-5-5" input="64" output="9698" cache_read="4969721" cache_write="171123" session="35954cdd-cd8d-4f6a-83a3-5d85ed9123a6" />
+      <usage ts="2026-09-24T18:09" provider="claude-cli" model="claude-opus-5-5" input="8" output="975" cache_read="100258" cache_write="67911" session="ec771f75-e3b0-454e-ac08-9679df68e88d" attributed="inferred" />
+    </tokens>
+    <files>
+      <file path="avatars/long.jpg" ts="2026-09-24T18:05" />
+      <file path="avatars/micha.jpg" ts="2026-09-24T18:05" />
+      <file path="avatars/ronny.jpg" ts="2026-09-24T18:05" />
+      <file path="avatars/rudi.jpg" ts="2026-09-24T18:05" />
+      <file path="avatars/thommy.jpg" ts="2026-09-24T18:05" />
+      <file path="avatars/ulbert.jpg" ts="2026-09-24T18:05" />
+      <file path="sw.js" ts="2026-09-24T18:05" />
+      <file path="urlaubskasse.html" ts="2026-09-24T18:05" />
+    </files>
+    <verifications>
+      <verification ts="2026-09-24T18:06" tool="manual browser check" result="pass" />
+    </verifications>
+    <spans file="runs/33.json" runs="1" calls="17" ms="19596" failed="0" wall_ms="74000" idle_pct="74" updated="2026-09-24T18:04" />
+  </task>
+  <task id="34" status="done">
+    <title>Währungs-Dropdown: Tschechische Krone und Polnischer Złoty nicht auswählbar</title>
+    <summary>Im Währungs-Dropdown lassen sich CZK und PLN nicht auswählen. Prüfen, ob beide Währungen mit Kursen vollständig hinterlegt sind, und Auswahl reparieren.</summary>
+    <created>2026-09-24T18:09</created>
+    <started>2026-09-24T18:09</started>
+    <done>2026-09-24T18:16</done>
+    <human_estimate>30min</human_estimate>
+    <story_points>2</story_points>
+    <story_points_refined>2</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-34.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>haiku</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Datalist-Optionen für CZK und PLN mit Text-Content erweitert für bessere Browser-Kompatibilität.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-24T18:09">received, backlog</event>
+      <event ts="2026-09-24T18:09">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-24T18:09">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-24T18:09">auto-aktiviert via prompt-hook</event>
+      <event ts="2026-09-24T18:09">started run lane run-e0a58e24</event>
+      <event ts="2026-09-24T18:09">started</event>
+      <event ts="2026-09-24T18:10">progress plan: 5 steps</event>
+      <event ts="2026-09-24T18:09">completed</event>
+      <event ts="2026-09-24T18:16">reopened nach Nutzer-Feedback: CZK/PLN sind tatsächlich nicht im Dropdown</event>
+      <event ts="2026-09-24T18:16">progress plan cleared (task moved to backlog)</event>
+      <event ts="2026-09-24T18:16">started</event>
+      <event ts="2026-09-24T18:16">started run lane run-b425d377</event>
+      <event ts="2026-09-24T18:16">completed</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-24T18:09" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-24T18:17" provider="claude-cli" model="claude-haiku-4-5-20251001" input="942" output="37497" cache_read="11854471" cache_write="259562" session="18351746-59c8-451f-9dd1-91e3f2338fcb" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-24T18:09" session="18351746-59c8-451f-9dd1-91e3f2338fcb" />
+    </skills>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-09-24T18:16" />
+    </files>
+    <spans file="runs/34.json" runs="1" calls="37" ms="28184" failed="0" wall_ms="434000" idle_pct="94" updated="2026-09-24T18:16" />
+    <execution_seconds>420</execution_seconds>
   </task>
 </tasks>
