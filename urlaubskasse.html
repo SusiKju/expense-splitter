@@ -347,6 +347,11 @@
   }
   .icon-btn:hover { background: var(--bg-muted); color: var(--text); }
   .icon-btn.danger:hover { color: var(--red-600); }
+  .icon-btn.lg {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
 
   /* Buttons */
   button.btn, a.btn {
@@ -1471,8 +1476,7 @@
               <div class="expense-actions">
                 ${exp.hasReceipt ? `<button class="icon-btn" data-receipt="${exp.id}" aria-label="Beleg ansehen" title="Beleg ansehen">📎</button>` : ''}
               ${isRoomClosed() ? '' : `
-                <button class="icon-btn" data-edit="${exp.id}" aria-label="Bearbeiten" title="Bearbeiten">✎</button>
-                <button class="icon-btn danger" data-del="${exp.id}" aria-label="Löschen" title="Löschen">🗑</button>`}
+                <button class="icon-btn lg" data-edit="${exp.id}" aria-label="Bearbeiten" title="Bearbeiten">✎</button>`}
               </div>
             </div>
           </div>
