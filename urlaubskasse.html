@@ -242,9 +242,9 @@
   /* Expense row */
   .expense {
     display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    padding: 8px 0;
+    align-items: center;
+    gap: 10px;
+    padding: 0;
     border-bottom: 1px solid var(--border);
   }
   .expense:last-child { border-bottom: none; }
@@ -283,10 +283,13 @@
     flex: 1;
     min-width: 0;
   }
+  .card.expense-card { padding: 8px 10px; margin-bottom: 8px; }
+  .expense-line { display: flex; align-items: baseline; gap: 8px; }
   .expense-title {
+    flex: 1;
+    min-width: 0;
     font-weight: 500;
     font-size: 15px;
-    margin-bottom: 2px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -294,9 +297,9 @@
   .expense-meta {
     font-size: 13px;
     color: var(--text-muted);
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .expense-meta .who-tags {
     display: inline-flex;
@@ -328,9 +331,9 @@
   .expense-actions {
     display: flex;
     gap: 4px;
-    margin-top: 2px;
-    justify-content: flex-end;
+    flex-shrink: 0;
   }
+  .expense-actions .icon-btn.lg { width: 40px; height: 40px; font-size: 18px; }
   .icon-btn {
     width: 32px;
     height: 32px;
@@ -1463,27 +1466,21 @@
         ? (payer ? `nur ${payer.name}` : '—')
         : (exp.participantIds.length === state.people.length ? 'alle' : 'mit ' + others.join(', '));
       return `
-        <div class="card">
+        <div class="card expense-card">
           <div class="expense">
             ${personAvatarHtml(payer, 'expense-avatar')}
             <div class="expense-body">
-              <div class="expense-title">${escapeHtml(exp.desc || 'Ausgabe')}</div>
+              <div class="expense-line">
+                <div class="expense-title">${escapeHtml(exp.desc || 'Ausgabe')}</div>
+                <div class="expense-amount">${fmtEur(Math.round(Number(exp.amount) * 100))}</div>
+              </div>
               <div class="expense-meta">
-                <span>${fmtDate(exp.date)}</span>
-                <span>•</span>
-                <span><b>${escapeHtml(payer?.name || '?')}</b> hat bezahlt</span>
-                <span>•</span>
-                <span>${escapeHtml(participantSummary)}</span>
+                ${fmtDate(exp.date)} · <b>${escapeHtml(payer?.name || '?')}</b> · ${escapeHtml(participantSummary)}${exp.currency ? ` · <span title="Kurs 1 € = ${String(exp.rate).replace('.', ',')} ${escapeHtml(exp.currency)}">${fmtOrig(exp.origAmount, exp.currency)}</span>` : ''}
               </div>
             </div>
-            <div>
-              <div class="expense-amount">${fmtEur(Math.round(Number(exp.amount) * 100))}</div>
-              ${exp.currency ? `<div class="expense-orig" title="Kurs 1 € = ${String(exp.rate).replace('.', ',')} ${escapeHtml(exp.currency)}">${fmtOrig(exp.origAmount, exp.currency)}</div>` : ''}
-              <div class="expense-actions">
-                ${exp.hasReceipt ? `<button class="icon-btn" data-receipt="${exp.id}" aria-label="Beleg ansehen" title="Beleg ansehen">📎</button>` : ''}
-              ${isRoomClosed() ? '' : `
-                <button class="icon-btn lg" data-edit="${exp.id}" aria-label="Bearbeiten" title="Bearbeiten">✎</button>`}
-              </div>
+            <div class="expense-actions">
+              ${exp.hasReceipt ? `<button class="icon-btn" data-receipt="${exp.id}" aria-label="Beleg ansehen" title="Beleg ansehen">📎</button>` : ''}
+              ${isRoomClosed() ? '' : `<button class="icon-btn lg" data-edit="${exp.id}" aria-label="Bearbeiten" title="Bearbeiten">✎</button>`}
             </div>
           </div>
         </div>`;
