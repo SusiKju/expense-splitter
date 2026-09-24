@@ -97,5 +97,17 @@
     return transfers;
   }
 
-  return { computeRaw, roundBalances, computeBalances, computeSettlement };
+  // Ein Freitextfeld pro Person: IBAN oder PayPal.me-Name/-Link.
+  // Liefert { type:'iban', iban } | { type:'paypal', url } | null.
+  function paymentAction(info, cent) {
+    const raw = String(info || '').trim();
+    if (!raw) return null;
+    const compact = raw.replace(/\s+/g, '').toUpperCase();
+    if (/^[A-Z]{2}\d{2}[A-Z0-9]{11,30}$/.test(compact)) return { type: 'iban', iban: compact };
+    const name = raw.replace(/^(https?:\/\/)?(www\.)?paypal\.me\//i, '').replace(/^@/, '').replace(/\/.*$/, '');
+    if (!/^[A-Za-z0-9._-]{1,40}$/.test(name)) return null;
+    return { type: 'paypal', url: 'https://paypal.me/' + name + '/' + (cent / 100).toFixed(2) + 'EUR' };
+  }
+
+  return { computeRaw, roundBalances, computeBalances, computeSettlement, paymentAction };
 });

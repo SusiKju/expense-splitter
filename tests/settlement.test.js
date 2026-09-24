@@ -7,6 +7,7 @@ const {
   roundBalances,
   computeBalances,
   computeSettlement,
+  paymentAction,
 } = require('../settlement.js');
 
 const people = (ids) => ids.map((id) => ({ id }));
@@ -231,5 +232,21 @@ describe('computeSettlement', () => {
     const bal = computeBalances(p, expenses, 1);
     const transfers = computeSettlement(bal);
     assertTransfersSettleBalances(bal, transfers);
+  });
+});
+
+describe('paymentAction', () => {
+  test('IBAN mit Leerzeichen wird normalisiert', () => {
+    assert.deepEqual(paymentAction('de89 3704 0044 0532 0130 00', 100), { type: 'iban', iban: 'DE89370400440532013000' });
+  });
+  test('PayPal.me-Name, @name und Link ergeben Link mit Betrag', () => {
+    const url = 'https://paypal.me/max/12.50EUR';
+    for (const i of ['max', '@max', 'paypal.me/max', 'https://www.paypal.me/max/5']) {
+      assert.equal(paymentAction(i, 1250).url, url);
+    }
+  });
+  test('leer oder ungültig -> null', () => {
+    assert.equal(paymentAction('', 100), null);
+    assert.equal(paymentAction('a b<c>', 100), null);
   });
 });

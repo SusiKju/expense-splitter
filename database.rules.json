@@ -11,6 +11,18 @@
         "$other": { ".validate": false }
       }
     },
+    "receipts": {
+      "$roomCode": {
+        ".read": true,
+        "$expenseId": {
+          ".write": "root.child('rooms/' + $roomCode).exists()",
+          ".validate": "newData.hasChildren(['data', 'createdAt'])",
+          "data": { ".validate": "newData.isString() && newData.val().beginsWith('data:image/jpeg;base64,') && newData.val().length < 700000" },
+          "createdAt": { ".validate": "newData.isNumber()" },
+          "$other": { ".validate": false }
+        }
+      }
+    },
     "deviceHistory": {
       "$deviceId": {
         ".read": true,

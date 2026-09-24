@@ -176,9 +176,14 @@
     border: 1px solid var(--border);
     margin-bottom: 12px;
   }
-  #event-card { line-height: 1.5; }
-  #event-card a { color: var(--accent); }
-  #event-card .event-info { white-space: pre-wrap; color: var(--text-muted); margin-top: 6px; }
+  #event-card { line-height: 1.5; white-space: pre-wrap; color: var(--text-muted); }
+  .brand-text { min-width: 0; display: flex; flex-direction: column; }
+  #brand-title { line-height: 1.2; }
+  #brand-event { font-size: 12px; font-weight: 400; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: flex; align-items: center; }
+  #brand-event a { color: var(--accent); }
+  .event-place-link { display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; padding: 8px; margin: -8px; border-radius: 6px; cursor: pointer; transition: background-color 0.2s; }
+  .event-place-link:hover { background-color: var(--accent-soft); }
+  .event-place-link svg { width: 20px; height: 26px; }
   .card.empty {
     text-align: center;
     color: var(--text-soft);
@@ -439,6 +444,27 @@
     border-color: var(--accent);
     box-shadow: 0 0 0 3px var(--accent-soft);
   }
+  .receipt-preview { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+  .receipt-preview[hidden] { display: none; }
+  .field label.receipt-drop {
+    display: flex; align-items: center; gap: 14px; margin: 0;
+    padding: 16px; border: 2px dashed var(--accent); border-radius: var(--radius-md);
+    background: var(--accent-soft); color: var(--accent); cursor: pointer;
+    transition: transform 0.15s, background 0.15s;
+  }
+  .field label.receipt-drop:hover { transform: translateY(-1px); }
+  .receipt-drop-text { display: flex; flex-direction: column; gap: 4px; }
+  .receipt-drop-text strong { font-size: 15px; color: var(--text); }
+  .receipt-drop-text small { font-size: 12px; font-weight: 400; color: var(--text-muted); }
+  .badge-new {
+    display: inline-block; vertical-align: middle; margin-left: 4px; padding: 2px 7px;
+    border-radius: 999px; background: var(--accent); color: var(--on-accent);
+    font-size: 10px; font-weight: 700; letter-spacing: 0.05em;
+  }
+  .receipt-drop[hidden] { display: none; }
+  #exp-receipt:disabled + .receipt-drop { opacity: 0.45; cursor: not-allowed; transform: none; } /* display:flex würde sonst das hidden-Attribut überstimmen */
+  .receipt-preview img { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; }
+  .receipt-view { display: block; max-width: 100%; max-height: 70vh; margin: 0 auto; border-radius: 8px; }
   .person-pick {
     display: flex;
     flex-wrap: wrap;
@@ -555,6 +581,7 @@
   .settle-text b { font-weight: 600; }
   .settle-arrow { color: var(--text-soft); margin: 0 2px; }
   .settle-amount { font-weight: 600; white-space: nowrap; }
+  .settle-pay { font-size: 13px; color: var(--primary, #2563eb); background: none; border: 0; padding: 4px 6px; cursor: pointer; text-decoration: underline; white-space: nowrap; font-family: inherit; }
 
   /* Empty */
   .h-stack {
@@ -670,7 +697,10 @@
   <header class="topbar" id="topbar">
     <div class="brand">
       <span class="logo">€</span>
-      <span id="brand-title">Kasse</span>
+      <div class="brand-text">
+        <span id="brand-title">Kasse</span>
+        <span id="brand-event" hidden></span>
+      </div>
     </div>
     <div class="topbar-actions">
       <button class="icon-btn" id="theme-btn" aria-label="Theme wechseln" title="Theme">☀</button>
@@ -702,6 +732,14 @@
       🔒 Diese Kasse ist geschlossen – keine Änderungen möglich.
     </div>
     <div id="expense-list"></div>
+    <details class="card" id="log-card" style="margin-top:12px">
+      <summary style="cursor:pointer;font-weight:500">Änderungsprotokoll</summary>
+      <div class="field" style="margin-top:12px">
+        <label for="log-device-person">Dieses Gerät gehört</label>
+        <select id="log-device-person"></select>
+      </div>
+      <div id="log-list" class="muted"></div>
+    </details>
   </section>
 
   <!-- Tab: Übersicht -->
@@ -768,6 +806,22 @@
         </div>
       </div>
     </div>
+    <div class="field">
+      <label for="exp-receipt">Beleg-Foto</label>
+      <input type="file" id="exp-receipt" accept="image/*">
+      <label for="exp-receipt" class="receipt-drop" id="exp-receipt-drop">
+        <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3.5"/></svg>
+        <span class="receipt-drop-text">
+          <strong>Schaffe Vertrauen – fotografiere deinen Beleg <span class="badge-new">NEU</span></strong>
+          <small>Tippen zum Aufnehmen oder Auswählen. Alle sehen das Foto über 📎.</small>
+        </span>
+      </label>
+      <p class="muted" id="exp-receipt-hint" hidden>Belege gibt es nur in einem geteilten Raum.</p>
+      <div id="exp-receipt-preview" class="receipt-preview" hidden>
+        <img alt="Beleg">
+        <button type="button" class="btn ghost" id="exp-receipt-remove">Foto entfernen</button>
+      </div>
+    </div>
     <div class="modal-footer">
       <button class="btn danger" id="exp-delete" hidden>Löschen</button>
       <button class="btn ghost" data-close>Abbrechen</button>
@@ -784,6 +838,10 @@
     <div class="field">
       <label for="person-name">Name</label>
       <input type="text" id="person-name" placeholder="Vorname" autocomplete="off" maxlength="32">
+    </div>
+    <div class="field">
+      <label for="person-pay">Zahlungsinfo (optional)</label>
+      <input type="text" id="person-pay" placeholder="PayPal.me-Name oder IBAN" autocomplete="off" maxlength="60">
     </div>
     <div class="modal-footer">
       <button class="btn danger" id="person-delete" hidden>Löschen</button>
@@ -833,7 +891,7 @@
     <div class="section-title" style="margin-top:20px">Echtzeit-Sync</div>
     <!-- Sync: kein Raum aktiv -->
     <div id="sync-idle-ui">
-      <p class="muted" style="margin:0 0 12px;font-size:13px">Erstelle einen Raum und teile den 6-stelligen Code mit der Gruppe – alle sehen Änderungen sofort.</p>
+      <p class="muted" style="margin:0 0 12px;font-size:13px">Erstelle einen Raum und teile den Einladungslink oder QR-Code mit der Gruppe – alle sehen Änderungen sofort.</p>
       <button class="btn primary" id="sync-create-btn">Raum erstellen</button>
       <div style="display:flex;gap:8px;margin-top:10px">
         <input id="sync-join-input" placeholder="Code eingeben (z.B. AB3X9Z)" style="flex:1;padding:10px 12px;border:1.5px solid var(--border-strong);border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:14px;font-family:monospace;outline:none;text-transform:uppercase;letter-spacing:.12em" maxlength="6">
@@ -845,6 +903,10 @@
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
         <span id="sync-dot" style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green-500);flex-shrink:0"></span>
         <span id="sync-status-text" class="muted" style="font-size:13px">Verbunden</span>
+      </div>
+      <div style="background:var(--bg-muted);border-radius:var(--radius-md);padding:12px;margin-bottom:10px;text-align:center">
+        <div id="sync-qr" style="background:#fff;padding:8px;border-radius:var(--radius-sm);width:180px;height:180px;margin:0 auto 10px" hidden></div>
+        <button class="btn primary" id="sync-share-btn" style="width:100%">Einladungslink teilen</button>
       </div>
       <div style="background:var(--bg-muted);border-radius:var(--radius-md);padding:12px;margin-bottom:10px">
         <div style="font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--text-soft);font-weight:600;margin-bottom:6px">Raum-Code</div>
@@ -902,6 +964,17 @@
   </div>
 </div>
 
+<!-- Modal: Beleg ansehen -->
+<div class="modal-backdrop" id="modal-receipt">
+  <div class="modal" role="dialog" aria-label="Beleg">
+    <div class="modal-handle"></div>
+    <img id="receipt-view" class="receipt-view" alt="Beleg">
+    <div class="modal-footer">
+      <button class="btn ghost" data-close>Schließen</button>
+    </div>
+  </div>
+</div>
+
 <!-- Modal: Confirm -->
 <div class="modal-backdrop" id="modal-confirm">
   <div class="modal" role="dialog">
@@ -919,6 +992,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js"></script>
 <script src="settlement.js"></script>
 <script>
 (() => {
@@ -1025,6 +1099,7 @@
 
   let state = loadState();
   let editingExpenseId = null;
+  let pendingReceipt;   // undefined = unverändert, String = neues Foto (Data-URL), null = entfernen
   let editingPersonId  = null;
 
   // ===== Helpers =====
@@ -1154,25 +1229,52 @@
     renderPeople();
     renderClosedState();
     renderEvent();
+    renderLog();
+  }
+
+  // ===== Änderungsprotokoll =====
+  const LOG_MAX = 200; // ponytail: älteste Einträge fallen raus; eigener Firebase-Pfad, falls volle Historie gebraucht wird
+
+  function logChange(action, desc) {
+    state.log = [...(state.log || []), { ts: Date.now(), action, desc: desc || '', deviceId: getDeviceId() }].slice(-LOG_MAX);
+  }
+
+  function renderLog() {
+    const devices = state.devices || {};
+    const sel = document.getElementById('log-device-person');
+    const mine = devices[getDeviceId()] || '';
+    sel.innerHTML = '<option value="">— nicht zugeordnet —</option>' + state.people
+      .map(p => `<option value="${p.id}"${p.id === mine ? ' selected' : ''}>${escapeHtml(p.name)}</option>`).join('');
+    const verbs = { add: 'hat hinzugefügt', edit: 'hat bearbeitet', delete: 'hat gelöscht' };
+    const entries = [...(state.log || [])].reverse();
+    document.getElementById('log-list').innerHTML = entries.length === 0 ? 'Noch keine Änderungen.' : entries.map(e => {
+      const who = personById(devices[e.deviceId])?.name || 'Unbekanntes Gerät (' + String(e.deviceId).slice(0, 4) + ')';
+      const when = new Date(e.ts).toLocaleString('de-DE', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+      return `<div style="padding:6px 0;border-top:1px solid var(--border)">${when} · <b>${escapeHtml(who)}</b> ${verbs[e.action] || escapeHtml(e.action)}: ${escapeHtml(e.desc || 'Ausgabe')}</div>`;
+    }).join('');
   }
 
   function renderEvent() {
     const { eventFrom = '', eventTo = '', eventPlace = '', eventInfo = '' } = state.settings;
     const card = document.getElementById('event-card');
-    const lines = [];
+    const line = document.getElementById('brand-event');
+    const parts = [];
     // 'T00:00' = lokale Mitternacht; ohne wird YYYY-MM-DD als UTC gelesen und kann einen Tag verrutschen
-    const fmtDay = (v) => new Date(v + 'T00:00').toLocaleDateString('de-DE', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' });
+    const fmtDay = (v) => new Date(v + 'T00:00').toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
     if (eventFrom || eventTo) {
       const range = eventFrom && eventTo && eventFrom !== eventTo ? fmtDay(eventFrom) + ' – ' + fmtDay(eventTo)
         : eventFrom ? fmtDay(eventFrom) : 'bis ' + fmtDay(eventTo);
-      lines.push('📅 ' + escapeHtml(range));
+      parts.push('📅 ' + escapeHtml(range));
     }
     if (eventPlace.trim()) {
       const url = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(eventPlace.trim());
-      lines.push('📍 <a href="' + url + '" target="_blank" rel="noopener">' + escapeHtml(eventPlace.trim()) + '</a>');
+      const pinSvg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 32" width="20" height="26" fill="currentColor" style="display:inline-block;vertical-align:middle"><path d="M12 0c-6.627 0-12 5.373-12 12 0 8 12 20 12 20s12-12 12-20c0-6.627-5.373-12-12-12zm0 16c-2.209 0-4-1.791-4-4s1.791-4 4-4 4 1.791 4 4-1.791 4-4 4z"/></svg>';
+      parts.push('<a href="' + url + '" target="_blank" rel="noopener" class="event-place-link" title="' + escapeHtml(eventPlace.trim()) + '" aria-label="' + escapeHtml(eventPlace.trim()) + '">' + pinSvg + '</a>');
     }
-    card.innerHTML = lines.join('<br>') + (eventInfo.trim() ? '<div class="event-info">' + escapeHtml(eventInfo.trim()) + '</div>' : '');
-    card.hidden = !lines.length && !eventInfo.trim();
+    line.innerHTML = parts.join(' · ');
+    line.hidden = !parts.length;
+    card.textContent = eventInfo.trim();
+    card.hidden = !eventInfo.trim();
   }
 
   function renderClosedState() {
@@ -1232,11 +1334,12 @@
             </div>
             <div>
               <div class="expense-amount">${fmtEur(Math.round(Number(exp.amount) * 100))}</div>
-              ${isRoomClosed() ? '' : `
               <div class="expense-actions">
+                ${exp.hasReceipt ? `<button class="icon-btn" data-receipt="${exp.id}" aria-label="Beleg ansehen" title="Beleg ansehen">📎</button>` : ''}
+              ${isRoomClosed() ? '' : `
                 <button class="icon-btn" data-edit="${exp.id}" aria-label="Bearbeiten" title="Bearbeiten">✎</button>
-                <button class="icon-btn danger" data-del="${exp.id}" aria-label="Löschen" title="Löschen">🗑</button>
-              </div>`}
+                <button class="icon-btn danger" data-del="${exp.id}" aria-label="Löschen" title="Löschen">🗑</button>`}
+              </div>
             </div>
           </div>
         </div>`;
@@ -1290,10 +1393,15 @@
       const toName   = personById(t.to)?.name || '?';
       const key = t.from + '->' + t.to;
       const done = !!state.settled[key];
+      const pa = Settlement.paymentAction(personById(t.to)?.pay, t.cent);
+      const payHtml = !pa ? ''
+        : pa.type === 'paypal' ? `<a class="settle-pay" href="${escapeHtml(pa.url)}" target="_blank" rel="noopener">PayPal</a>`
+        : `<button class="settle-pay" data-copy-iban="${escapeHtml(pa.iban)}">IBAN kopieren</button>`;
       return `
         <div class="settle-row ${done ? 'done' : ''}">
           <button class="settle-check" aria-pressed="${done}" data-settle-key="${escapeHtml(key)}" aria-label="Als erledigt markieren">✓</button>
           <div class="settle-text"><b>${escapeHtml(fromName)}</b> <span class="settle-arrow">→</span> <b>${escapeHtml(toName)}</b></div>
+          ${payHtml}
           <div class="settle-amount">${fmtEur(t.cent)}</div>
         </div>`;
     }).join('');
@@ -1418,11 +1526,18 @@
       }
       delBtn.hidden = true;
     }
+    const exp = expenseId && state.expenses.find(e => e.id === expenseId);
+    pendingReceipt = undefined;
+    document.getElementById('exp-receipt').value = '';
+    document.getElementById('exp-receipt').disabled = !_roomCode;
+    document.getElementById('exp-receipt-hint').hidden = !!_roomCode;
+    showReceiptPreview(null);
+    if (exp?.hasReceipt && _roomCode) loadReceipt(exp.id).then(url => { if (editingExpenseId === exp.id && pendingReceipt === undefined) showReceiptPreview(url); });
     openModal('modal-expense');
     setTimeout(() => descEl.focus(), 100);
   }
 
-  function saveExpense() {
+  async function saveExpense() {
     if (guardClosed()) return;
     const desc   = document.getElementById('exp-desc').value.trim();
     const amount = parseFloat(document.getElementById('exp-amount').value);
@@ -1436,20 +1551,33 @@
     if (!payerId) { toast('Zahler auswählen'); return; }
     if (parts.length === 0) { toast('Mindestens einen Beteiligten auswählen'); return; }
 
-    if (editingExpenseId) {
-      const idx = state.expenses.findIndex(e => e.id === editingExpenseId);
-      if (idx >= 0) {
-        state.expenses[idx] = {
-          ...state.expenses[idx],
-          desc, amount, date, payerId,
-          participantIds: parts,
-        };
+    const id = editingExpenseId || newId();
+    const prev = state.expenses.find(e => e.id === id);
+    let hasReceipt = !!prev?.hasReceipt;
+    if (pendingReceipt !== undefined && _roomCode) {
+      const saveBtn = document.getElementById('exp-save');
+      saveBtn.disabled = true;
+      try {
+        await saveReceipt(id, pendingReceipt);
+        hasReceipt = !!pendingReceipt;
+      } catch (e) {
+        console.error('[Kasse] Beleg speichern fehlgeschlagen:', e);
+        toast('Beleg konnte nicht gespeichert werden');
+        return;
+      } finally {
+        saveBtn.disabled = false;
       }
+    }
+
+    logChange(editingExpenseId ? 'edit' : 'add', desc);
+    if (prev) {
+      Object.assign(prev, { desc, amount, date, payerId, participantIds: parts, hasReceipt });
     } else {
       state.expenses.push({
-        id: newId(),
+        id,
         desc, amount, date, payerId,
         participantIds: parts,
+        hasReceipt,
         createdAt: Date.now(),
       });
     }
@@ -1466,6 +1594,9 @@
       title: 'Ausgabe löschen?',
       text: 'Diese Aktion kann nicht rückgängig gemacht werden.',
       onConfirm: () => {
+        const exp = state.expenses.find(e => e.id === editingExpenseId);
+        logChange('delete', exp?.desc);
+        if (exp?.hasReceipt && _roomCode) saveReceipt(exp.id, null).catch(e => console.error('[Kasse] Beleg löschen fehlgeschlagen:', e));
         state.expenses = state.expenses.filter(e => e.id !== editingExpenseId);
         editingExpenseId = null;
         saveState();
@@ -1480,16 +1611,19 @@
   function openPersonModal(personId) {
     editingPersonId = personId || null;
     const nameEl = document.getElementById('person-name');
+    const payEl = document.getElementById('person-pay');
     const titleEl = document.getElementById('modal-person-title');
     const delBtn = document.getElementById('person-delete');
     if (personId) {
       const p = personById(personId);
       titleEl.textContent = 'Teilnehmer bearbeiten';
       nameEl.value = p?.name || '';
+      payEl.value = p?.pay || '';
       delBtn.hidden = false;
     } else {
       titleEl.textContent = 'Teilnehmer hinzufügen';
       nameEl.value = '';
+      payEl.value = '';
       delBtn.hidden = true;
     }
     openModal('modal-person');
@@ -1500,13 +1634,15 @@
     if (guardClosed()) return;
     const name = document.getElementById('person-name').value.trim();
     if (!name) { toast('Name fehlt'); return; }
+    const pay = document.getElementById('person-pay').value.trim();
+    if (pay && !Settlement.paymentAction(pay, 0)) { toast('Zahlungsinfo: PayPal.me-Name oder IBAN'); return; }
     if (editingPersonId) {
       const p = personById(editingPersonId);
-      if (p) p.name = name;
+      if (p) { p.name = name; p.pay = pay; }
     } else {
       const dup = state.people.find(p => p.name.toLowerCase() === name.toLowerCase());
       if (dup) { toast('Name existiert schon'); return; }
-      state.people.push({ id: newId(), name });
+      state.people.push({ id: newId(), name, pay });
     }
     sortPeople();
     saveState();
@@ -1685,6 +1821,64 @@
     return _db;
   }
 
+  // ===== Belege: eigener RTDB-Pfad receipts/{room}/{expenseId}, nicht im state-Blob (sonst schickt jeder Sync alle Fotos mit) =====
+  // ponytail: Fotos als JPEG-Data-URL in der RTDB (~100–400 KB); Firebase Storage erst, wenn das Free-Tier (1 GB) knapp wird
+  const RECEIPT_MAX_PX = 1280;
+  const RECEIPT_MAX_LEN = 600000; // muss unter dem Limit in database.rules.json bleiben
+
+  async function compressImage(file) {
+    const bmp = await createImageBitmap(file);
+    const scale = Math.min(1, RECEIPT_MAX_PX / Math.max(bmp.width, bmp.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bmp.width * scale);
+    canvas.height = Math.round(bmp.height * scale);
+    canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
+    bmp.close();
+    for (let q = 0.7; q >= 0.2; q -= 0.1) {
+      const url = canvas.toDataURL('image/jpeg', q);
+      if (url.length < RECEIPT_MAX_LEN) return url;
+    }
+    throw new Error('Bild zu groß');
+  }
+
+  function receiptRef(expenseId) {
+    return getDb().ref(`receipts/${_roomCode}/${expenseId}`);
+  }
+  function saveReceipt(expenseId, dataUrl) {
+    return dataUrl ? receiptRef(expenseId).set({ data: dataUrl, createdAt: Date.now() }) : receiptRef(expenseId).remove();
+  }
+  async function loadReceipt(expenseId) {
+    const snap = await receiptRef(expenseId).get();
+    return snap.val()?.data || null;
+  }
+
+  function showReceiptPreview(url) {
+    const box = document.getElementById('exp-receipt-preview');
+    box.hidden = !url;
+    document.getElementById('exp-receipt-drop').hidden = !!url;
+    const img = box.querySelector('img');
+    if (url) img.src = url; else img.removeAttribute('src');
+  }
+
+  async function openReceipt(expenseId) {
+    if (!_roomCode) { toast('Belege gibt es nur in einem geteilten Raum'); return; }
+    const img = document.getElementById('receipt-view');
+    img.src = '';
+    openModal('modal-receipt');
+    try {
+      const url = await loadReceipt(expenseId);
+      if (url) img.src = url; else { closeAllModals(); toast('Beleg nicht gefunden'); }
+    } catch (e) {
+      console.error('[Kasse] Beleg laden fehlgeschlagen:', e);
+      closeAllModals();
+      toast('Beleg konnte nicht geladen werden');
+    }
+  }
+
+  function inviteUrl(code) {
+    return `${location.href.split(/[?#]/)[0]}?room=${code}`;
+  }
+
   function generateRoomCode() {
     const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
     let code = '';
@@ -1857,8 +2051,8 @@
       setSyncDot('ok');
       touchHistory(code, state.settings.tripName);
       if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(code).catch(() => {});
-        toast(`Raum ${code} erstellt – Code kopiert!`);
+        await navigator.clipboard.writeText(inviteUrl(code)).catch(() => {});
+        toast(`Raum ${code} erstellt – Einladungslink kopiert!`);
       } else {
         toast(`Raum erstellt: ${code}`);
       }
@@ -1920,7 +2114,32 @@
     idleUI.hidden   = !!_roomCode;
     activeUI.hidden = !_roomCode;
     if (_roomCode && display) display.textContent = _roomCode;
+    renderInviteQr();
     renderHistoryList();
+  }
+
+  function renderInviteQr() {
+    const box = document.getElementById('sync-qr');
+    // QR-Lib kommt vom CDN — offline fehlt sie, dann bleibt nur Link/Code
+    if (!box || !_roomCode || typeof qrcode === 'undefined') { if (box) box.hidden = true; return; }
+    const qr = qrcode(0, 'M');
+    qr.addData(inviteUrl(_roomCode));
+    qr.make();
+    box.innerHTML = qr.createSvgTag({ scalable: true, margin: 0 });
+    box.hidden = false;
+  }
+
+  async function shareInvite() {
+    if (!_roomCode) return;
+    const url = inviteUrl(_roomCode);
+    if (navigator.share) {
+      try { await navigator.share({ title: state.settings.tripName || DEFAULT_TRIP_NAME, text: 'Tritt unserer Kasse bei', url }); }
+      catch (e) { /* Abbruch durch den Nutzer */ }
+    } else if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(url).then(() => toast('Einladungslink kopiert'), () => toast(url));
+    } else {
+      toast(url);
+    }
   }
 
   function copySyncCode() {
@@ -1955,12 +2174,16 @@
     }
     const editId = t.closest('[data-edit]')?.dataset.edit;
     if (editId) { openExpenseModal(editId); return; }
+    const receiptId = t.closest('[data-receipt]')?.dataset.receipt;
+    if (receiptId) { openReceipt(receiptId); return; }
     const delId = t.closest('[data-del]')?.dataset.del;
     if (delId) { editingExpenseId = delId; deleteExpense(); return; }
     const editPid = t.closest('[data-edit-person]')?.dataset.editPerson;
     if (editPid) { openPersonModal(editPid); return; }
     const delPid = t.closest('[data-del-person]')?.dataset.delPerson;
     if (delPid) { editingPersonId = delPid; deletePerson(); return; }
+    const iban = t.closest('[data-copy-iban]')?.dataset.copyIban;
+    if (iban) { navigator.clipboard?.writeText(iban).then(() => toast('IBAN kopiert'), () => toast('IBAN: ' + iban)); return; }
     const settleKey = t.closest('[data-settle-key]')?.dataset.settleKey;
     if (settleKey) { toggleSettle(settleKey); return; }
     const switchCode = t.closest('[data-history-switch]')?.dataset.historySwitch;
@@ -1971,6 +2194,23 @@
 
   document.getElementById('fab').addEventListener('click', () => openExpenseModal(null));
   document.getElementById('exp-save').addEventListener('click', saveExpense);
+  document.getElementById('exp-receipt').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    try {
+      pendingReceipt = await compressImage(file);
+      showReceiptPreview(pendingReceipt);
+    } catch (err) {
+      console.error('[Kasse] Bild verarbeiten fehlgeschlagen:', err);
+      toast('Bild konnte nicht gelesen werden');
+      e.target.value = '';
+    }
+  });
+  document.getElementById('exp-receipt-remove').addEventListener('click', () => {
+    pendingReceipt = null;
+    document.getElementById('exp-receipt').value = '';
+    showReceiptPreview(null);
+  });
   document.getElementById('exp-delete').addEventListener('click', deleteExpense);
   document.getElementById('pick-all').addEventListener('click', () => {
     document.querySelectorAll('#exp-participants button[data-pid]').forEach(b => b.setAttribute('aria-pressed', 'true'));
@@ -1979,6 +2219,11 @@
     document.querySelectorAll('#exp-participants button[data-pid]').forEach(b => b.setAttribute('aria-pressed', 'false'));
   });
   document.getElementById('add-person-btn').addEventListener('click', () => openPersonModal(null));
+  document.getElementById('log-device-person').addEventListener('change', (e) => {
+    state.devices = { ...(state.devices || {}), [getDeviceId()]: e.target.value || null };
+    saveState();
+    renderLog();
+  });
   document.getElementById('person-save').addEventListener('click', savePerson);
   document.getElementById('person-delete').addEventListener('click', deletePerson);
   document.getElementById('copy-plan-btn').addEventListener('click', copyPlan);
@@ -2046,6 +2291,7 @@
     if (e.key === 'Enter') document.getElementById('sync-join-btn').click();
   });
   document.getElementById('sync-copy-btn').addEventListener('click', copySyncCode);
+  document.getElementById('sync-share-btn').addEventListener('click', shareInvite);
   document.getElementById('sync-leave-btn').addEventListener('click', roomLeave);
 
   // Welcome/Onboarding event listeners
@@ -2095,7 +2341,13 @@
   render();
 
   // Sync: UI-Status wiederherstellen und ggf. Raum auto-reconnect
-  if (_roomCode && FIREBASE_CONFIG.apiKey) {
+  // Einladungslink (?room=CODE) hat Vorrang vor dem gespeicherten Raum
+  const inviteCode = new URLSearchParams(location.search).get('room');
+  if (inviteCode) history.replaceState(null, '', location.pathname);
+  let startup = null;
+  if (inviteCode && inviteCode.toUpperCase() !== _roomCode) {
+    startup = roomJoin(inviteCode);
+  } else if (_roomCode && FIREBASE_CONFIG.apiKey) {
     roomJoin(_roomCode);
   } else {
     updateSyncUI();
@@ -2103,9 +2355,12 @@
   subscribeHistory();
 
   // Onboarding: allererster Start auf diesem Gerät (kein gespeicherter State, kein Raum) -> Willkommens-Modal
-  if (!localStorage.getItem(STORAGE_KEY) && !_roomCode && !localStorage.getItem(ONBOARDED_KEY)) {
-    openModal('modal-welcome');
-  }
+  // (bei Einladungslink erst nach dem Beitritt prüfen — schlägt er fehl, greift das Modal trotzdem)
+  Promise.resolve(startup).then(() => {
+    if (!localStorage.getItem(STORAGE_KEY) && !_roomCode && !localStorage.getItem(ONBOARDED_KEY)) {
+      openModal('modal-welcome');
+    }
+  });
 })();
 </script>
 </body>
