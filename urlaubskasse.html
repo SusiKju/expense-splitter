@@ -2,6 +2,7 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
+<script>try{document.documentElement.setAttribute('data-theme',localStorage.getItem('urlaubskasse:theme')==='light'?'light':'dark')}catch(e){document.documentElement.setAttribute('data-theme','dark')}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#0d9488" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#0b1f1d" media="(prefers-color-scheme: dark)">
@@ -127,6 +128,30 @@
     display: flex;
     gap: 8px;
     align-items: center;
+  }
+  #menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  #menu-btn:hover {
+    background: var(--bg-muted);
+    color: var(--text);
+    border-color: var(--border-strong);
+  }
+  #menu-btn:active {
+    transform: scale(0.98);
   }
 
   /* Tabs */
@@ -712,8 +737,7 @@
       </div>
     </div>
     <div class="topbar-actions">
-      <button class="icon-btn" id="theme-btn" aria-label="Theme wechseln" title="Theme">☀</button>
-      <button class="icon-btn" id="menu-btn" aria-label="Menü" title="Mehr">⋯</button>
+      <button id="menu-btn" aria-label="Einstellungen" title="Einstellungen">👤 <span id="user-menu-name"></span></button>
     </div>
   </header>
 
@@ -809,6 +833,7 @@
       <label for="exp-rate">Wechselkurs: 1 € = … <span id="exp-rate-cur"></span></label>
       <input type="number" id="exp-rate" inputmode="decimal" step="any" min="0" placeholder="z.B. 0,95">
       <div class="muted" id="exp-rate-preview" style="font-size:13px;margin-top:4px"></div>
+      <div class="muted" id="exp-rate-live" style="font-size:13px;margin-top:2px"></div>
     </div>
     <datalist id="currency-list">
       <option value="EUR"><option value="CHF"><option value="GBP"><option value="USD"><option value="DKK"><option value="SEK"><option value="NOK">
@@ -904,6 +929,13 @@
       <div class="muted" id="close-status-text" style="font-size:13px;margin-bottom:10px"></div>
       <button class="btn" id="close-room-btn" hidden></button>
     </div>
+    <div class="field">
+      <label for="theme-select">Design</label>
+      <select id="theme-select">
+        <option value="dark">Dunkel</option>
+        <option value="light">Hell</option>
+      </select>
+    </div>
     <div class="field" style="margin-bottom:18px">
       <label>Rundung der Aufteilung</label>
       <div class="person-pick" id="round-pick"></div>
@@ -943,7 +975,7 @@
     <div id="history-list"></div>
 
     <div class="muted" style="margin-top:16px;font-size:12px">
-      Theme: <span id="theme-status">System</span> • PWA-tauglich, alles lokal gespeichert.
+      PWA-tauglich, alles lokal gespeichert.
     </div>
     <div class="modal-footer">
       <button class="btn ghost" data-close>Schließen</button>
@@ -1324,14 +1356,21 @@
 
   function renderCurrentIdentity() {
     const el = document.getElementById('brand-identity');
+    const menuNameEl = document.getElementById('user-menu-name');
     if (!el) return;
     const currentPersonId = (state.devices || {})[getDeviceId()];
     const person = currentPersonId ? personById(currentPersonId) : null;
     if (person) {
       el.textContent = '👤 ' + escapeHtml(person.name);
       el.hidden = false;
+      if (menuNameEl) {
+        menuNameEl.textContent = escapeHtml(person.name);
+      }
     } else {
       el.hidden = true;
+      if (menuNameEl) {
+        menuNameEl.textContent = 'Einstellungen';
+      }
     }
   }
 
@@ -1569,6 +1608,8 @@
       amountEl.value = exp.currency ? exp.origAmount : exp.amount;
       document.getElementById('exp-currency').value = exp.currency || 'EUR';
       document.getElementById('exp-rate').value = exp.currency ? exp.rate : '';
+      // gespeicherter Kurs bleibt fest, der Live-Kurs wird nur angezeigt
+      document.getElementById('exp-rate').dataset.auto = exp.currency ? '0' : '1';
       dateEl.value = exp.date || today();
       payerEl.value = exp.payerId;
       for (const btn of partEl.querySelectorAll('button[data-pid]')) {
@@ -1583,6 +1624,7 @@
       const last = state.expenses.reduce((a, e) => (!a || (e.createdAt || 0) > (a.createdAt || 0) ? e : a), null);
       document.getElementById('exp-currency').value = last?.currency || 'EUR';
       document.getElementById('exp-rate').value = last?.currency ? last.rate : '';
+      document.getElementById('exp-rate').dataset.auto = '1';
       dateEl.value = today();
       const currentPersonId = state.devices && state.devices[getDeviceId()];
       payerEl.value = currentPersonId || state.people[0].id;
@@ -1676,6 +1718,46 @@
     document.getElementById('exp-rate-cur').textContent = cur;
     const eur = Settlement.toEur(document.getElementById('exp-amount').value, document.getElementById('exp-rate').value);
     document.getElementById('exp-rate-preview').textContent = eur > 0 ? '= ' + fmtEur(Math.round(eur * 100)) : '';
+    if (cur !== fxShownCur) showLiveRate(cur);
+  }
+
+  // Live-Wechselkurs (EZB via frankfurter.dev, kein API-Key). Cache pro Währung, max. 6 h alt;
+  // offline wird der letzte bekannte Kurs genutzt.
+  const FX_KEY = 'urlaubskasse:fx';
+  const FX_MAX_AGE = 6 * 3600 * 1000;
+  let fxShownCur = null;
+
+  async function fetchRate(cur) {
+    let cache = {};
+    try { cache = JSON.parse(localStorage.getItem(FX_KEY)) || {}; } catch (e) {}
+    const hit = cache[cur];
+    if (hit && Date.now() - hit.fetched < FX_MAX_AGE) return hit;
+    try {
+      const res = await fetch('https://api.frankfurter.dev/v1/latest?base=EUR&symbols=' + cur);
+      if (!res.ok) return hit || null; // z.B. 404: Währung nicht bei der EZB
+      const data = await res.json();
+      const rate = data.rates?.[cur];
+      if (!(rate > 0)) return hit || null;
+      cache[cur] = { rate, date: data.date, fetched: Date.now() };
+      try { localStorage.setItem(FX_KEY, JSON.stringify(cache)); } catch (e) {}
+      return cache[cur];
+    } catch (e) {
+      return hit || null;
+    }
+  }
+
+  async function showLiveRate(cur) {
+    fxShownCur = cur;
+    const live = document.getElementById('exp-rate-live');
+    live.textContent = '';
+    if (!/^[A-Z]{3}$/.test(cur)) return;
+    live.textContent = 'Lade aktuellen Kurs …';
+    const fx = await fetchRate(cur);
+    if (fxShownCur !== cur) return; // Währung wurde inzwischen geändert
+    if (!fx) { live.textContent = 'Kein Online-Kurs verfügbar – bitte manuell eingeben'; return; }
+    const rateEl = document.getElementById('exp-rate');
+    if (rateEl.dataset.auto === '1') { rateEl.value = fx.rate; updateCurrencyUI(); }
+    live.textContent = `Aktueller Kurs (EZB, ${fx.date.split('-').reverse().join('.')}): 1 € = ${String(fx.rate).replace('.', ',')} ${cur}`;
   }
 
   function deleteExpense() {
@@ -1828,30 +1910,12 @@
 
   // ===== Theme =====
   function applyTheme(mode) {
-    // mode: 'light' | 'dark' | 'system'
-    const root = document.documentElement;
-    if (mode === 'system') {
-      root.removeAttribute('data-theme');
-    } else {
-      root.setAttribute('data-theme', mode);
-    }
-    localStorage.setItem(THEME_KEY, mode);
-    updateThemeIcon(mode);
-    const status = document.getElementById('theme-status');
-    if (status) status.textContent = mode === 'system' ? 'System' : (mode === 'dark' ? 'Dunkel' : 'Hell');
-  }
-
-  function updateThemeIcon(mode) {
-    const btn = document.getElementById('theme-btn');
-    if (!btn) return;
-    btn.textContent = mode === 'dark' ? '🌙' : (mode === 'light' ? '☀' : '◐');
-    btn.title = 'Theme: ' + (mode === 'system' ? 'System' : (mode === 'dark' ? 'Dunkel' : 'Hell'));
-  }
-
-  function cycleTheme() {
-    const cur = localStorage.getItem(THEME_KEY) || 'system';
-    const next = cur === 'system' ? 'light' : (cur === 'light' ? 'dark' : 'system');
-    applyTheme(next);
+    // mode: 'light' | 'dark'; alles andere (auch altes 'system') -> dark
+    if (mode !== 'light') mode = 'dark';
+    document.documentElement.setAttribute('data-theme', mode);
+    try { localStorage.setItem(THEME_KEY, mode); } catch (e) {}
+    const sel = document.getElementById('theme-select');
+    if (sel) sel.value = mode;
   }
 
   // ===== Modal helpers =====
@@ -2328,6 +2392,8 @@
   document.getElementById('fab').addEventListener('click', () => openExpenseModal(null));
   document.getElementById('exp-save').addEventListener('click', saveExpense);
   for (const id of ['exp-amount', 'exp-currency', 'exp-rate']) document.getElementById(id).addEventListener('input', updateCurrencyUI);
+  // manuell eingetippter Kurs wird nicht mehr vom Live-Kurs überschrieben
+  document.getElementById('exp-rate').addEventListener('input', e => { e.target.dataset.auto = '0'; });
   document.getElementById('exp-receipt').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -2396,7 +2462,7 @@
       renderEvent();
     });
   }
-  document.getElementById('theme-btn').addEventListener('click', cycleTheme);
+  document.getElementById('theme-select').addEventListener('change', (e) => applyTheme(e.target.value));
   document.getElementById('close-room-btn').addEventListener('click', toggleRoomClosed);
 
   // Sync event listeners
@@ -2469,7 +2535,7 @@
   });
 
   // Theme init
-  applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
+  applyTheme(localStorage.getItem(THEME_KEY));
 
   // Service Worker nur registrieren, wenn http(s) verfügbar (nicht bei file://)
   if ('serviceWorker' in navigator && location.protocol !== 'file:') {
