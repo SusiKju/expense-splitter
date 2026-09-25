@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks prefix="ES" generated="2026-09-24T21:27" label="expense-splitter" next_id="43">
+<tasks prefix="ES" generated="2026-09-25T10:38" label="expense-splitter" next_id="44">
   <task id="1" status="done">
     <title>Event-Details: Ort (Google Maps), Datum/Uhrzeit, Infos</title>
     <summary>Pro Kasse/Event Ort (klickbar → Google Maps), Datum/Uhrzeit und Freitext-Infos hinterlegen, damit Freunde eine Übersicht haben.</summary>
@@ -603,12 +603,12 @@
     <spans file="runs/9.json" runs="1" calls="6" ms="9669" failed="0" wall_ms="43000" idle_pct="78" updated="2026-09-24T12:56" />
     <execution_seconds>120</execution_seconds>
   </task>
-  <task id="10" status="backlog">
+  <task id="10" status="done">
     <title>Ungleiche Anteile bei Ausgaben ermöglichen (Beträge, Prozent, Gewichte)</title>
     <summary>Ausgaben sollen nicht nur gleich, sondern auch nach festen Beträgen, Prozenten oder Gewichten (z. B. Kind = 0,5) aufgeteilt werden können.</summary>
     <created>2026-09-24T13:26</created>
-    <started />
-    <done />
+    <started>2026-09-25T10:34</started>
+    <done>2026-09-25T10:34</done>
     <human_estimate>1 tag</human_estimate>
     <story_points>5</story_points>
     <story_points_refined>5</story_points_refined>
@@ -643,14 +643,14 @@
     <planning_recommended>false</planning_recommended>
     <planning_active />
     <auto_run />
-    <changelog_entry />
+    <changelog_entry>Expenses can now be split unequally by fixed amounts, percentages or shares (e.g. a child counts as half).</changelog_entry>
     <end_customer_visible />
     <start_date />
     <end_date />
     <deadline />
     <version />
     <session_id />
-    <changelog_snippet>Ausgaben lassen sich jetzt ungleich aufteilen: nach Betrag, Prozent oder Anteilen, z. B. halber Anteil für Kinder.</changelog_snippet>
+    <changelog_snippet>Ausgaben lassen sich jetzt ungleich aufteilen – nach festen Beträgen, Prozent oder Anteilen, z. B. halber Anteil für Kinder.</changelog_snippet>
     <changelog_snippet_stale />
     <changelog_snippet_source />
     <jira_sync_failed />
@@ -658,6 +658,14 @@
     <history>
       <event ts="2026-09-24T13:26">received, backlog</event>
       <event ts="2026-09-24T13:26">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-25T10:34">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-25T10:34">auto-aktiviert via prompt-hook</event>
+      <event ts="2026-09-25T10:34">started run lane run-449f7d1b</event>
+      <event ts="2026-09-25T10:34">progress plan: 6 steps</event>
+      <event ts="2026-09-25T10:34">in testing — running node --test</event>
+      <event ts="2026-09-25T10:34">back to in-progress</event>
+      <event ts="2026-09-25T10:38">verification: Browser-Check 127.0.0.1 (Beträge-Validierung, Anteile 1/1/0,5 → +60/−40/−20) passed</event>
+      <event ts="2026-09-25T10:34">completed</event>
     </history>
     <is_design />
     <predicted_files>
@@ -665,6 +673,31 @@
       <file path="settlement.js" source="predicted" ts="2026-09-24T13:26" />
       <file path="tests" source="predicted" ts="2026-09-24T13:26" />
     </predicted_files>
+    <tokens>
+      <usage ts="2026-09-25T10:34" provider="claude-cli" model="claude-opus-5-5" input="16" output="2883" cache_read="265968" cache_write="70898" session="e1112e24-a30e-4893-b62a-6a7927e75c26" />
+      <usage ts="2026-09-25T10:38" provider="claude-cli" model="claude-opus-5-5" input="122" output="53555" cache_read="8746100" cache_write="429497" session="99b0cb73-58bd-4e08-914a-90c4bfc0d42c" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-25T10:34" session="99b0cb73-58bd-4e08-914a-90c4bfc0d42c" />
+    </skills>
+    <progress step="6" of="6" started="2026-09-25T10:34" label="Tests + Browsercheck">
+      <step n="1" label="Code lesen" done="2026-09-25T10:34" />
+      <step n="2" label="computeRaw erweitern" done="2026-09-25T10:34" />
+      <step n="3" label="Tests" done="2026-09-25T10:34" />
+      <step n="4" label="Formular-UI" done="2026-09-25T10:34" />
+      <step n="5" label="Anzeige &amp; Speicherung" done="2026-09-25T10:34" />
+      <step n="6" label="Tests + Browsercheck" />
+    </progress>
+    <files>
+      <file path="settlement.js" ts="2026-09-25T10:35" />
+      <file path="tests/settlement.test.js" ts="2026-09-25T10:35" />
+      <file path="urlaubskasse.html" ts="2026-09-25T10:36" />
+      <file path="sw.js" ts="2026-09-25T10:36" />
+    </files>
+    <verifications>
+      <verification ts="2026-09-25T10:38" tool="Browser-Check 127.0.0.1 (Beträge-Validierung, Anteile 1/1/0,5 → +60/−40/−20)" result="pass" />
+    </verifications>
+    <spans file="runs/10.json" runs="1" calls="33" ms="61393" failed="0" wall_ms="229000" idle_pct="73" updated="2026-09-25T10:34" />
   </task>
   <task id="11" status="done">
     <title>Fremdwährungen mit manuellem Kurs pro Ausgabe unterstützen</title>
@@ -3074,7 +3107,7 @@
       <event ts="2026-09-24T21:26">completed</event>
     </history>
     <tokens>
-      <usage ts="2026-09-24T21:26" provider="claude-cli" model="claude-opus-5-5" input="30" output="8433" cache_read="2342721" cache_write="162452" session="60565b7b-0f36-4146-b1fd-83e8355f69c6" />
+      <usage ts="2026-09-24T21:27" provider="claude-cli" model="claude-opus-5-5" input="58" output="13067" cache_read="4781067" cache_write="169579" session="60565b7b-0f36-4146-b1fd-83e8355f69c6" />
     </tokens>
     <files>
       <file path="sw.js" ts="2026-09-24T21:26" />
@@ -3085,5 +3118,95 @@
     </verifications>
     <spans file="runs/42.json" runs="1" calls="14" ms="20185" failed="2" wall_ms="86000" idle_pct="77" updated="2026-09-24T21:26" />
     <execution_seconds>60</execution_seconds>
+  </task>
+  <task id="43" status="done">
+    <title>Ersteller kann Raum „Wandern in Böhmen“ nicht schließen bzw. wieder öffnen</title>
+    <summary>Reddi hat den Raum „Wandern in Böhmen“ angelegt, bekommt aber keine Berechtigung, ihn zu schließen. Wer einen Raum anlegt, soll ihn schließen und wieder öffnen dürfen.</summary>
+    <created>2026-09-25T10:33</created>
+    <started>2026-09-25T10:34</started>
+    <done>2026-09-25T10:41</done>
+    <human_estimate>2h</human_estimate>
+    <story_points>3</story_points>
+    <story_points_refined>3</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-43.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>sonnet</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Wer eine Kasse erstellt, kann sie zuverlässig schließen und wieder öffnen – auch auf einem anderen Gerät; „Wandern in Böhmen“ gehört wieder Reddi.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-25T10:33">received, backlog</event>
+      <event ts="2026-09-25T10:33">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-25T10:34">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-25T10:34">auto-aktiviert via prompt-hook (parallel run)</event>
+      <event ts="2026-09-25T10:34">started run lane run-49a8a3b2</event>
+      <event ts="2026-09-25T10:34">started</event>
+      <event ts="2026-09-25T10:35">progress plan: 5 steps</event>
+      <event ts="2026-09-25T10:41">completed</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-25T10:33" />
+      <file path="database.rules.json" source="predicted" ts="2026-09-25T10:33" />
+      <file path="tests" source="predicted" ts="2026-09-25T10:33" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-25T10:36" provider="claude-cli" model="claude-sonnet-5" input="46" output="18859" cache_read="2817971" cache_write="342289" session="434b3897-f85c-4fdd-bd0f-9e91f0877054" />
+      <usage ts="2026-09-25T11:50" provider="claude-cli" model="claude-opus-5-5" input="48" output="7351" cache_read="1504620" cache_write="132730" session="0916e336-31f0-47d0-8e21-50db988d0e45" attributed="inferred" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-25T10:34" session="434b3897-f85c-4fdd-bd0f-9e91f0877054" />
+    </skills>
+    <progress step="5" of="5" started="2026-09-25T10:35" label="Docs" elapsed="360" step_ts="2026-09-25T10:40">
+      <step n="1" label="Investigate creatorDeviceId flow" done="2026-09-25T10:40" />
+      <step n="2" label="Fix creator check" done="2026-09-25T10:40" />
+      <step n="3" label="Repair existing room" done="2026-09-25T10:40" />
+      <step n="4" label="Test" done="2026-09-25T10:40" />
+      <step n="5" label="Docs" />
+    </progress>
+    <files>
+      <file path="settlement.js" ts="2026-09-25T10:35" />
+      <file path="tests/settlement.test.js" ts="2026-09-25T10:35" />
+      <file path="urlaubskasse.html" ts="2026-09-25T10:36" />
+    </files>
+    <spans file="runs/43.json" runs="1" calls="12" ms="36654" failed="0" wall_ms="109000" idle_pct="66" updated="2026-09-25T10:41" />
+    <execution_seconds>420</execution_seconds>
   </task>
 </tasks>

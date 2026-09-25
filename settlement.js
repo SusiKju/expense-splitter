@@ -10,9 +10,21 @@
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 
+  // Gewicht einer Person an einer Ausgabe. Ohne splitMode (bzw. 'equal') zählt
+  // jeder Teilnehmer 1. Bei 'amount' | 'percent' | 'shares' sind splitValues
+  // ({ personId: Zahl }) Gewichte: der Betrag wird proportional verteilt.
+  // Gehen Beträge/Prozente nicht exakt auf, wird so automatisch skaliert
+  // (das Formular prüft die Summe vorher, Altdaten bleiben so trotzdem stabil).
+  function splitWeight(exp, pid) {
+    if (!exp.splitMode || exp.splitMode === 'equal' || !exp.splitValues) return 1;
+    const v = Number(exp.splitValues[pid]);
+    return v > 0 ? v : 0;
+  }
+
   // Liefert pro Person: { paid, exactShare } (Float in Cent).
   // payerId/participantIds außerhalb von `people` werden ignoriert, ebenso
-  // Ausgaben ohne Teilnehmer oder mit Betrag <= 0.
+  // Ausgaben ohne Teilnehmer (bzw. ohne positives Gewicht) oder mit Betrag <= 0.
+  // Rundung auf Cent passiert erst in roundBalances (Largest Remainder).
   function computeRaw(people, expenses) {
     const paid = {};
     const exactShare = {};
@@ -20,12 +32,11 @@
     for (const exp of expenses) {
       if (!paid.hasOwnProperty(exp.payerId)) continue;
       const amt = Math.round(Number(exp.amount) * 100);
-      const parts = (exp.participantIds || []).filter(id => paid.hasOwnProperty(id));
-      const n = parts.length;
-      if (n === 0 || amt <= 0) continue;
+      const parts = (exp.participantIds || []).filter(id => paid.hasOwnProperty(id) && splitWeight(exp, id) > 0);
+      const total = parts.reduce((s, pid) => s + splitWeight(exp, pid), 0);
+      if (total <= 0 || amt <= 0) continue;
       paid[exp.payerId] += amt;
-      const share = amt / n;
-      for (const pid of parts) exactShare[pid] += share;
+      for (const pid of parts) exactShare[pid] += amt * splitWeight(exp, pid) / total;
     }
     return { paid, exactShare };
   }

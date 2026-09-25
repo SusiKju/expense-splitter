@@ -81,6 +81,50 @@ describe('computeRaw', () => {
     assert.deepEqual(exactShare, { a: 500, b: 500 });
   });
 
+  test('ohne splitMode (Altdaten) bleibt es bei gleicher Aufteilung', () => {
+    const p = people(['a', 'b']);
+    const expenses = [{ payerId: 'a', amount: 10, participantIds: ['a', 'b'], splitMode: 'equal', splitValues: { a: 9 } }];
+    assert.deepEqual(computeRaw(p, expenses).exactShare, { a: 500, b: 500 });
+  });
+
+  test('teilt nach festen Beträgen, Prozent und Gewichten auf', () => {
+    const p = people(['a', 'b', 'c']);
+    const ids = ['a', 'b', 'c'];
+    const cases = [
+      [{ splitMode: 'amount', splitValues: { a: 50, b: 30, c: 20 } }, { a: 5000, b: 3000, c: 2000 }],
+      [{ splitMode: 'percent', splitValues: { a: 50, b: 25, c: 25 } }, { a: 5000, b: 2500, c: 2500 }],
+      // Kind c zählt halb: 1 + 1 + 0,5 = 2,5 Anteile
+      [{ splitMode: 'shares', splitValues: { a: 1, b: 1, c: 0.5 } }, { a: 4000, b: 4000, c: 2000 }],
+    ];
+    for (const [split, expected] of cases) {
+      const { paid, exactShare } = computeRaw(p, [{ payerId: 'a', amount: 100, participantIds: ids, ...split }]);
+      assert.equal(paid.a, 10000, split.splitMode);
+      assert.deepEqual(exactShare, expected, split.splitMode);
+    }
+  });
+
+  test('Teilnehmer mit Gewicht 0 oder ohne Wert tragen nichts', () => {
+    const p = people(['a', 'b', 'c']);
+    const expenses = [{ payerId: 'a', amount: 30, participantIds: ['a', 'b', 'c'], splitMode: 'shares', splitValues: { a: 2, b: 0 } }];
+    assert.deepEqual(computeRaw(p, expenses).exactShare, { a: 3000, b: 0, c: 0 });
+  });
+
+  test('nicht aufgehende Beträge werden proportional skaliert, Gewicht 0 überall -> ignoriert', () => {
+    const p = people(['a', 'b']);
+    const scaled = [{ payerId: 'a', amount: 10, participantIds: ['a', 'b'], splitMode: 'amount', splitValues: { a: 3, b: 1 } }];
+    assert.deepEqual(computeRaw(p, scaled).exactShare, { a: 750, b: 250 });
+    const none = [{ payerId: 'a', amount: 10, participantIds: ['a', 'b'], splitMode: 'percent', splitValues: {} }];
+    assert.deepEqual(computeRaw(p, none).paid, { a: 0, b: 0 });
+  });
+
+  test('ungleiche Aufteilung bleibt nach Rundung summenneutral', () => {
+    const p = people(['a', 'b', 'c']);
+    const expenses = [{ payerId: 'b', amount: 10, participantIds: ['a', 'b', 'c'], splitMode: 'shares', splitValues: { a: 1, b: 1, c: 1.5 } }];
+    const bal = computeBalances(p, expenses, 1);
+    assert.equal(bal.a + bal.b + bal.c, 0);
+    assertTransfersSettleBalances(bal, computeSettlement(bal));
+  });
+
   test('rechnet mit Fließkomma-Eurobeträgen korrekt in Cent um', () => {
     const p = people(['a', 'b']);
     // 0.1 + 0.2 ist der klassische Float-Stolperstein

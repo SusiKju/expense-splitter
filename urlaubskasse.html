@@ -571,6 +571,9 @@
     font-weight: 500;
   }
   .person-pick .actions button:hover { text-decoration: underline; }
+  .split-values { display: grid; grid-template-columns: 1fr 7em; gap: 6px 10px; align-items: center; margin-top: 8px; font-size: 14px; }
+  .split-values[hidden] { display: none; }
+  .split-values input { width: 100%; min-width: 0; }
 
   /* Balance view */
   .balance-row {
@@ -894,6 +897,17 @@
           <button type="button" id="pick-none">Niemand</button>
         </div>
       </div>
+    </div>
+    <div class="field">
+      <label for="exp-split-mode">Aufteilung</label>
+      <select id="exp-split-mode">
+        <option value="equal">Gleichmäßig</option>
+        <option value="amount">Feste Beträge</option>
+        <option value="percent">Prozent</option>
+        <option value="shares">Anteile (z.B. Kind = 0,5)</option>
+      </select>
+      <div class="split-values" id="exp-split-values" hidden></div>
+      <div class="muted" id="exp-split-sum" style="font-size:13px;margin-top:4px"></div>
     </div>
     <div class="field">
       <label for="exp-receipt">Beleg-Foto</label>
@@ -1268,13 +1282,16 @@
     state.expenses.filter(e => e.payerId === personId || (e.participantIds || []).includes(personId));
 
   // ===== Kasse schließen =====
-  // Geschlossen blockiert Änderungen für alle; nur wer die Kasse erstellt hat
-  // (creatorDeviceId === eigene Geräte-ID) darf wieder öffnen/schließen.
+  // Geschlossen blockiert Änderungen für alle; nur wer die Kasse erstellt hat darf
+  // wieder öffnen/schließen: erstellendes Gerät (creatorDeviceId) oder die dem Raum
+  // als Ersteller zugeordnete Person (creatorPersonId) auf einem beliebigen Gerät.
   function isRoomClosed() {
     return !!(state.settings && state.settings.closed);
   }
   function isCreatorDevice() {
-    return !!(state.settings && state.settings.creatorDeviceId === getDeviceId());
+    const s = state.settings || {};
+    const dev = getDeviceId();
+    return s.creatorDeviceId === dev || (!!s.creatorPersonId && (state.devices || {})[dev] === s.creatorPersonId);
   }
   function guardClosed() {
     if (isRoomClosed()) {
@@ -1440,6 +1457,8 @@
     document.getElementById('sum-count').textContent = state.expenses.length.toString();
   }
 
+  const SPLIT_LABELS = { amount: 'nach Beträgen', percent: 'nach Prozent', shares: 'nach Anteilen' };
+
   function renderExpenses() {
     const list = document.getElementById('expense-list');
     if (state.expenses.length === 0) {
@@ -1462,9 +1481,10 @@
       const others = (exp.participantIds || [])
         .filter(id => id !== exp.payerId)
         .map(id => personById(id)?.name || '?');
-      const participantSummary = others.length === 0
+      const participantSummary = (others.length === 0
         ? (payer ? `nur ${payer.name}` : '—')
-        : (exp.participantIds.length === state.people.length ? 'alle' : 'mit ' + others.join(', '));
+        : (exp.participantIds.length === state.people.length ? 'alle' : 'mit ' + others.join(', ')))
+        + (SPLIT_LABELS[exp.splitMode] ? ' · ' + SPLIT_LABELS[exp.splitMode] : '');
       return `
         <div class="card expense-card">
           <div class="expense">
@@ -1646,6 +1666,7 @@
       btn.addEventListener('click', () => {
         const cur = btn.getAttribute('aria-pressed') === 'true';
         btn.setAttribute('aria-pressed', cur ? 'false' : 'true');
+        renderSplitInputs();
       });
       partEl.appendChild(btn);
     }
@@ -1664,6 +1685,8 @@
       for (const btn of partEl.querySelectorAll('button[data-pid]')) {
         btn.setAttribute('aria-pressed', (exp.participantIds || []).includes(btn.dataset.pid) ? 'true' : 'false');
       }
+      document.getElementById('exp-split-mode').value = exp.splitMode || 'equal';
+      renderSplitInputs(exp.splitValues || {});
       delBtn.hidden = false;
     } else {
       titleEl.textContent = 'Ausgabe hinzufügen';
@@ -1681,6 +1704,8 @@
       for (const btn of partEl.querySelectorAll('button[data-pid]')) {
         btn.setAttribute('aria-pressed', 'true');
       }
+      document.getElementById('exp-split-mode').value = 'equal';
+      renderSplitInputs({});
       delBtn.hidden = true;
     }
     const exp = expenseId && state.expenses.find(e => e.id === expenseId);
@@ -1705,7 +1730,7 @@
     const amount = currency ? Settlement.toEur(inputAmount, rate) : inputAmount;
     const date   = document.getElementById('exp-date').value || today();
     const payerId = document.getElementById('exp-payer').value;
-    const parts = Array.from(document.querySelectorAll('#exp-participants button[data-pid][aria-pressed="true"]'))
+    let parts = Array.from(document.querySelectorAll('#exp-participants button[data-pid][aria-pressed="true"]'))
       .map(b => b.dataset.pid);
 
     if (!desc) { toast('Beschreibung fehlt'); return; }
@@ -1716,6 +1741,19 @@
     // null statt undefined: Firebase lehnt undefined ab, null löscht das Feld
     const fx = currency ? { currency, rate, origAmount: inputAmount } : { currency: null, rate: null, origAmount: null };
     if (!payerId) { toast('Zahler auswählen'); return; }
+    // Ungleiche Aufteilung: Werte sind Gewichte (Beträge in Eingabewährung), nur Personen mit Wert > 0 zählen
+    const splitMode = document.getElementById('exp-split-mode').value;
+    let split = { splitMode: null, splitValues: null };
+    if (splitMode !== 'equal') {
+      const values = splitInputValues();
+      parts = parts.filter(pid => values[pid] > 0);
+      const sum = parts.reduce((s, pid) => s + values[pid], 0);
+      if (splitMode === 'amount' && Math.round(sum * 100) !== Math.round(inputAmount * 100)) {
+        toast(`Beträge ergeben ${fmtNum(sum)} statt ${fmtNum(inputAmount)}`); return;
+      }
+      if (splitMode === 'percent' && Math.abs(sum - 100) > 0.001) { toast(`Prozente ergeben ${fmtNum(sum)} % statt 100 %`); return; }
+      split = { splitMode, splitValues: Object.fromEntries(parts.map(pid => [pid, values[pid]])) };
+    }
     if (parts.length === 0) { toast('Mindestens einen Beteiligten auswählen'); return; }
 
     const id = editingExpenseId || newId();
@@ -1738,12 +1776,13 @@
 
     logChange(editingExpenseId ? 'edit' : 'add', desc);
     if (prev) {
-      Object.assign(prev, { desc, amount, date, payerId, participantIds: parts, hasReceipt, ...fx });
+      Object.assign(prev, { desc, amount, date, payerId, participantIds: parts, hasReceipt, ...fx, ...split });
     } else {
       state.expenses.push({
         id,
         desc, amount, date, payerId,
         ...fx,
+        ...split,
         participantIds: parts,
         hasReceipt,
         createdAt: Date.now(),
@@ -1753,6 +1792,44 @@
     render();
     closeAllModals();
     toast(editingExpenseId ? 'Ausgabe aktualisiert' : 'Ausgabe gespeichert');
+  }
+
+  const fmtNum = n => (Math.round(n * 100) / 100).toLocaleString('de-DE');
+
+  // Eingabefelder je beteiligter Person für die ungleiche Aufteilung.
+  // values: Startwerte { pid: Zahl }; ohne Argument bleiben bereits eingetippte Werte erhalten.
+  function renderSplitInputs(values) {
+    const mode = document.getElementById('exp-split-mode').value;
+    const box = document.getElementById('exp-split-values');
+    const keep = values || splitInputValues();
+    const pids = Array.from(document.querySelectorAll('#exp-participants button[data-pid][aria-pressed="true"]')).map(b => b.dataset.pid);
+    box.hidden = mode === 'equal' || pids.length === 0;
+    box.innerHTML = box.hidden ? '' : pids.map(pid => {
+      const v = keep[pid] ?? (mode === 'shares' ? 1 : mode === 'percent' ? Math.round(10000 / pids.length) / 100 : '');
+      return `<label for="split-${pid}">${escapeHtml(personById(pid)?.name || '?')}</label>
+        <input type="number" id="split-${pid}" data-split-pid="${pid}" inputmode="decimal" step="any" min="0" value="${v}" placeholder="${mode === 'amount' ? '0,00' : '0'}">`;
+    }).join('');
+    updateSplitSum();
+  }
+
+  function splitInputValues() {
+    const out = {};
+    for (const el of document.querySelectorAll('#exp-split-values input[data-split-pid]')) {
+      const v = parseFloat(el.value);
+      if (v >= 0) out[el.dataset.splitPid] = v;
+    }
+    return out;
+  }
+
+  function updateSplitSum() {
+    const mode = document.getElementById('exp-split-mode').value;
+    const el = document.getElementById('exp-split-sum');
+    if (mode === 'equal') { el.textContent = ''; return; }
+    const sum = Object.values(splitInputValues()).reduce((s, v) => s + v, 0);
+    const amount = parseFloat(document.getElementById('exp-amount').value) || 0;
+    el.textContent = mode === 'amount' ? `Summe ${fmtNum(sum)} von ${fmtNum(amount)} (offen: ${fmtNum(amount - sum)})`
+      : mode === 'percent' ? `Summe ${fmtNum(sum)} % von 100 %`
+      : `${fmtNum(sum)} Anteile gesamt`;
   }
 
   // unbekannte (alte) Währung als Option ergänzen, sonst fällt das Select still auf EUR zurück
@@ -1998,6 +2075,7 @@
 
   function setIdentity(personId) {
     state.devices = { ...(state.devices || {}), [getDeviceId()]: personId || null };
+    if (personId && state.settings.creatorDeviceId === getDeviceId()) state.settings.creatorPersonId = personId;
     saveState();
     render();
   }
@@ -2269,7 +2347,13 @@
     if (!loaded.settings) loaded.settings = { roundStep: 1, tripName: DEFAULT_TRIP_NAME };
     if (typeof loaded.settings.tripName !== 'string') loaded.settings.tripName = DEFAULT_TRIP_NAME;
     if (typeof loaded.settings.closed !== 'boolean') loaded.settings.closed = false;
-    if (typeof loaded.settings.creatorDeviceId !== 'string') loaded.settings.creatorDeviceId = getDeviceId();
+    // Kein Fallback auf das beitretende Gerät: sonst würde, wer einen Raum ohne Ersteller zuerst öffnet, dessen Ersteller.
+    // Einmal-Reparatur „Wandern in Böhmen“: Ersteller war fälschlich ein anderes Gerät → wieder Reddi zuordnen
+    const reddi = loaded.people.find(p => p.name === 'Reddi');
+    if (loaded.settings.tripName === 'Wandern in Böhmen' && reddi && loaded.settings.creatorPersonId !== reddi.id) {
+      loaded.settings.creatorPersonId = reddi.id;
+      delete loaded.settings.creatorDeviceId;
+    }
     loaded.people.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
     state = loaded;
     syncPullInProgress = true;
@@ -2309,6 +2393,10 @@
     try {
       const code = generateRoomCode();
       const ref = getDb().ref(`rooms/${code}`);
+      // Lokaler State kann noch den Ersteller eines früheren Raums tragen — neuer Raum gehört diesem Gerät
+      state.settings.creatorDeviceId = getDeviceId();
+      const me = (state.devices || {})[getDeviceId()];
+      if (personById(me)) state.settings.creatorPersonId = me; else delete state.settings.creatorPersonId;
       await ref.set({ state: stateForSync(), updatedAt: Date.now(), pushedBy: SESSION_ID });
       _roomRef = ref;
       _roomCode = code;
@@ -2486,10 +2574,16 @@
   document.getElementById('exp-delete').addEventListener('click', deleteExpense);
   document.getElementById('pick-all').addEventListener('click', () => {
     document.querySelectorAll('#exp-participants button[data-pid]').forEach(b => b.setAttribute('aria-pressed', 'true'));
+    renderSplitInputs();
   });
   document.getElementById('pick-none').addEventListener('click', () => {
     document.querySelectorAll('#exp-participants button[data-pid]').forEach(b => b.setAttribute('aria-pressed', 'false'));
+    renderSplitInputs();
   });
+  // Moduswechsel: andere Einheit → Werte neu vorbelegen
+  document.getElementById('exp-split-mode').addEventListener('change', () => renderSplitInputs({}));
+  document.getElementById('exp-split-values').addEventListener('input', updateSplitSum);
+  document.getElementById('exp-amount').addEventListener('input', updateSplitSum);
   document.getElementById('add-person-btn').addEventListener('click', () => openPersonModal(null));
   document.getElementById('log-device-person').addEventListener('change', (e) => setIdentity(e.target.value));
   document.getElementById('identity-list').addEventListener('click', (e) => {
