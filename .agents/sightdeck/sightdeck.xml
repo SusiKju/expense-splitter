@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks prefix="ES" generated="2026-09-25T11:56" label="expense-splitter" next_id="45">
+<tasks prefix="ES" generated="2026-09-25T12:08" label="expense-splitter" next_id="46">
   <task id="1" status="done">
     <title>Event-Details: Ort (Google Maps), Datum/Uhrzeit, Infos</title>
     <summary>Pro Kasse/Event Ort (klickbar → Google Maps), Datum/Uhrzeit und Freitext-Infos hinterlegen, damit Freunde eine Übersicht haben.</summary>
@@ -3189,7 +3189,7 @@
     </predicted_files>
     <tokens>
       <usage ts="2026-09-25T10:36" provider="claude-cli" model="claude-sonnet-5" input="46" output="18859" cache_read="2817971" cache_write="342289" session="434b3897-f85c-4fdd-bd0f-9e91f0877054" />
-      <usage ts="2026-09-25T11:56" provider="claude-cli" model="claude-opus-5-5" input="60" output="9414" cache_read="1959359" cache_write="135811" session="0916e336-31f0-47d0-8e21-50db988d0e45" attributed="inferred" />
+      <usage ts="2026-09-25T12:08" provider="claude-cli" model="claude-opus-5-5" input="78" output="13042" cache_read="2734058" cache_write="153815" session="0916e336-31f0-47d0-8e21-50db988d0e45" attributed="inferred" />
       <usage ts="2026-09-25T11:53" provider="claude-cli" model="claude-opus-5-5" input="8" output="889" cache_read="98524" cache_write="66223" session="8d428003-ecd5-45ee-947e-08dc7e468075" attributed="inferred" />
     </tokens>
     <skills>
@@ -3277,6 +3277,7 @@
     </predicted_files>
     <tokens>
       <usage ts="2026-09-25T11:56" provider="claude-cli" model="claude-haiku-4-5-20251001" input="449" output="14515" cache_read="5109599" cache_write="245858" session="e753f8db-03fc-4911-ad88-2c180e0342f0" />
+      <usage ts="2026-09-25T12:00" provider="claude-cli" model="claude-opus-5-5" input="6" output="827" cache_read="60781" cache_write="63404" session="033d0f1f-6309-4c36-9ab2-9b84149ce110" attributed="inferred" />
     </tokens>
     <skills>
       <skill name="sightdeck-ai" ts="2026-09-25T11:54" session="e753f8db-03fc-4911-ad88-2c180e0342f0" />
@@ -3285,5 +3286,84 @@
       <file path="urlaubskasse.html" ts="2026-09-25T11:56" />
     </files>
     <spans file="runs/44.json" runs="1" calls="22" ms="53206" failed="0" wall_ms="123000" idle_pct="57" updated="2026-09-25T11:54" />
+  </task>
+  <task id="45" status="done">
+    <title>Datums-Icon weiß machen und Formularfelder auf Lesbarkeit in beiden Themes prüfen</title>
+    <summary>Das Kalender-Icon im Datumsfeld ist noch schwarz und muss weiß sein, damit man es gut sieht. Zusätzlich alle anderen Formularfelder in beiden Themes auf gute Lesbarkeit prüfen.</summary>
+    <created>2026-09-25T11:59</created>
+    <started>2026-09-25T12:00</started>
+    <done>2026-09-25T12:08</done>
+    <human_estimate>1h</human_estimate>
+    <story_points>2</story_points>
+    <story_points_refined>2</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-45.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>haiku</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Das Datums-Icon und die übrigen Formularfelder sind jetzt in beiden Themes gut lesbar.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-25T11:59">received, backlog</event>
+      <event ts="2026-09-25T11:59">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-25T12:00">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-25T12:00">auto-aktiviert via prompt-hook</event>
+      <event ts="2026-09-25T12:00">started run lane run-a1a2718d</event>
+      <event ts="2026-09-25T12:00">started</event>
+      <event ts="2026-09-25T12:08">completed</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-25T11:59" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-25T12:04" provider="claude-cli" model="claude-haiku-4-5-20251001" input="793" output="22130" cache_read="10008690" cache_write="395915" session="33fb8c25-4034-479f-93b9-169f331e1fbe" />
+      <usage ts="2026-09-25T12:08" provider="claude-cli" model="claude-haiku-4-5-20251001" input="298" output="10753" cache_read="3835144" cache_write="257877" session="29b8fdf8-82d2-436d-93a9-472bad4f2bc2" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-25T12:00" session="33fb8c25-4034-479f-93b9-169f331e1fbe" />
+      <skill name="run" ts="2026-09-25T12:00" session="33fb8c25-4034-479f-93b9-169f331e1fbe" />
+    </skills>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-09-25T12:04" />
+    </files>
+    <spans file="runs/45.json" runs="3" calls="76" ms="191293" failed="2" wall_ms="427000" idle_pct="55" updated="2026-09-25T12:08" />
+    <execution_seconds>480</execution_seconds>
   </task>
 </tasks>
