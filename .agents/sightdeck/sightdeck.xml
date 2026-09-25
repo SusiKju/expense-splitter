@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks prefix="ES" generated="2026-09-25T12:08" label="expense-splitter" next_id="46">
+<tasks prefix="ES" generated="2026-09-25T15:28" label="expense-splitter" next_id="47">
   <task id="1" status="done">
     <title>Event-Details: Ort (Google Maps), Datum/Uhrzeit, Infos</title>
     <summary>Pro Kasse/Event Ort (klickbar → Google Maps), Datum/Uhrzeit und Freitext-Infos hinterlegen, damit Freunde eine Übersicht haben.</summary>
@@ -3189,7 +3189,7 @@
     </predicted_files>
     <tokens>
       <usage ts="2026-09-25T10:36" provider="claude-cli" model="claude-sonnet-5" input="46" output="18859" cache_read="2817971" cache_write="342289" session="434b3897-f85c-4fdd-bd0f-9e91f0877054" />
-      <usage ts="2026-09-25T15:24" provider="claude-cli" model="claude-opus-5-5" input="94" output="18788" cache_read="3367609" cache_write="312421" session="0916e336-31f0-47d0-8e21-50db988d0e45" attributed="inferred" />
+      <usage ts="2026-09-25T15:29" provider="claude-cli" model="claude-opus-5-5" input="100" output="19384" cache_read="3675947" cache_write="315110" session="0916e336-31f0-47d0-8e21-50db988d0e45" attributed="inferred" />
       <usage ts="2026-09-25T11:53" provider="claude-cli" model="claude-opus-5-5" input="8" output="889" cache_read="98524" cache_write="66223" session="8d428003-ecd5-45ee-947e-08dc7e468075" attributed="inferred" />
     </tokens>
     <skills>
@@ -3355,6 +3355,7 @@
     <tokens>
       <usage ts="2026-09-25T12:04" provider="claude-cli" model="claude-haiku-4-5-20251001" input="793" output="22130" cache_read="10008690" cache_write="395915" session="33fb8c25-4034-479f-93b9-169f331e1fbe" />
       <usage ts="2026-09-25T12:08" provider="claude-cli" model="claude-haiku-4-5-20251001" input="298" output="10753" cache_read="3835144" cache_write="257877" session="29b8fdf8-82d2-436d-93a9-472bad4f2bc2" />
+      <usage ts="2026-09-25T15:27" provider="claude-cli" model="claude-opus-5-5" input="10" output="1049" cache_read="139130" cache_write="66749" session="c4940155-487a-4993-9a62-5d8e54fc914e" attributed="inferred" />
     </tokens>
     <skills>
       <skill name="sightdeck-ai" ts="2026-09-25T12:00" session="33fb8c25-4034-479f-93b9-169f331e1fbe" />
@@ -3365,5 +3366,86 @@
     </files>
     <spans file="runs/45.json" runs="3" calls="76" ms="191293" failed="2" wall_ms="427000" idle_pct="55" updated="2026-09-25T12:08" />
     <execution_seconds>480</execution_seconds>
+  </task>
+  <task id="46" status="done">
+    <title>Währungsauswahl auf EUR, CZK und PLN beschränken</title>
+    <summary>Im Ausgaben-Formular sollen vorerst nur Euro, tschechische Kronen und polnische Złote auswählbar sein.</summary>
+    <created>2026-09-25T15:26</created>
+    <started>2026-09-25T15:27</started>
+    <done>2026-09-25T15:27</done>
+    <human_estimate>15min</human_estimate>
+    <story_points>2</story_points>
+    <story_points_refined>2</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-46.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>change</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>haiku</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Die Währungsauswahl bei Ausgaben ist jetzt auf Euro, tschechische Kronen und polnische Złote beschränkt.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-25T15:26">received, backlog</event>
+      <event ts="2026-09-25T15:26">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-25T15:27">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-25T15:27">auto-aktiviert via prompt-hook</event>
+      <event ts="2026-09-25T15:27">started run lane run-7df74e0d</event>
+      <event ts="2026-09-25T15:27">started</event>
+      <event ts="2026-09-25T15:28">auto-detected: running npm test</event>
+      <event ts="2026-09-25T15:28">verification: npm test passed</event>
+      <event ts="2026-09-25T15:27">completed</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-25T15:26" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-25T15:28" provider="claude-cli" model="claude-haiku-4-5-20251001" input="359" output="11971" cache_read="3975919" cache_write="220619" session="977be91f-cb69-4bb8-87b6-00cd19255a6e" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-25T15:27" session="977be91f-cb69-4bb8-87b6-00cd19255a6e" />
+    </skills>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-09-25T15:28" />
+    </files>
+    <verifications>
+      <verification ts="2026-09-25T15:28" tool="npm test" result="pass" />
+    </verifications>
+    <spans file="runs/46.json" runs="1" calls="18" ms="9281" failed="1" wall_ms="69000" idle_pct="87" updated="2026-09-25T15:27" />
   </task>
 </tasks>
