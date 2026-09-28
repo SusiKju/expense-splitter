@@ -23,6 +23,15 @@
         }
       }
     },
+    "identities": {
+      "$roomCode": {
+        ".read": true,
+        "$deviceId": {
+          ".write": "root.child('rooms/' + $roomCode).exists()",
+          ".validate": "newData.isString()"
+        }
+      }
+    },
     "deviceHistory": {
       "$deviceId": {
         ".read": true,

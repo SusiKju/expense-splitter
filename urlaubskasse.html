@@ -450,6 +450,10 @@
     box-shadow: var(--shadow-lg);
     animation: slideUp 0.2s ease-out;
   }
+  @media (max-width: 639px) {
+    .row { flex-direction: column; }
+    .row > * { flex: none; }
+  }
   @media (min-width: 640px) {
     .modal-backdrop { align-items: center; padding: 16px; }
     .modal { border-radius: var(--radius-xl); }
@@ -975,7 +979,7 @@
     </div>
     <div class="field">
       <label for="person-pay">Zahlungsinfo (optional)</label>
-      <input type="text" id="person-pay" placeholder="PayPal.me-Name oder IBAN" autocomplete="off" maxlength="60">
+      <input type="text" id="person-pay" placeholder="z.B. paypal.me/name oder DE89370400440532013000" autocomplete="off" maxlength="60">
     </div>
     <div class="modal-footer">
       <button class="btn danger" id="person-delete" hidden>Löschen</button>
@@ -2108,6 +2112,13 @@
     state.devices = { ...(state.devices || {}), [getDeviceId()]: personId || null };
     if (personId && state.settings.creatorDeviceId === getDeviceId()) state.settings.creatorPersonId = personId;
     saveState();
+    // Eigener Pfad statt Teil des großen state-Blobs: roomPush() überschreibt bei jedem Sync
+    // den kompletten Blob mit dem lokal zwischengespeicherten Stand. Kommt ein anderes Gerät
+    // (typischerweise der Ersteller, der die Kasse aktiv nutzt) dabei mit einem Stand zum Zug,
+    // der von dieser Auswahl noch nichts weiß, überschreibt es sie sofort wieder — die Auswahl
+    // hält nie, auch nicht nach Verlassen/erneutem Beitreten. Ein eigener, kleiner Schreibpfad
+    // pro Gerät ist von diesem "letzter gewinnt"-Überschreiben der Kasse nicht betroffen.
+    if (_roomRef) identityRef(getDeviceId()).set(personId || null).catch(e => console.error('[Kasse] Identität sync fehlgeschlagen:', e));
     render();
   }
 
@@ -2173,6 +2184,7 @@
   let _roomRef = null;
   let _roomCode = localStorage.getItem(ROOM_KEY) || null;
   let _unsubscribe = null;
+  let _unsubscribeIdentities = null;
 
   function getDb() {
     if (!_db) {
@@ -2386,7 +2398,13 @@
       delete loaded.settings.creatorDeviceId;
     }
     loaded.people.sort((a, b) => a.name.localeCompare(b.name, 'de', { sensitivity: 'base' }));
+    // devices kommt hier evtl. veraltet an (roomPush() schreibt den kompletten Blob aus dem lokalen
+    // Cache eines Geräts, das von einer frischen Geräte-Zuordnung eines anderen Geräts noch nichts
+    // weiß) — die eigene, per identities/{room} synchronisierte Zuordnung bleibt deshalb erhalten und
+    // gewinnt gegenüber dem Blob; nur wirklich neue Einträge aus dem Blob werden übernommen.
+    const devicesBeforeLoad = state.devices;
     state = loaded;
+    state.devices = { ...(loaded.devices || {}), ...(devicesBeforeLoad || {}) };
     syncPullInProgress = true;
     saveState();
     syncPullInProgress = false;
@@ -2405,6 +2423,30 @@
       loadFromFirebase(data.state);
     });
     _unsubscribe = () => ref.off('value', handler);
+    subscribeIdentities();
+  }
+
+  function identityRef(deviceId) {
+    return getDb().ref(`identities/${_roomCode}/${deviceId}`);
+  }
+
+  // Eigener RTDB-Pfad identities/{room}/{deviceId}, nicht im state-Blob: roomPush() überschreibt bei
+  // jedem Sync den kompletten Blob mit dem lokal zwischengespeicherten Stand. Kommt dabei ein Gerät mit
+  // einem Stand zum Zug, der von der Geräte-Zuordnung eines anderen Geräts noch nichts weiß, überschreibt
+  // es sie sofort wieder — die Auswahl hält nie. Ein eigener Pfad pro Gerät ist davon nicht betroffen.
+  function subscribeIdentities() {
+    if (_unsubscribeIdentities) _unsubscribeIdentities();
+    const code = _roomCode;
+    const ref = getDb().ref(`identities/${code}`);
+    const handler = ref.on('value', (snap) => {
+      if (_roomCode !== code) return; // Raum wurde inzwischen gewechselt, dieser Listener ist obsolet
+      state.devices = { ...(state.devices || {}), ...(snap.val() || {}) };
+      syncPullInProgress = true;
+      saveState();
+      syncPullInProgress = false;
+      render();
+    });
+    _unsubscribeIdentities = () => ref.off('value', handler);
   }
 
   async function roomPush() {
@@ -2433,6 +2475,7 @@
       _roomCode = code;
       localStorage.setItem(ROOM_KEY, code);
       subscribeRoom();
+      if (personById(me)) identityRef(getDeviceId()).set(me).catch(() => {});
       updateSyncUI();
       setSyncDot('ok');
       touchHistory(code, state.settings.tripName);
@@ -2477,6 +2520,7 @@
 
   function roomLeave() {
     if (_unsubscribe) { _unsubscribe(); _unsubscribe = null; }
+    if (_unsubscribeIdentities) { _unsubscribeIdentities(); _unsubscribeIdentities = null; }
     _roomRef = null;
     _roomCode = null;
     localStorage.removeItem(ROOM_KEY);

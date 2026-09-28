@@ -1,0 +1,56 @@
+{
+  "key": "d2026-09-24",
+  "day": "2026-09-24",
+  "period": {
+    "mode": "day",
+    "start": "2026-09-24",
+    "end": "2026-09-24",
+    "dayCount": 1
+  },
+  "narrative": {
+    "lede": "**Die Urlaubskasse wurde an einem Tag deutlich persönlicher und sozialer: Jede Eingabe gehört jetzt einer Person, und jede Person hat ein Gesicht.** Dazu kamen Werkzeuge rund ums Geld: Zahlungsinfos im Ausgleichsplan, Fremdwährungen mit automatisch geladenem EZB-Kurs und Beleg-Fotos. Am Mittag starteten die Event-Details mit Zeitraum, Ort und Infos, am Abend wurde die Ausgabenliste deutlich kompakter.",
+    "glance": [
+      "**Identität ist Pflicht**: Wer einen Raum betritt, muss sich einer Person zuordnen; Header, Zahler-Feld und Änderungsprotokoll bauen darauf auf",
+      "**Avatare mit Umwegen**: Erst eigene Uploads und echte Fotos, dann Schwarz-Weiß mit mehr Kontrast, am Ende gezeichnete Karikaturen",
+      "**Geld über Grenzen**: Fremdwährungen mit eigenem oder automatisch geladenem EZB-Kurs, CZK und PLN neu, Dropdown zweimal repariert",
+      "**Bezahlen und Belegen**: PayPal.me- oder IBAN-Angaben im Ausgleichsplan, Beleg-Fotos per Firebase Storage mit auffälliger Upload-Kachel",
+      "**Beitreten per Link**: Einladungslink oder QR-Code ersetzt das Eintippen des 6-stelligen Codes"
+    ],
+    "sections": [
+      {
+        "title": "Wo und wann die Reise stattfindet",
+        "paragraphs": [
+          "Kassen können jetzt einen Zeitraum, einen Ort mit Google-Maps-Link und Infos für alle Teilnehmer tragen. Getestet wurde das auf einem lokalen Server im Browser, die Test-Kasse wurde danach wieder gelöscht. Außerdem wurde geprüft, warum nach dem Push kein GitHub-Pages-Deployment lief. Zeitraum und Ort wanderten danach als schmale Zeile unter den Kassennamen, die Adresse wurde durch ein gut antippbares Nadel-Symbol ersetzt, das Google Maps öffnet. Ein Fehler, durch den Datum und Ort auf Geräten mit veraltetem Cache fehlten, ist behoben. Parallel entstand eine priorisierte Liste neuer Feature-Ideen für die App."
+        ]
+      },
+      {
+        "title": "Wer du bist und wer was getan hat",
+        "paragraphs": [
+          "Beim Betreten eines Raumes wählt man jetzt aus, wer man ist; erst danach geht es weiter. Die gewählte Identität steht im Header und ist dort per Klick wechselbar. Ein User-Icon mit Namen ersetzt das Drei-Punkte-Menü für die Einstellungen, und beim Anlegen einer Ausgabe ist man selbst als Zahler vorausgewählt. Ein Änderungsprotokoll zeigt, wer wann Ausgaben hinzugefügt, bearbeitet oder gelöscht hat. Untersucht wurde auch, warum es pro Name aufgeteilt ist und ob eine gemeinsame History mit Wiederherstellung sinnvoller wäre. Jede Person kann ein eigenes Profilbild hochladen, das rund bei Ausgaben, Salden und im Header erscheint. Der doppelte Name im Header ist weg, er steht jetzt einmal neben einem runden Bild mit Rand. Die Stamm-Truppe bekam zuerst echte Fotos, dann kontrastreiches Schwarz-Weiß mit einheitlichem Kontrast und am Abend gezeichnete Karikaturen, auch für Reddi. Dabei zeigte sich, dass die Standardbilder nicht in Firebase liegen, sondern über den Personennamen aus einem fest eingebauten Objekt geladen werden. Deshalb zeigen neue Events automatisch die aktuellen Bilder."
+        ]
+      },
+      {
+        "title": "Bezahlen, umrechnen, belegen",
+        "paragraphs": [
+          "Für jeden Teilnehmer lässt sich eine PayPal.me-Adresse oder IBAN hinterlegen, und der Ausgleichsplan bietet dazu einen PayPal-Link mit Betrag bzw. einen Kopieren-Button. Ausgaben können in Fremdwährung erfasst und in Euro umgerechnet werden, erst mit manuellem Kurs, später mit automatisch geladenem und angezeigtem EZB-Kurs. Tschechische Kronen und polnische Złoty kamen hinzu. Weil sie sich im Währungs-Dropdown nicht auswählen ließen, wurde es zweimal repariert, bis alle Währungen erschienen und die Kurse automatisch luden. Zu jeder Ausgabe kann jetzt ein Beleg-Foto hochgeladen werden, das eine große Upload-Kachel mit Kamera-Icon und NEU-Badge bekam. Bearbeitet wurde dabei ein Speicherfehler mit PERMISSION_DENIED, und die Vorschau zeigt kein kaputtes Bild mehr, solange kein Foto gewählt ist. Kassen lassen sich außerdem per Einladungslink oder QR-Code betreten."
+        ]
+      },
+      {
+        "title": "Aufgeräumte Oberfläche",
+        "paragraphs": [
+          "Das Design lässt sich nur noch in den Einstellungen wählen, ohne gespeicherte Auswahl startet die App im Dark Mode. Am Abend wurden die Ausgaben zu kompakten, einzeiligen Karten. Der Papierkorb verschwand aus dem Eintrag, gelöscht wird jetzt über einen größeren Bearbeiten-Button. Für die Arbeit wurde außerdem der Browser-Aufruf dauerhaft erlaubt, damit er nicht mehr jedes Mal bestätigt werden muss."
+        ]
+      }
+    ]
+  },
+  "model": "default",
+  "language": "",
+  "audience": "me",
+  "length": "standard",
+  "memberScope": "",
+  "profileId": "",
+  "profileName": "",
+  "generatedAt": "2026-09-25T15:37",
+  "taskHash": "4dba74fd3d2822cf",
+  "taskCount": 36
+}

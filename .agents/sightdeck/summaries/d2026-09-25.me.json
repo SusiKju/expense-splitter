@@ -1,0 +1,50 @@
+{
+  "key": "d2026-09-25",
+  "day": "2026-09-25",
+  "period": {
+    "mode": "day",
+    "start": "2026-09-25",
+    "end": "2026-09-25",
+    "dayCount": 1
+  },
+  "narrative": {
+    "lede": "**Ausgaben lassen sich jetzt ungleich aufteilen: nach festen Beträgen, Prozent oder Gewichten.** Das war die wichtigste Neuerung des Tages. Außerdem dürfen Ersteller ihre Räume wieder zuverlässig schließen und öffnen, und die Formularfelder wurden optisch korrigiert. Zum Schluss wurde die Währungsauswahl im Ausgaben-Formular eingeschränkt.",
+    "glance": [
+      "**Ungleiche Anteile möglich**: Ausgaben lassen sich nach Beträgen, Prozent oder Gewichten wie dem halben Anteil für Kinder aufteilen",
+      "**Nur drei Währungen**: Im Ausgaben-Formular stehen vorerst Euro, tschechische Kronen und polnische Złote zur Wahl",
+      "**Ersteller behalten Kontrolle**: Wer einen Raum anlegt, kann ihn auch auf einem anderen Gerät schließen und wieder öffnen",
+      "**Dropdown-Pfeil korrigiert**: Der Pfeil sitzt in allen Auswahlfeldern wieder an der richtigen Stelle",
+      "**Lesbar in beiden Themes**: Das Datums-Icon und die übrigen Formularfelder sind jetzt gut erkennbar"
+    ],
+    "sections": [
+      {
+        "title": "Ausgaben gerechter aufteilen",
+        "paragraphs": [
+          "Bisher wurden Ausgaben nur gleichmäßig aufgeteilt. Jetzt geht das auch nach festen Beträgen, nach Prozent oder nach Gewichten, zum Beispiel mit einem halben Anteil für ein Kind. Später am Tag wurde die Währungsauswahl im Ausgaben-Formular vorerst auf Euro, tschechische Kronen und polnische Złote beschränkt."
+        ]
+      },
+      {
+        "title": "Wer den Raum anlegt, darf ihn auch schließen",
+        "paragraphs": [
+          "Reddi hatte den Raum „Wandern in Böhmen“ angelegt, durfte ihn aber nicht schließen. Das ist behoben: Wer eine Kasse erstellt, kann sie jetzt zuverlässig schließen und wieder öffnen, auch auf einem anderen Gerät. „Wandern in Böhmen“ gehört wieder Reddi."
+        ]
+      },
+      {
+        "title": "Formulare, die man gut lesen kann",
+        "paragraphs": [
+          "Zwei Darstellungsfehler in den Formularen wurden behoben. Der verrutschte Pfeil in den Auswahlfeldern wurde für alle Selects auf einmal korrigiert. Das Kalender-Icon im Datumsfeld war schwarz und schlecht zu sehen; jetzt ist es gut sichtbar. Die übrigen Formularfelder wurden in beiden Themes auf Lesbarkeit geprüft und sind jetzt gut lesbar."
+        ]
+      }
+    ]
+  },
+  "model": "default",
+  "language": "",
+  "audience": "me",
+  "length": "standard",
+  "memberScope": "",
+  "profileId": "",
+  "profileName": "",
+  "generatedAt": "2026-09-25T15:36",
+  "taskHash": "ff1c78e0bdcfed70",
+  "taskCount": 5
+}

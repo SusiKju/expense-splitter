@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks prefix="ES" generated="2026-09-25T15:28" label="expense-splitter" next_id="47">
+<tasks prefix="ES" generated="2026-09-28T08:13" label="expense-splitter" next_id="56">
   <task id="1" status="done">
     <title>Event-Details: Ort (Google Maps), Datum/Uhrzeit, Infos</title>
     <summary>Pro Kasse/Event Ort (klickbar → Google Maps), Datum/Uhrzeit und Freitext-Infos hinterlegen, damit Freunde eine Übersicht haben.</summary>
@@ -791,67 +791,6 @@
       <verification ts="2026-09-24T14:15" tool="manual browser check" result="pass" />
     </verifications>
     <spans file="runs/11.json" runs="2" calls="26" ms="108881" failed="1" wall_ms="228000" idle_pct="52" updated="2026-09-24T14:11" />
-  </task>
-  <task id="12" status="backlog">
-    <title>Kategorien für Ausgaben und Auswertung pro Kategorie und Person</title>
-    <summary>Ausgaben bekommen eine Kategorie (Essen, Unterkunft, Transport …) und es gibt eine Übersicht als Kuchen- oder Balkendiagramm.</summary>
-    <created>2026-09-24T13:26</created>
-    <started />
-    <done />
-    <human_estimate>1 tag</human_estimate>
-    <story_points>5</story_points>
-    <story_points_refined>5</story_points_refined>
-    <agents>Claude</agents>
-    <concept>tasks/ES-12.md</concept>
-    <parent />
-    <subtasks />
-    <dependencies />
-    <external_id />
-    <external_url />
-    <backlog_rank />
-    <queue_seq />
-    <informational />
-    <kind>feature</kind>
-    <testing_tool />
-    <testing_tool_locked />
-    <lane_id />
-    <lane_order />
-    <lane_source />
-    <answer_read />
-    <branch />
-    <branch_base_sha />
-    <worktree />
-    <question />
-    <question_about_tests />
-    <question_topic />
-    <question_blocking />
-    <gate_rule />
-    <tags />
-    <run_window_id />
-    <claude_model>opus</claude_model>
-    <planning_recommended>false</planning_recommended>
-    <planning_active />
-    <auto_run />
-    <changelog_entry />
-    <end_customer_visible />
-    <start_date />
-    <end_date />
-    <deadline />
-    <version />
-    <session_id />
-    <changelog_snippet>Ausgaben lassen sich jetzt Kategorien zuordnen, und eine neue Übersicht zeigt, wofür die Gruppe ihr Geld ausgegeben hat.</changelog_snippet>
-    <changelog_snippet_stale />
-    <changelog_snippet_source />
-    <jira_sync_failed />
-    <jira_sync_error />
-    <is_design>true</is_design>
-    <history>
-      <event ts="2026-09-24T13:26">received, backlog</event>
-    </history>
-    <predicted_files>
-      <file path="urlaubskasse.html" source="predicted" ts="2026-09-24T13:26" />
-      <file path="tests" source="predicted" ts="2026-09-24T13:26" />
-    </predicted_files>
   </task>
   <task id="13" status="done">
     <title>Zahlungsinfos pro Person und Zahlungslink im Ausgleichsplan</title>
@@ -3189,7 +3128,7 @@
     </predicted_files>
     <tokens>
       <usage ts="2026-09-25T10:36" provider="claude-cli" model="claude-sonnet-5" input="46" output="18859" cache_read="2817971" cache_write="342289" session="434b3897-f85c-4fdd-bd0f-9e91f0877054" />
-      <usage ts="2026-09-25T15:29" provider="claude-cli" model="claude-opus-5-5" input="100" output="19384" cache_read="3675947" cache_write="315110" session="0916e336-31f0-47d0-8e21-50db988d0e45" attributed="inferred" />
+      <usage ts="2026-09-28T08:14" provider="claude-cli" model="claude-opus-5-5" input="118" output="21642" cache_read="4544853" cache_write="407679" session="0916e336-31f0-47d0-8e21-50db988d0e45" attributed="inferred" />
       <usage ts="2026-09-25T11:53" provider="claude-cli" model="claude-opus-5-5" input="8" output="889" cache_read="98524" cache_write="66223" session="8d428003-ecd5-45ee-947e-08dc7e468075" attributed="inferred" />
     </tokens>
     <skills>
@@ -3347,6 +3286,8 @@
       <event ts="2026-09-25T12:00">started run lane run-a1a2718d</event>
       <event ts="2026-09-25T12:00">started</event>
       <event ts="2026-09-25T12:08">completed</event>
+      <event ts="2026-09-25T15:39">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-25T15:39">background run stopped by user</event>
     </history>
     <is_design />
     <predicted_files>
@@ -3429,6 +3370,8 @@
       <event ts="2026-09-25T15:28">auto-detected: running npm test</event>
       <event ts="2026-09-25T15:28">verification: npm test passed</event>
       <event ts="2026-09-25T15:27">completed</event>
+      <event ts="2026-09-25T15:39">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-25T15:39">background run stopped by user</event>
     </history>
     <is_design />
     <predicted_files>
@@ -3436,6 +3379,8 @@
     </predicted_files>
     <tokens>
       <usage ts="2026-09-25T15:28" provider="claude-cli" model="claude-haiku-4-5-20251001" input="359" output="11971" cache_read="3975919" cache_write="220619" session="977be91f-cb69-4bb8-87b6-00cd19255a6e" />
+      <usage ts="2026-09-25T15:36" provider="claude-cli" model="claude-opus-5-5" input="4" output="2602" cache_read="19632" cache_write="58104" session="3187a9ac-e044-4bd2-8d18-3211a2143496" attributed="inferred" />
+      <usage ts="2026-09-25T15:37" provider="claude-cli" model="claude-opus-5-5" input="4" output="5570" cache_read="19632" cache_write="68728" session="d1a5cf45-6136-44eb-82de-c534e2e1d61e" attributed="inferred" />
     </tokens>
     <skills>
       <skill name="sightdeck-ai" ts="2026-09-25T15:27" session="977be91f-cb69-4bb8-87b6-00cd19255a6e" />
@@ -3447,5 +3392,645 @@
       <verification ts="2026-09-25T15:28" tool="npm test" result="pass" />
     </verifications>
     <spans file="runs/46.json" runs="1" calls="18" ms="9281" failed="1" wall_ms="69000" idle_pct="87" updated="2026-09-25T15:27" />
+  </task>
+  <task id="47" status="done">
+    <title>Preis-Eingabefeld auf schmalen Displays nicht abschneiden</title>
+    <summary>Auf schmalen Mobil-Displays wird das Input-Feld für den Preis abgeschnitten. Das mobile Layout soll so angepasst werden, dass das Feld vollständig sichtbar ist.</summary>
+    <created>2026-09-28T07:48</created>
+    <started>2026-09-28T07:49</started>
+    <done>2026-09-28T07:49</done>
+    <human_estimate>30min</human_estimate>
+    <story_points>2</story_points>
+    <story_points_refined>2</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-47.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>haiku</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Das Preisfeld wird jetzt auch auf schmalen Handy-Displays vollständig angezeigt.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-28T07:48">received, backlog</event>
+      <event ts="2026-09-28T07:48">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-28T07:49">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-28T07:49">auto-aktiviert via prompt-hook</event>
+      <event ts="2026-09-28T07:49">started run lane run-09eaf329</event>
+      <event ts="2026-09-28T07:49">progress plan: 4 steps</event>
+      <event ts="2026-09-28T07:49">completed</event>
+      <event ts="2026-09-28T08:08">background run stopped by user</event>
+      <event ts="2026-09-28T08:08">session closed by user (status done unchanged)</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-28T07:48" />
+      <file path="sw.js" source="predicted" ts="2026-09-28T07:48" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-28T07:49" provider="claude-cli" model="claude-opus-5-5" input="6" output="929" cache_read="60856" cache_write="63338" session="fcf92524-e887-4864-b0eb-8755cd0f18ba" />
+      <usage ts="2026-09-28T08:08" provider="claude-cli" model="claude-haiku-4-5-20251001" input="547" output="16986" cache_read="7733853" cache_write="488170" session="48af3432-7477-4daa-8fb4-9eeec256e101" />
+      <usage ts="2026-09-28T07:50" provider="claude-cli" model="claude-opus-5-5" input="6" output="693" cache_read="60822" cache_write="62973" session="4a26b0b2-b919-4794-b37e-e563075e5cfd" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-28T07:49" session="48af3432-7477-4daa-8fb4-9eeec256e101" />
+    </skills>
+    <progress step="4" of="4" started="2026-09-28T07:49" label="Abschluss">
+      <step n="1" label="Mobile-Layout prüfen" done="2026-09-28T07:49" />
+      <step n="2" label="CSS anpassen" done="2026-09-28T07:49" />
+      <step n="3" label="Browser-Test" done="2026-09-28T07:49" />
+      <step n="4" label="Abschluss" />
+    </progress>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-09-28T07:50" />
+      <file path="database.rules.json" ts="2026-09-28T08:07" />
+    </files>
+    <spans file="runs/47.json" runs="2" calls="31" ms="1015359" failed="1" wall_ms="1114000" idle_pct="9" updated="2026-09-28T07:49" />
+  </task>
+  <task id="48" status="done">
+    <title>Freund kann im fremden Raum seine eigene Person nicht auswählen</title>
+    <summary>Ein Freund, der in meinem Raum ist, kann seine eigene Person nicht auswählen – auch nicht, nachdem er den Raum verlassen und neu betreten hat. Möglicherweise ist die Auswahl nur für den Ersteller erlaubt; Ursache prüfen und beheben.</summary>
+    <created>2026-09-28T07:49</created>
+    <started>2026-09-28T07:50</started>
+    <done>2026-09-28T08:13</done>
+    <human_estimate>2h</human_estimate>
+    <story_points>3</story_points>
+    <story_points_refined>3</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-48.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>sonnet</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Fix: Ein im Raum eines anderen Geräts (z.B. Ersteller) neu ausgewählter Name geht nicht mehr durch einen zeitgleichen Sync verloren.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-28T07:49">received, backlog</event>
+      <event ts="2026-09-28T07:49">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-28T07:50">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-28T07:50">auto-aktiviert via prompt-hook (parallel run)</event>
+      <event ts="2026-09-28T07:50">started run lane run-b4c85cfb</event>
+      <event ts="2026-09-28T08:13">completed</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-28T07:49" />
+      <file path="database.rules.json" source="predicted" ts="2026-09-28T07:49" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-28T08:14" provider="claude-cli" model="claude-sonnet-5" input="594" output="198881" cache_read="68259803" cache_write="1061179" session="758741b4-df8f-4db8-b880-2507292c6514" />
+      <usage ts="2026-09-28T07:52" provider="claude-cli" model="claude-opus-5-5" input="6" output="964" cache_read="61054" cache_write="64061" session="0bfa6cf2-6b51-4b3e-bc7a-8c12c8e79d00" />
+      <usage ts="2026-09-28T08:06" provider="claude-cli" model="claude-opus-5-5" input="6" output="2596" cache_read="61134" cache_write="65710" session="18ed20da-5247-4eea-863f-04eb00b785e5" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-28T07:50" session="758741b4-df8f-4db8-b880-2507292c6514" />
+    </skills>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-09-28T08:02" />
+      <file path="database.rules.json" ts="2026-09-28T08:04" />
+    </files>
+    <spans file="runs/48.json" runs="3" calls="180" ms="225952" failed="3" wall_ms="1369000" idle_pct="83" updated="2026-09-28T08:13" />
+    <execution_seconds>1380</execution_seconds>
+  </task>
+  <task id="49" status="done">
+    <title>PayPal.me-Feld im Account wieder sichtbar machen und mit passendem Placeholder versehen</title>
+    <summary>Das Eingabefeld für den PayPal.me-Link soll im Account wieder auffindbar sein. Ein Placeholder soll zeigen, was eingetragen werden muss.</summary>
+    <created>2026-09-28T07:50</created>
+    <started>2026-09-28T07:52</started>
+    <done>2026-09-28T07:52</done>
+    <human_estimate>30min</human_estimate>
+    <story_points>2</story_points>
+    <story_points_refined>2</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-49.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>haiku</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Das PayPal.me-Feld ist im Account wieder zu finden und zeigt per Platzhalter, was eingetragen werden soll.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-28T07:50">received, backlog</event>
+      <event ts="2026-09-28T07:50">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-28T07:51">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-28T07:52">auto-aktiviert via prompt-hook (parallel run)</event>
+      <event ts="2026-09-28T07:52">started run lane run-73271a6a</event>
+      <event ts="2026-09-28T07:52">progress plan: 3 steps</event>
+      <event ts="2026-09-28T07:52">completed</event>
+      <event ts="2026-09-28T08:08">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-28T08:08">background run stopped by user</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-28T07:50" />
+      <file path="settlement.js" source="predicted" ts="2026-09-28T07:50" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-28T08:03" provider="claude-cli" model="claude-haiku-4-5-20251001" input="548" output="16456" cache_read="7844022" cache_write="312514" session="17fa07e3-fc38-4f06-a3f4-af8ab222aab3" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-28T07:52" session="17fa07e3-fc38-4f06-a3f4-af8ab222aab3" />
+    </skills>
+    <progress step="3" of="3" started="2026-09-28T07:52" label="Browser-Test">
+      <step n="1" label="Code lesen" done="2026-09-28T07:52" />
+      <step n="2" label="Änderung implementieren" done="2026-09-28T07:52" />
+      <step n="3" label="Browser-Test" />
+    </progress>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-09-28T08:02" />
+    </files>
+    <spans file="runs/49.json" runs="1" calls="28" ms="557508" failed="2" wall_ms="645000" idle_pct="14" updated="2026-09-28T07:52" />
+  </task>
+  <task id="50" status="done">
+    <title>Identitätsbetrug beim Raumbeitritt verhindern (personenbezogener Code)</title>
+    <summary>Aktuell kann jemand mit dem Raumcode eine beliebige Person auswählen und sich so als jemand anderes ausgeben. Gesucht ist ein Konzept, wie sich Personen eindeutig identifizieren lassen, zum Beispiel über einen eigenen Code pro Person.</summary>
+    <created>2026-09-28T07:51</created>
+    <started>2026-09-28T07:54</started>
+    <done>2026-09-28T07:54</done>
+    <human_estimate>1h</human_estimate>
+    <story_points>3</story_points>
+    <story_points_refined>3</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-50.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational>true</informational>
+    <kind>research</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>sonnet</claude_model>
+    <planning_recommended>true</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible>false</end_customer_visible>
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet />
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-28T07:51">received, backlog</event>
+      <event ts="2026-09-28T07:51">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-28T07:54">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-28T07:54">auto-aktiviert via prompt-hook (parallel run)</event>
+      <event ts="2026-09-28T07:54">started run lane run-14fd77f3</event>
+      <event ts="2026-09-28T07:54">progress plan: 3 steps</event>
+      <event ts="2026-09-28T07:54">completed (informational only — no code changes)</event>
+      <event ts="2026-09-28T08:08">background run stopped by user</event>
+      <event ts="2026-09-28T08:08">session closed by user (status done unchanged)</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-28T07:51" />
+      <file path="database.rules.json" source="predicted" ts="2026-09-28T07:51" />
+      <file path="tests" source="predicted" ts="2026-09-28T07:51" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-28T07:57" provider="claude-cli" model="claude-sonnet-5" input="58" output="20032" cache_read="3692534" cache_write="219423" session="58813cab-9c12-4a86-bfd8-21a01ffa8f3d" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-28T07:55" session="58813cab-9c12-4a86-bfd8-21a01ffa8f3d" />
+    </skills>
+    <progress step="3" of="3" started="2026-09-28T07:54" label="Empfehlung dokumentieren">
+      <step n="1" label="Bestandscode &amp; DB-Rules prüfen" done="2026-09-28T07:54" />
+      <step n="2" label="Optionen abwägen" done="2026-09-28T07:54" />
+      <step n="3" label="Empfehlung dokumentieren" />
+    </progress>
+    <spans file="runs/50.json" runs="1" calls="15" ms="17095" failed="0" wall_ms="139000" idle_pct="88" updated="2026-09-28T07:54" />
+  </task>
+  <task id="51" status="backlog">
+    <title>Personenbezogener Einladungslink statt geteiltem Raumcode</title>
+    <summary>Jede Person bekommt einen eigenen Einladungslink mit persönlichem Token. Wer so beitritt, wird automatisch dieser Person zugeordnet. Damit kann sich niemand mehr über den Raumcode als jemand anderes ausgeben.</summary>
+    <created>2026-09-28T08:05</created>
+    <started />
+    <done />
+    <human_estimate>mehrere tage</human_estimate>
+    <story_points>8</story_points>
+    <story_points_refined>8</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-51.md</concept>
+    <parent />
+    <subtasks>52,53,54,55</subtasks>
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>feature</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>opus</claude_model>
+    <planning_recommended>true</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Jede Person erhält jetzt einen eigenen Einladungslink – so kann sich niemand mehr als jemand anderes ausgeben.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-28T08:05">received, backlog</event>
+      <event ts="2026-09-28T08:05">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-28T08:05" />
+      <file path="database.rules.json" source="predicted" ts="2026-09-28T08:05" />
+      <file path="sw.js" source="predicted" ts="2026-09-28T08:05" />
+      <file path="tests" source="predicted" ts="2026-09-28T08:05" />
+    </predicted_files>
+  </task>
+  <task id="52" status="backlog">
+    <title>Persönliches Token pro Person im Raum-Datenmodell anlegen</title>
+    <summary>Jede Person bekommt ein zufälliges, geheimes Token, das im Raum gespeichert wird. Bestehende Personen bekommen beim Laden nachträglich ein Token.</summary>
+    <created>2026-09-28T08:05</created>
+    <started />
+    <done />
+    <human_estimate>2h</human_estimate>
+    <story_points>3</story_points>
+    <story_points_refined>3</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-52.md</concept>
+    <parent>51</parent>
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>feature</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>sonnet</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible>false</end_customer_visible>
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet />
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <is_design />
+    <history>
+      <event ts="2026-09-28T08:05">received, backlog</event>
+    </history>
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-28T08:05" />
+      <file path="tests" source="predicted" ts="2026-09-28T08:05" />
+    </predicted_files>
+  </task>
+  <task id="53" status="backlog">
+    <title>Personenbezogene Einladungslinks erzeugen und teilen</title>
+    <summary>Statt eines gemeinsamen Raumlinks wird pro Person ein eigener Link aus Raumcode und Token erzeugt, den man kopieren oder teilen kann.</summary>
+    <created>2026-09-28T08:05</created>
+    <started />
+    <done />
+    <human_estimate>2h</human_estimate>
+    <story_points>3</story_points>
+    <story_points_refined>3</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-53.md</concept>
+    <parent>51</parent>
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>change</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>sonnet</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Einladungslinks lassen sich jetzt gezielt für jede Person kopieren und teilen.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <is_design />
+    <history>
+      <event ts="2026-09-28T08:05">received, backlog</event>
+    </history>
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-28T08:05" />
+    </predicted_files>
+  </task>
+  <task id="54" status="backlog">
+    <title>Beitritt per Einladungslink setzt Identität automatisch</title>
+    <summary>Ein Link mit Token ordnet das Gerät direkt der passenden Person zu. Die freie Personenauswahl im Identitäts-Modal entfällt.</summary>
+    <created>2026-09-28T08:05</created>
+    <started />
+    <done />
+    <human_estimate>halber tag</human_estimate>
+    <story_points>5</story_points>
+    <story_points_refined>5</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-54.md</concept>
+    <parent>51</parent>
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>change</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>opus</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Wer über den eigenen Einladungslink beitritt, ist sofort der richtigen Person zugeordnet.</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <is_design />
+    <history>
+      <event ts="2026-09-28T08:05">received, backlog</event>
+    </history>
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-28T08:05" />
+      <file path="tests" source="predicted" ts="2026-09-28T08:05" />
+    </predicted_files>
+  </task>
+  <task id="55" status="backlog">
+    <title>Firebase-Regeln für Identitätszuordnung per Token absichern</title>
+    <summary>Die Regeln für identities sollen verhindern, dass ein Gerät ohne passendes Token einer Person zugeordnet wird.</summary>
+    <created>2026-09-28T08:05</created>
+    <started />
+    <done />
+    <human_estimate>2h</human_estimate>
+    <story_points>3</story_points>
+    <story_points_refined>3</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-55.md</concept>
+    <parent>51</parent>
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>change</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>sonnet</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible>false</end_customer_visible>
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet />
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <is_design />
+    <history>
+      <event ts="2026-09-28T08:05">received, backlog</event>
+    </history>
+    <predicted_files>
+      <file path="database.rules.json" source="predicted" ts="2026-09-28T08:05" />
+    </predicted_files>
   </task>
 </tasks>
