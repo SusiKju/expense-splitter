@@ -25,3 +25,6 @@ logs
 /.dist/
 
 .ai/skills
+
+# Claude Code local settings
+.claude/settings.local.json
