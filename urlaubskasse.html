@@ -2019,7 +2019,6 @@
 
   // ===== Settle Plan =====
   function toggleSettle(key) {
-    if (guardClosed()) return;
     state.settled[key] = !state.settled[key];
     saveState();
     renderSettlement();

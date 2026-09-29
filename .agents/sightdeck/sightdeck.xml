@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<tasks prefix="ES" generated="2026-09-28T08:13" label="expense-splitter" next_id="56">
+<tasks prefix="ES" generated="2026-09-29T08:27" label="expense-splitter" next_id="58">
   <task id="1" status="done">
     <title>Event-Details: Ort (Google Maps), Datum/Uhrzeit, Infos</title>
     <summary>Pro Kasse/Event Ort (klickbar → Google Maps), Datum/Uhrzeit und Freitext-Infos hinterlegen, damit Freunde eine Übersicht haben.</summary>
@@ -3128,7 +3128,7 @@
     </predicted_files>
     <tokens>
       <usage ts="2026-09-25T10:36" provider="claude-cli" model="claude-sonnet-5" input="46" output="18859" cache_read="2817971" cache_write="342289" session="434b3897-f85c-4fdd-bd0f-9e91f0877054" />
-      <usage ts="2026-09-28T08:14" provider="claude-cli" model="claude-opus-5-5" input="118" output="21642" cache_read="4544853" cache_write="407679" session="0916e336-31f0-47d0-8e21-50db988d0e45" attributed="inferred" />
+      <usage ts="2026-09-29T08:29" provider="claude-cli" model="claude-opus-5-5" input="160" output="28308" cache_read="6841786" cache_write="508672" session="0916e336-31f0-47d0-8e21-50db988d0e45" attributed="inferred" />
       <usage ts="2026-09-25T11:53" provider="claude-cli" model="claude-opus-5-5" input="8" output="889" cache_read="98524" cache_write="66223" session="8d428003-ecd5-45ee-947e-08dc7e468075" attributed="inferred" />
     </tokens>
     <skills>
@@ -3540,6 +3540,8 @@
       <event ts="2026-09-28T07:50">auto-aktiviert via prompt-hook (parallel run)</event>
       <event ts="2026-09-28T07:50">started run lane run-b4c85cfb</event>
       <event ts="2026-09-28T08:13">completed</event>
+      <event ts="2026-09-29T08:22">session closed by user (status done unchanged)</event>
+      <event ts="2026-09-29T08:22">background run stopped by user</event>
     </history>
     <is_design />
     <predicted_files>
@@ -3547,7 +3549,7 @@
       <file path="database.rules.json" source="predicted" ts="2026-09-28T07:49" />
     </predicted_files>
     <tokens>
-      <usage ts="2026-09-28T08:14" provider="claude-cli" model="claude-sonnet-5" input="594" output="198881" cache_read="68259803" cache_write="1061179" session="758741b4-df8f-4db8-b880-2507292c6514" />
+      <usage ts="2026-09-28T08:17" provider="claude-cli" model="claude-sonnet-5" input="614" output="204041" cache_read="71628661" cache_write="1072518" session="758741b4-df8f-4db8-b880-2507292c6514" />
       <usage ts="2026-09-28T07:52" provider="claude-cli" model="claude-opus-5-5" input="6" output="964" cache_read="61054" cache_write="64061" session="0bfa6cf2-6b51-4b3e-bc7a-8c12c8e79d00" />
       <usage ts="2026-09-28T08:06" provider="claude-cli" model="claude-opus-5-5" input="6" output="2596" cache_read="61134" cache_write="65710" session="18ed20da-5247-4eea-863f-04eb00b785e5" />
     </tokens>
@@ -4032,5 +4034,177 @@
     <predicted_files>
       <file path="database.rules.json" source="predicted" ts="2026-09-28T08:05" />
     </predicted_files>
+  </task>
+  <task id="56" status="done">
+    <title>Ausgleich-Items bei gesperrter Kasse abhaken erlauben</title>
+    <summary>Ist eine Kasse gesperrt, sind keine neuen Eingaben mehr möglich. User müssen die Items beim Ausgleich aber trotzdem noch abhaken können.</summary>
+    <created>2026-09-29T08:20</created>
+    <started>2026-09-29T08:21</started>
+    <done>2026-09-29T08:21</done>
+    <human_estimate>1h</human_estimate>
+    <story_points>2</story_points>
+    <story_points_refined>2</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-56.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>haiku</claude_model>
+    <planning_recommended>false</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible />
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>Ausgleich-Items können jetzt auch bei gesperrter Kasse abgehakt werden</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-29T08:20">received, backlog</event>
+      <event ts="2026-09-29T08:20">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-29T08:21">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-29T08:21">auto-aktiviert via prompt-hook</event>
+      <event ts="2026-09-29T08:21">started run lane run-dda18f70</event>
+      <event ts="2026-09-29T08:21">started</event>
+      <event ts="2026-09-29T08:22">auto-detected: running npm test</event>
+      <event ts="2026-09-29T08:22">verification: npm test passed</event>
+      <event ts="2026-09-29T08:21">progress plan: 3 steps</event>
+      <event ts="2026-09-29T08:21">in testing — running npm test</event>
+      <event ts="2026-09-29T08:23">verification: npm test passed</event>
+      <event ts="2026-09-29T08:21">completed</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path="urlaubskasse.html" source="predicted" ts="2026-09-29T08:20" />
+      <file path="database.rules.json" source="predicted" ts="2026-09-29T08:20" />
+      <file path="settlement.js" source="predicted" ts="2026-09-29T08:20" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-29T08:23" provider="claude-cli" model="claude-haiku-4-5-20251001" input="577" output="17197" cache_read="7167413" cache_write="268559" session="5c901940-85d9-4f52-b6a3-6973f4a65766" />
+      <usage ts="2026-09-29T08:26" provider="claude-cli" model="claude-opus-5-5" input="8" output="2024" cache_read="105642" cache_write="66792" session="accde478-a671-4f04-8385-bb5772fd28ef" attributed="inferred" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-29T08:21" session="5c901940-85d9-4f52-b6a3-6973f4a65766" />
+    </skills>
+    <files>
+      <file path="urlaubskasse.html" ts="2026-09-29T08:22" />
+    </files>
+    <verifications>
+      <verification ts="2026-09-29T08:22" tool="npm test" result="pass" />
+      <verification ts="2026-09-29T08:23" tool="npm test" result="pass" />
+    </verifications>
+    <progress step="3" of="3" started="2026-09-29T08:21" label="Verify tests pass">
+      <step n="1" label="Analyze locking mechanism" done="2026-09-29T08:21" />
+      <step n="2" label="Remove guardClosed guard from toggleSettle" done="2026-09-29T08:21" />
+      <step n="3" label="Verify tests pass" />
+    </progress>
+    <spans file="runs/56.json" runs="1" calls="32" ms="15101" failed="0" wall_ms="96000" idle_pct="84" updated="2026-09-29T08:21" />
+  </task>
+  <task id="57" status="done">
+    <title>Commit-Messages beim GitHub-Development sichtbar machen</title>
+    <summary>Beim Arbeiten mit GitHub soll immer erkennbar sein, worum es geht, deshalb muss die Commit-Message sichtbar sein. Es ist noch unklar, wo genau sie aktuell fehlt.</summary>
+    <created>2026-09-29T08:25</created>
+    <started>2026-09-29T08:27</started>
+    <done>2026-09-29T08:29</done>
+    <human_estimate>30min</human_estimate>
+    <story_points>3</story_points>
+    <story_points_refined>3</story_points_refined>
+    <agents>Claude</agents>
+    <concept>tasks/ES-57.md</concept>
+    <parent />
+    <subtasks />
+    <dependencies />
+    <external_id />
+    <external_url />
+    <backlog_rank />
+    <queue_seq />
+    <informational />
+    <kind>bug</kind>
+    <testing_tool />
+    <testing_tool_locked />
+    <lane_id />
+    <lane_order />
+    <lane_source />
+    <answer_read />
+    <branch />
+    <branch_base_sha />
+    <worktree />
+    <question />
+    <question_about_tests />
+    <question_topic />
+    <question_blocking />
+    <gate_rule />
+    <tags />
+    <run_window_id />
+    <claude_model>sonnet</claude_model>
+    <planning_recommended>true</planning_recommended>
+    <planning_active />
+    <auto_run />
+    <changelog_entry />
+    <end_customer_visible>false</end_customer_visible>
+    <start_date />
+    <end_date />
+    <deadline />
+    <version />
+    <session_id />
+    <changelog_snippet>GitHub-Actions-Läufe zeigen jetzt die Commit-Message statt des generischen Namens "pages build and deployment".</changelog_snippet>
+    <changelog_snippet_stale />
+    <changelog_snippet_source />
+    <jira_sync_failed />
+    <jira_sync_error />
+    <history>
+      <event ts="2026-09-29T08:25">received, backlog</event>
+      <event ts="2026-09-29T08:25">refined (title, summary, human_estimate, story_points, kind, claude_model, is_design, end_customer_visible, changelog_snippet, planning_recommended)</event>
+      <event ts="2026-09-29T08:27">scheduled for claude (bulk-start)</event>
+      <event ts="2026-09-29T08:27">auto-aktiviert via prompt-hook</event>
+      <event ts="2026-09-29T08:27">started run lane run-fedd42ce</event>
+      <event ts="2026-09-29T08:27">started</event>
+      <event ts="2026-09-29T08:29">completed</event>
+    </history>
+    <is_design />
+    <predicted_files>
+      <file path=".agent-context" source="predicted" ts="2026-09-29T08:25" />
+      <file path=".claude" source="predicted" ts="2026-09-29T08:25" />
+      <file path=".agents/sightdeck" source="predicted" ts="2026-09-29T08:25" />
+    </predicted_files>
+    <tokens>
+      <usage ts="2026-09-29T08:27" provider="claude-cli" model="claude-sonnet-5-5" input="26" output="5640" cache_read="1296482" cache_write="248853" session="bd9f36bb-022c-44f5-8ceb-a504b39f59ab" />
+    </tokens>
+    <skills>
+      <skill name="sightdeck-ai" ts="2026-09-29T08:27" session="bd9f36bb-022c-44f5-8ceb-a504b39f59ab" />
+    </skills>
+    <files>
+      <file path=".github/workflows/pages.yml" ts="2026-09-29T08:27" />
+    </files>
+    <spans file="runs/57.json" runs="1" calls="9" ms="6566" failed="0" wall_ms="21000" idle_pct="69" updated="2026-09-29T08:29" />
+    <execution_seconds>120</execution_seconds>
   </task>
 </tasks>
